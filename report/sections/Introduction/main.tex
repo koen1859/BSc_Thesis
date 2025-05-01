@@ -1,0 +1,53 @@
+\section{Introduction}
+The Traveling Salesman Problem (TSP) is an important problem in operations research.
+It is particularly relevant for last-mile carriers and other logistics companies where efficient
+routing directly impacts cost, time and service quality. Since the number of parcels worldwide has
+increased between 2013 and 2022 and is expected to keep increasing \citep{statista}, the need for
+fast, scalable route planning methods becomes ever more pressing.
+
+The TSP is an NP-hard problem, it is computationally intensive to find the exact solution for
+large instances. In many real-world scenarios, the exact optimal routes may not be needed, but
+instead a rough, reliable estimate of the optimal route length. For instance, consider a postal delivery company.
+This firm may need to assign a certain amount of deliveries or a certain area to each postman.
+Reliable estimates for the route length can provide valuable information for making such decisions.
+
+Efficient approximation methods provide a solution for such practical applications where exact
+solutions are too computationally intensive to conduct or not feasible due to insufficient data.
+These methods aim at approximating the expected optimal total travel time or distance, while using
+minimal data and computational effort.
+
+There is extensive research on such approximation methods and how they perform in the Euclidean
+plane.
+Consider $n$ uniformly drawn locations from some area in $\mathbb{R}^2$ with area $A$.
+\citet{beardwood1959shortest} prove the relation:
+\begin{align}
+	L \to \beta \sqrt{nA}, \quad \text{as } n \to \infty
+	\label{eq:beardwood}
+\end{align}
+as an estimation for the length of the shortest TSP path measured by Euclidean distance through
+these random locations, where $\beta$ is some proportionality constant. This formula is a very
+elegant result, and it requires very little data. However, its assumptions,
+uniform random locations and euclidean space differ from real-world applications, which are defined
+by complex geographic features, such as road networks.
+
+This research investigates how well this approximation method performs when considering real road
+networks. Using OpenStreetMap \citep{openstreetmap} data, TSP instances are simulated in a wide variety of different urban areas
+in the Netherlands, then solve these for the actual shortest paths using the Lin–Kernighan heuristic
+\citep{lin1973effective}.
+Then, the $\beta$ from equation \ref{eq:beardwood} is estimated and the performance of this
+formula is analyzed. Additionally, the results for $\beta$ and the performance across the selected
+areas is compared. 
+
+The core contribution of this research is the performance of the Beardwood formula is analyzed when: 
+\begin{enumerate}
+  \item relaxing the assumption of uniformly drawn locations. In this research,
+	the locations are drawn from the set of postcodes in the area in question.
+  \item applied to realistically sized real-world parts of cities and villages in the Netherlands.
+\end{enumerate}
+The analysis can easily be extended to any type of area in any part of the world, one would only
+have to download the OpenStreetMap \citep{openstreetmap} for another part of the world and add the names of the areas
+to apply it to. The source code of this project is available on 
+\href{https://github.com/koen1859/Scriptie}{GitHub}.
+
+In section 2 a deep dive in the context and previous research in this field is provided.
+In section 3 the experimental design is documented.

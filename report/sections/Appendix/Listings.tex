@@ -1,0 +1,115 @@
+\subsection{Listings}
+\begin{lstlisting}[caption={The query to extract roads inside a neighborhood.}, label={lst:sql-roads}]
+-- First, get the neighborhood polygon, in the coordinate format we need.
+WITH neighborhood AS (
+    SELECT ST_Transform(way, 4326) AS geom
+    FROM planet_osm_polygon
+    WHERE place = 'quarter'
+      AND name = '{neighborhood}'
+),
+-- Then, define the road geometries in a way that we can filter based 
+-- on whether they are inside the neighborhood.
+road_geometries AS (
+    SELECT
+	w.id AS road_id,
+	w.nodes AS node_ids,
+	w.tags->>'oneway' AS oneway,
+	ST_MakeLine(ARRAY(
+	    SELECT ST_SetSRID(
+		ST_MakePoint(n.lon / 1e7, n.lat / 1e7), 4326
+		)
+	    FROM unnest(w.nodes) WITH ORDINALITY AS u(node_id, ordinality)
+	    JOIN planet_osm_nodes n ON n.id = u.node_id
+	    ORDER BY u.ordinality
+	)) AS road_geom
+    FROM planet_osm_ways w
+    -- Also filter based on the road type.
+    WHERE w.tags->>'highway' IN (
+	'trunk', 'rest_area', 'service', 'secondary_link',
+	'services', 'tertiary', 'primary', 'secondary',
+	'tertiary_link', 'road', 'motorway', 'motorway_link', 
+	'corridor', 'primary_link', 'residential', 'trunk_link', 
+	'living_street', 'unclassified', 'proposed'
+    )
+),
+-- Filter on whether the roads are at least partly in the neighborhood.
+filtered_roads AS (
+    SELECT rg.*
+    FROM road_geometries rg, neighborhood nb
+    WHERE
+	ST_Intersects(rg.road_geom, ST_Buffer(nb.geom, 0.0001))
+)
+-- Select the attributes that are needed.
+SELECT
+    fr.road_id,
+    array_agg(n.id ORDER BY u.ordinality) AS node_ids,
+    array_agg(n.lat / 1e7) AS node_lats,
+    array_agg(n.lon / 1e7) AS node_lons,
+    fr.oneway
+FROM filtered_roads fr
+JOIN planet_osm_ways w ON fr.road_id = w.id
+JOIN LATERAL unnest(w.nodes) 
+    WITH ORDINALITY 
+    AS u(node_id, ordinality) 
+    ON true
+JOIN planet_osm_nodes n ON n.id = u.node_id
+GROUP BY fr.road_id, fr.oneway;
+\end{lstlisting}
+\begin{lstlisting}[language=Python, caption={The algorithm to extract the edges to connect the buildings to the road network}, label={lst:python-edges}]
+tree = STRtree(road_segments)  # make a tree of the road network
+
+# Counter to add new nodes to connect buildings to road network correctly
+new_node_idx = 0
+for building_id, building_coords in buildings.items():
+    building_point = Point(building_coords)
+
+    # find the nearest edge
+    nearest_segment_idx = tree.nearest(building_point)  
+    start_node, end_node, oneway = segment_info[nearest_segment_idx]
+
+    # Project the building onto this nearest edge
+    nearest_segment = road_segments[nearest_segment_idx]
+    projected_point = nearest_segment.interpolate(
+	nearest_segment.project(building_point)
+    )
+
+    # If the projected point is one of the segments end points, use this
+    if projected_point.equals(Point(nodes[start_node])):
+	connect_to = start_node
+    elif projected_point.equals(Point(nodes[end_node])):
+	connect_to = end_node
+    # else, we need to create a virtual node
+    else:
+	virtual_node_id = f"virtual_{new_node_idx}"
+	nodes[virtual_node_id] = (projected_point.x, projected_point.y)
+	new_node_idx += 1
+
+	# We split the road segment and add the virtual node
+	edges.append((start_node, virtual_node_id))
+	weights.append(
+	  distance(nodes[start_node], nodes[virtual_node_id])
+	  )
+	edges.append((virtual_node_id, end_node))
+	weights.append(
+	  distance(nodes[virtual_node_id], nodes[end_node])
+	  )
+
+	if oneway != "yes":  # if not one-way, add reverse
+	    edges.append((virtual_node_id, start_node))
+	    weights.append(
+	      distance(nodes[virtual_node_id], nodes[start_node])
+	      )
+	    edges.append((end_node, virtual_node_id))
+	    weights.append(
+	    distance(nodes[end_node], nodes[virtual_node_id])
+	    )
+
+	# And we need to connect the building to the newly created node
+	connect_to = virtual_node_id
+
+    # Finally, we make the connections
+    edges.append((str(building_id), connect_to))
+    weights.append(distance(building_coords, nodes[connect_to]))
+    edges.append((connect_to, str(building_id)))
+    weights.append(distance(nodes[connect_to], building_coords))
+\end{lstlisting}

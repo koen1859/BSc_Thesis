@@ -1,0 +1,23 @@
+project/maps/
+*.osm.pbf
+*.pbf
+*.toc
+*.synctex.gz
+*.out
+*.log
+*.fls
+*.fdb_latexmk
+*.aux
+*.sty
+*.bst
+*.bbl
+*.blg
+
+# Devenv
+.devenv/
+
+# direnv
+.direnv
+
+# pre-commit
+.pre-commit-config.yaml
