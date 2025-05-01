@@ -31,7 +31,6 @@ def find_beta(lengths, area):
 def results(lengths, x, y, b_hat, area):
     sorted_keys = sorted(lengths.keys())
     line = [b_hat * math.sqrt(n * area) for n in sorted_keys]
-    # line = [b_hat_n[n] * math.sqrt(n * area) for n in sorted_keys]
     errors = [line[sorted_keys.index(x[i])] - y[i] for i in range(len(x))]
     MAE = np.mean(np.mean(np.abs(errors)) / line)
 

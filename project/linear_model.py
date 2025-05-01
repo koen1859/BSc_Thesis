@@ -18,10 +18,10 @@ def linear_model(df):
     )
 
     model = RandomForestRegressor(n_estimators=100, random_state=42)
-    model.fit(X_scaled, y)
+    model.fit(X_train, y_train)
 
-    y_pred = model.predict(X_scaled)
-    r2 = r2_score(y, y_pred)
-    mae = mean_absolute_error(y, y_pred)
+    y_pred = model.predict(X_test)
+    r2 = r2_score(y_test, y_pred)
+    mae = mean_absolute_error(y_test, y_pred)
 
     return r2, mae
