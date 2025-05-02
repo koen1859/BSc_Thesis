@@ -36,17 +36,22 @@ in the Netherlands, then solve these for the actual shortest paths using the Lin
 \citep{lin1973effective}.
 Then, the $\beta$ from equation \ref{eq:beardwood} is estimated and the performance of this
 formula is analyzed. Additionally, the results for $\beta$ and the performance across the selected
-areas is compared. 
+areas is compared.
 
-The core contribution of this research is the performance of the Beardwood formula is analyzed when: 
+The core contributions of this research are:
 \begin{enumerate}
-  \item relaxing the assumption of uniformly drawn locations. In this research,
-	the locations are drawn from the set of postcodes in the area in question.
-  \item applied to realistically sized real-world parts of cities and villages in the Netherlands.
+	\item An analysis of the BHH formula under more realistic conditions, specifically:
+	      \begin{enumerate}
+		      \item Relaxing the assumption of uniformly drawn locations. In this research,
+		            the locations are drawn from the set of postcodes in the area in question;
+		      \item Applied to realistically sized real-world parts of cities and villages in the Netherlands;
+	      \end{enumerate}
+	\item A machine learning analysis to investigate which spatial features (e.g., address density, road network characteristics)
+	      influence deviations from the BHH formula's predictions.
 \end{enumerate}
 The analysis can easily be extended to any type of area in any part of the world, one would only
 have to download the OpenStreetMap \citep{openstreetmap} for another part of the world and add the names of the areas
-to apply it to. The source code of this project is available on 
+to apply it to. The source code of this project is available on
 \href{https://github.com/koen1859/Bsc_Thesis}{GitHub}.
 
 In section 2 a deep dive in the context and previous research in this field is provided.
