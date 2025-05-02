@@ -1,4 +1,5 @@
 from pandas.core.common import random_state
+from pandas.core.generic import RandomState
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
@@ -21,7 +22,8 @@ def linear_model(df):
         X_scaled, y, test_size=0.2, random_state=42
     )
 
-    model = LinearRegression()
+    # model = LinearRegression()
+    model = RandomForestRegressor(n_estimators=100, random_state=42)
     model.fit(X_train, y_train)
 
     y_pred = model.predict(X_test)

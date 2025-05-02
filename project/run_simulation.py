@@ -56,8 +56,8 @@ def interpret_results(DB, neighborhood):
 
     x, y, b_hat, b = find_beta(distances, area)
     line, errors, MAE = results(distances, x, y, b_hat, area)
-    scatterplot(distances, x, y, b_hat, line, f"scatter_{DB}_{neighborhood}")
-    errorsplot(errors, f"errors_{DB}_{neighborhood}")
+    scatterplot(distances, x, y, b_hat, line, f"scatter_{DB}_{neighborhood}.png")
+    errorsplot(errors, f"errors_{DB}_{neighborhood}.png")
 
     key = f"{DB}-{neighborhood}"
     print(f"Solved TSPs for {DB} {neighborhood}")

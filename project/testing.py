@@ -13,6 +13,7 @@ from features_df import features_df
 from run_simulation import run_ml
 
 import pandas as pd
+import numpy as np
 
 # This is just a file i made to test some things before but it will probably return error now
 # roads = get_road_data("groningen", "Beijum")
@@ -42,3 +43,5 @@ r2, mae, mape, y_test, y_pred = run_ml()
 print(f"r2: {r2}, mae: {mae}, mape: {mape}")
 print(y_test)
 print(y_pred)
+print(np.min(y_test))
+print(np.min(y_pred))
