@@ -1,4 +1,3 @@
-from operator import ne
 from db import get_addresses, get_road_data, get_features
 from area import get_area
 from map import create_map
@@ -68,5 +67,5 @@ def interpret_results(DB, neighborhood):
 
 def run_ml():
     df = features_df()
-    r2, mae = linear_model(df)
-    return r2, mae
+    r2, mae, mape, y_test, y_pred = linear_model(df)
+    return r2, mae, mape, y_test, y_pred

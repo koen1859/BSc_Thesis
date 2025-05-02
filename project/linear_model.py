@@ -2,7 +2,11 @@ from pandas.core.common import random_state
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import r2_score, mean_absolute_error
+from sklearn.metrics import (
+    r2_score,
+    mean_absolute_error,
+    mean_absolute_percentage_error,
+)
 from sklearn.model_selection import train_test_split
 import pandas as pd
 
@@ -17,11 +21,12 @@ def linear_model(df):
         X_scaled, y, test_size=0.2, random_state=42
     )
 
-    model = RandomForestRegressor(n_estimators=100, random_state=42)
+    model = LinearRegression()
     model.fit(X_train, y_train)
 
     y_pred = model.predict(X_test)
     r2 = r2_score(y_test, y_pred)
     mae = mean_absolute_error(y_test, y_pred)
+    mape = mean_absolute_percentage_error(y_test, y_pred)
 
-    return r2, mae
+    return r2, mae, mape, y_test, y_pred
