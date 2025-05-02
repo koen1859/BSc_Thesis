@@ -1,4 +1,3 @@
-from operator import ne
 from db import get_addresses, get_road_data, get_features
 from area import get_area
 from map import create_map
@@ -57,8 +56,8 @@ def interpret_results(DB, neighborhood):
 
     x, y, b_hat, b = find_beta(distances, area)
     line, errors, MAE = results(distances, x, y, b_hat, area)
-    scatterplot(distances, x, y, b_hat, line, f"scatter_{DB}_{neighborhood}")
-    errorsplot(errors, f"errors_{DB}_{neighborhood}")
+    scatterplot(distances, x, y, b_hat, line, f"scatter_{DB}_{neighborhood}.png")
+    errorsplot(errors, f"errors_{DB}_{neighborhood}.png")
 
     key = f"{DB}-{neighborhood}"
     print(f"Solved TSPs for {DB} {neighborhood}")
@@ -68,5 +67,5 @@ def interpret_results(DB, neighborhood):
 
 def run_ml():
     df = features_df()
-    r2, mae = linear_model(df)
-    return r2, mae
+    r2, mae, mape, y_test, y_pred = linear_model(df)
+    return r2, mae, mape, y_test, y_pred

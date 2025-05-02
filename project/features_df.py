@@ -22,5 +22,6 @@ def features_df():
 
     df = pd.DataFrame(data)
     df.set_index("area", inplace=True)
+    df.dropna(subset=["beta"], inplace=True)
     df.fillna(0, inplace=True)
     return df

@@ -43,5 +43,5 @@ with open("beta_values.tex", "w") as f:
     f.write("\\end{longtable}\n")
 
 print("ML to estimate beta...")
-r2, mae = run_ml()
-print(f"r2: {r2}, mae: {mae}")
+r2, mae, mape, y_test, y_pred = run_ml()
+print(f"r2: {r2}, mae: {mae}, mape: {mape}")

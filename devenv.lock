@@ -3,10 +3,10 @@
     "devenv": {
       "locked": {
         "dir": "src/modules",
-        "lastModified": 1746034422,
+        "lastModified": 1746189866,
         "owner": "cachix",
         "repo": "devenv",
-        "rev": "f19b62ea677ec6046d78243e176fa01d5ef0d55a",
+        "rev": "5fc592d45dd056035e0fd5000893a21609c35526",
         "type": "github"
       },
       "original": {
@@ -89,10 +89,10 @@
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1745930157,
+        "lastModified": 1746141548,
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "46e634be05ce9dc6d4db8e664515ba10b78151ae",
+        "rev": "f02fddb8acef29a8b32f10a335d44828d7825b78",
         "type": "github"
       },
       "original": {
