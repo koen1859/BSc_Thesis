@@ -31,7 +31,7 @@ graph = make_graph(nodes, buildings, edges, weights)
 area = get_area(buildings)
 
 tours, lengths = read_tours("tsps_groningen_Beijum")
-paths_subset(graph, nodes, buildings, tours, lengths, "groningen_Beijum")
+# paths_subset(graph, nodes, buildings, tours, lengths, "groningen_Beijum")
 x, y, b_hat, b_hat_n = find_beta(lengths, area)
 line, errors, MAE = results(lengths, x, y, b_hat, area)
 print(
