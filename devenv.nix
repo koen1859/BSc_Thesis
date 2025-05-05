@@ -16,8 +16,8 @@
     postgresql_17
     postgresql17Packages.postgis
     osm2pgsql
-    (pkgs.callPackage ./lkh.nix {})
-    (import ./create_db.nix {inherit pkgs;})
+    (pkgs.callPackage ./dependencies/lkh.nix {})
+    (import ./dependencies/create_db.nix {inherit pkgs;})
   ];
 
   services.postgres = {
