@@ -13,11 +13,8 @@ project/maps/
 *.bbl
 *.blg
 
-# Devenv
+.devenv.flake.nix
+.envrc
 .devenv/
-
-# direnv
 .direnv
-
-# pre-commit
 .pre-commit-config.yaml
