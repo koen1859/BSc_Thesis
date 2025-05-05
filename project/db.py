@@ -1,4 +1,4 @@
-import psycopg2
+import psycopg
 import os
 import ujson
 
@@ -10,7 +10,7 @@ import ujson
 # also the parts that are not in the neighborhood. This is done because otherwise there are
 # some edge cases where connections are missed that should have been there.
 def get_road_data(DB, neighborhood):
-    connection = psycopg2.connect(dbname=DB)
+    connection = psycopg.connect(dbname=DB)
     cursor = connection.cursor()
     cursor.execute(
         f"""
@@ -76,7 +76,7 @@ def get_road_data(DB, neighborhood):
 # so we can just say ST_Within instead of having to make a new object to also fetch the
 # buildings that intersect the boundary (these do not exist).
 def get_addresses(DB, neighborhood):
-    connection = psycopg2.connect(dbname=DB)
+    connection = psycopg.connect(dbname=DB)
     cursor = connection.cursor()
     cursor.execute(
         f"""
@@ -116,7 +116,7 @@ def get_addresses(DB, neighborhood):
 # parks or lakes, or the buildings are only in a small part of the quarter. We need the area
 # of the convex hull around the buildings, as calculated in area.py
 def get_area(DB, neighborhood):
-    connection = psycopg2.connect(dbname=DB)
+    connection = psycopg.connect(dbname=DB)
     cursor = connection.cursor()
     cursor.execute(
         f"""
@@ -137,7 +137,7 @@ def get_area(DB, neighborhood):
 
 
 def get_features(DB, neighborhood, roads, graph, area):
-    connection = psycopg2.connect(dbname=DB)
+    connection = psycopg.connect(dbname=DB)
     cursor = connection.cursor()
     cursor.execute(
         f"""

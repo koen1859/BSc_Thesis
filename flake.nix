@@ -22,20 +22,6 @@
   } @ inputs: let
     system = "x86_64-linux";
     pkgs = nixpkgs.legacyPackages.${system};
-
-    python-env = pkgs.python3.withPackages (ps:
-      with ps; [
-        igraph
-        psycopg2
-        shapely
-        numpy
-        matplotlib
-        folium
-        ujson
-        geopandas
-        scikit-learn
-        pandas
-      ]);
   in {
     devenv-up = self.devShells.${system}.default.config.procfileScript;
     devenv-test = self.devShells.${system}.default.config.test;
@@ -46,7 +32,20 @@
       modules = [
         ({pkgs, ...}: {
           packages = [
-            python-env
+            pkgs.gcc
+            (pkgs.python3.withPackages (ps:
+              with ps; [
+                nuitka
+                psycopg
+                igraph
+                numpy
+                matplotlib
+                folium
+                ujson
+                geopandas
+                scikit-learn
+                pandas
+              ]))
             pkgs.osm2pgsql
             (pkgs.callPackage ./dependencies/lkh.nix {})
             (import ./dependencies/create_db.nix {inherit pkgs;})
