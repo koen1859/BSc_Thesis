@@ -32,10 +32,8 @@
       modules = [
         ({pkgs, ...}: {
           packages = [
-            pkgs.gcc
             (pkgs.python3.withPackages (ps:
               with ps; [
-                nuitka
                 psycopg
                 igraph
                 numpy
