@@ -1,7 +1,8 @@
-I use `devenv` to manage the dependencies for the project, and make a shell. Using `direnv` we 
-can make this shell activate automatically when entering this directory. Then, to start the `postgres`
-service run `devenv up -d`.
-You need to create a directory called `data`, and store the .osm.pbf files from Groningen and
-Noord-Holland in there. These files can be downloaded from here: 
-https://download.geofabrik.de/europe/netherlands.html. First, run `create_db` to create the databases.
-Then, move into the `project` directory and run `python main.py` and the entire project will run.
+- Dependencies
+  All dependencies are listed in the `flake.nix` file. If you use the nix package manager, with flakes enabled, and with `devenv` installed, you can run `nix develop --no-pure-eval`.
+  This will create a shell with all dependencies installed. Then, to start the `postgresql` service, run `devenv up`. If you do not have the nix package manager, just download the
+  packages that are listed in the flake, and start `postgres` manually. I made a small shell script, `dependencies/create_db.nix` to create the databases and fill with OSM data.
+  This data needs to be downloaded from geofabrik, and stored in a directory called `data`.
+
+- How to run
+  First, run `create_db` and all databases get created and filled. Then move into the `project/` directory and run the `main.py` file.
