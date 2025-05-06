@@ -12,6 +12,7 @@ project/maps/
 *.bst
 *.bbl
 *.blg
+project/__pycache__/
 
 .devenv.flake.nix
 .envrc
