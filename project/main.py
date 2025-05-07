@@ -11,7 +11,7 @@ tasks = [
 num_threads = multiprocessing.cpu_count()
 
 with multiprocessing.Pool(num_threads) as pool:
-    results = pool.starmap(run_simulation, tasks)
+    results = pool.starmap(interpret_results, tasks)
 
 final_results = dict(results)
 

@@ -35,7 +35,7 @@ def run_simulation(DB, neighborhood):
 
     solve_tsps(f"tsps_{key}")
     tours, distances = read_tours(f"tsps_{key}")
-    paths_subset(graph, nodes, buildings, tours, distances, DB)
+    paths_subset(graph, nodes, buildings, tours, distances, key)
 
     x, y, b_hat, b = find_beta(distances, area)
     line, errors, mae, mape = results(distances, x, y, b_hat, area)
@@ -61,19 +61,19 @@ def interpret_results(DB, neighborhood):
     nodes = get_nodes(roads)
     edges, weights = get_edges(roads, nodes, buildings)
     graph = make_graph(nodes, buildings, edges, weights)
-    create_map(nodes, buildings, graph, f"{key}.html")
+    # create_map(nodes, buildings, graph, f"{key}.html")
 
     tours, distances = read_tours(f"tsps_{key}")
     paths_subset(graph, nodes, buildings, tours, distances, key)
 
-    x, y, b_hat, b = find_beta(distances, area)
-    line, errors, mae, mape = results(distances, x, y, b_hat, area)
-    scatterplot(distances, x, y, b_hat, line, f"scatter_{key}.png")
-    errorsplot(errors, f"errors_{key}.png")
-
+    # x, y, b_hat, b = find_beta(distances, area)
+    # line, errors, mae, mape = results(distances, x, y, b_hat, area)
+    # scatterplot(distances, x, y, b_hat, line, f"scatter_{key}.png")
+    # errorsplot(errors, f"errors_{key}.png")
+    #
     print(f"Solved TSPs for {key}")
-
-    return (key, [b_hat, mae, mape, area, line])
+    #
+    # return (key, [b_hat, mae, mape, area, line])
 
 
 def run_ml():

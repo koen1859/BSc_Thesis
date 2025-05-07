@@ -20,9 +20,9 @@ def route(graph, locations):
 # folim, and saves to a html file so it can be viewed and interacted with from a browser.
 # It also displays the total length of the path, if you click on a marker.
 def plot_route(nodes, buildings, locations, path, distance, filename):
-    m = folium.Map(location=[53.2194, 6.5665], zoom_start=12)
     all_nodes = {**nodes, **buildings}
     path_coords = [all_nodes[index] for index in path]
+    m = folium.Map(location=list(path_coords)[0], zoom_start=12)
     folium.PolyLine(path_coords, color="red", weight=4.5).add_to(m)
     for i in range(len(locations)):
         folium.Marker(
@@ -44,4 +44,4 @@ def paths_subset(graph, nodes, buildings, tours, distances, city):
     locations = tours[i][0]
     distance = distances[i][0]
     path = route(graph, locations)
-    plot_route(nodes, buildings, locations, path, distance, f"TSP_{city}_{i}.html")
+    plot_route(nodes, buildings, locations, path, distance, f"TSP_{city}_{i}")
