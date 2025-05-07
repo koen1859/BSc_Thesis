@@ -1,3 +1,5 @@
+import math
+import json
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import (
@@ -7,8 +9,8 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import train_test_split
 import pandas as pd
-import math
-import json
+import ujson
+import numpy as np
 
 
 def linear_model(df):
@@ -37,14 +39,22 @@ def predict_path_lengths(y_pred):
     with open("final_results.json") as f:
         final_results = json.load(f)
     ml_results = {}
+    maes, mapes = [], []
 
     for neighborhood in y_pred.index:
-        area = final_results[neighborhood][2]
+        area = final_results[neighborhood][3]
+        line = final_results[neighborhood][4]
         b_hat_pred = y_pred[neighborhood]
         line_pred = [b_hat_pred * math.sqrt(n * area) for n in sorted_keys]
-        line = final_results[neighborhood][3]
         mae = mean_absolute_error(line, line_pred)
         mape = mean_absolute_percentage_error(line, line_pred)
         ml_results[neighborhood] = (mae, mape)
+        maes.append(mae)
+        mapes.append(mape)
 
-    json.dump(ml_results)
+    ml_results["average"] = (np.mean(maes), np.mean(mapes))
+
+    with open("ml_results.json", "w") as f:
+        ujson.dump(ml_results, f)
+
+    return ml_results

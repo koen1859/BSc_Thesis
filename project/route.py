@@ -1,4 +1,6 @@
+import os
 import folium
+import random
 
 
 # This function takes a set of locations that form a sorted tour (i.e. a tsp solutions),
@@ -27,7 +29,8 @@ def plot_route(nodes, buildings, locations, path, distance, filename):
             all_nodes[locations[i]],
             popup=f"The total route distance is {round(distance / 1000, 3)}km.",
         ).add_to(m)
-    m.save(f"maps/{filename}")
+    os.makedirs("routes", exist_ok=True)
+    m.save(f"routes/{filename}.html")
 
 
 # This function puts the previous two together. We have solved a bunch of TSPS, of course plotting
@@ -37,8 +40,8 @@ def plot_route(nodes, buildings, locations, path, distance, filename):
 # If you want you can always uncomment this part in the loop, to make some visualisations of the
 # tsps paths.
 def paths_subset(graph, nodes, buildings, tours, distances, city):
-    for i in tours.keys():
-        locations = tours[i][0]
-        distance = distances[i][0]
-        path = route(graph, locations)
-        plot_route(nodes, buildings, locations, path, distance, f"TSP_{city}_{i}.html")
+    i = random.choice(list(tours.keys()))
+    locations = tours[i][0]
+    distance = distances[i][0]
+    path = route(graph, locations)
+    plot_route(nodes, buildings, locations, path, distance, f"TSP_{city}_{i}.html")

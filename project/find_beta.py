@@ -5,6 +5,10 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+from sklearn.metrics import (
+    mean_absolute_error,
+    mean_absolute_percentage_error,
+)
 
 
 # This function estimates beta. b_hat is the average beta over all simulations in the
@@ -34,9 +38,15 @@ def results(lengths, x, y, b_hat, area):
     sorted_keys = sorted(lengths.keys())
     line = [b_hat * math.sqrt(n * area) for n in sorted_keys]
     errors = [line[sorted_keys.index(x[i])] - y[i] for i in range(len(x))]
-    MAE = np.mean(np.mean(np.abs(errors)) / line)
 
-    return line, errors, MAE
+    y_pred = [line[sorted_keys.index(xi)] for xi in x]
+    mae = mean_absolute_error(y, y_pred)
+    mape = mean_absolute_percentage_error(y, y_pred)
+
+    # mae = np.mean(np.abs(errors))
+    # mape = np.mean(np.mean(np.abs(errors)) / line)
+
+    return line, errors, mae, mape
 
 
 # This function makes scatterplot of all tsp path lengths and their n, and the line that

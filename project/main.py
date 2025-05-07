@@ -20,16 +20,16 @@ with open("final_results.json", "w") as f:
 
 
 with open("beta_values.tex", "w") as f:
-    f.write("\\begin{longtable}{llcc}\n")
+    f.write("\\begin{longtable}{llccc}\cn")
     f.write(
         "\\caption{Empirical estimates for $\\beta$ in selected neighborhoods.} \\label{tab:results}\\\\\n"
     )
     f.write("\\hline\n")
-    f.write("Province & Neighborhood & $\\beta$ & MAE \\\\\n")
+    f.write("Province & Neighborhood & $\\beta$ & MAE (m) & MAPE (\\%) \\\\\n")
     f.write("\\hline\n")
     f.write("\\endfirsthead\n")
     f.write("\\hline\n")
-    f.write("Province & Neighborhood & $\\beta$ & MAE \\\\\n")
+    f.write("Province & Neighborhood & $\\beta$ & MAE (m) & MAPE (\\%) \\\\\n")
     f.write("\\hline\n")
     f.write("\\endhead\n")
 
@@ -37,7 +37,9 @@ with open("beta_values.tex", "w") as f:
         db, neighborhood = key.split("-", 1)
         neighborhood = neighborhood.replace("_", " ")
         db = db.replace("_", " ")
-        f.write(f"{db} & {neighborhood} & {values[0]:.4f} & {values[1]:.4f} \\\\\n")
+        f.write(
+            f"{db} & {neighborhood} & {values[0]:.4f} & {values[1]:.4f} & {values[2]:.4f} \\\\\n"
+        )
 
     f.write("\\hline\n")
     f.write("\\end{longtable}\n")
