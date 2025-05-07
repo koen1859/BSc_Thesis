@@ -40,9 +40,9 @@ def run_simulation(DB, neighborhood):
     errorsplot(errors, f"errors_{DB}_{neighborhood}")
 
     key = f"{DB}-{neighborhood}"
-    print(f"Solved TSPs for {DB} {neighborhood}")
+    print(f"Solved TSPs for {key}")
 
-    return (key, [b_hat, MAE])
+    return (key, [b_hat, MAE, area, line])
 
 
 def interpret_results(DB, neighborhood):
