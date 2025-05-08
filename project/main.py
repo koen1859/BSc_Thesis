@@ -25,11 +25,11 @@ with open("beta_values.tex", "w") as f:
         "\\caption{Empirical estimates for $\\beta$ in selected neighborhoods.} \\label{tab:results}\\\\\n"
     )
     f.write("\\hline\n")
-    f.write("Province & Neighborhood & $\\beta$ & MAE (m) & MAPE (\\%) \\\\\n")
+    f.write("Province-Neighborhood & $\\beta$ & MAE (m) & MAPE (\\%) \\\\\n")
     f.write("\\hline\n")
     f.write("\\endfirsthead\n")
     f.write("\\hline\n")
-    f.write("Province & Neighborhood & $\\beta$ & MAE (m) & MAPE (\\%) \\\\\n")
+    f.write("Province-Neighborhood & $\\beta$ & MAE (m) & MAPE (\\%) \\\\\n")
     f.write("\\hline\n")
     f.write("\\endhead\n")
 
@@ -38,7 +38,7 @@ with open("beta_values.tex", "w") as f:
         neighborhood = neighborhood.replace("_", " ")
         db = db.replace("_", " ")
         f.write(
-            f"{db} & {neighborhood} & {values[0]:.4f} & {values[1]:.4f} & {values[2]:.4f} \\\\\n"
+            f"{db}-{neighborhood} & {values[0]:.4f} & {values[1]:.4f} & {values[2]:.4f} \\\\\n"
         )
 
     f.write("\\hline\n")

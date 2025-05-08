@@ -20,36 +20,37 @@
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage[numbib]{tocbibind}
+\usepackage{adjustbox}
 
 \bibliographystyle{rug-econometrics}
 \settocbibname{References}
 
 \lstdefinelanguage{SQL}{
-    keywords={SELECT, FROM, WHERE, INSERT, INTO, UPDATE, DELETE, CREATE, TABLE, ALTER, DROP, JOIN, ON, AND, OR, NOT, NULL, PRIMARY, KEY},
-    keywordstyle=\color{blue}\bfseries,
-    comment=[l]{--},
-    commentstyle=\color{gray}\ttfamily,
-    stringstyle=\color{red},
-    morestring=[b]',
-    morestring=[b]"
+	keywords={SELECT, FROM, WHERE, INSERT, INTO, UPDATE, DELETE, CREATE, TABLE, ALTER, DROP, JOIN, ON, AND, OR, NOT, NULL, PRIMARY, KEY},
+	keywordstyle=\color{blue}\bfseries,
+	comment=[l]{--},
+	commentstyle=\color{gray}\ttfamily,
+	stringstyle=\color{red},
+	morestring=[b]',
+	morestring=[b]"
 }
 
 \lstdefinelanguage{Python}{
-    keywords={def, return, if, elif, else, while, for, in, try, except, finally, with, as, import, from, class, pass, break, continue, and, or, not, is, None, True, False, lambda, yield, global, nonlocal, assert, raise},
-    keywordstyle=\color{blue}\bfseries,
-    comment=[l]\#,
-    commentstyle=\color{gray}\ttfamily,
-    stringstyle=\color{red},
-    morestring=[b]',
-    morestring=[b]"
+	keywords={def, return, if, elif, else, while, for, in, try, except, finally, with, as, import, from, class, pass, break, continue, and, or, not, is, None, True, False, lambda, yield, global, nonlocal, assert, raise},
+	keywordstyle=\color{blue}\bfseries,
+	comment=[l]\#,
+	commentstyle=\color{gray}\ttfamily,
+	stringstyle=\color{red},
+	morestring=[b]',
+	morestring=[b]"
 }
 
 \lstset{
-    basicstyle=\ttfamily,
-    columns=fullflexible,
-    language=SQL,
-    frame=single,
-    backgroundcolor=\color{gray!10}
+	basicstyle=\ttfamily,
+	columns=fullflexible,
+	language=SQL,
+	frame=single,
+	backgroundcolor=\color{gray!10}
 }
 
 \setlength{\parindent}{0pt}     % No paragraph indentation
@@ -78,7 +79,7 @@
 \renewcommand{\P}[1]{\,\mathbb{P}\left\{#1\right\}}
 \renewcommand{\cos}[1]{\text{cos}\left[#1\right]}
 \newcommand{\fat}[1]{\ThisStyle{\hstretch{1.2}{\ooalign{%
-  \kern.46pt$\SavedStyle#1$\cr\kern.33pt$\SavedStyle#1$\cr%
-  \kern.2pt$\SavedStyle#1$\cr$\SavedStyle#1$}}}}
+				\kern.46pt$\SavedStyle#1$\cr\kern.33pt$\SavedStyle#1$\cr%
+				\kern.2pt$\SavedStyle#1$\cr$\SavedStyle#1$}}}}
 \renewcommand{\ln}[1]{\,\mathrm{ln}\left[#1\right]}
 \newcommand*{\B}[1]{\ifmmode\bm{#1}\else\textbf{#1}\fi}
