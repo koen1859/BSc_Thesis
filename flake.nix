@@ -29,30 +29,34 @@
       inherit inputs pkgs;
 
       modules = [
-        ({pkgs, ...}: {
-          packages = [
-            (pkgs.python3.withPackages (ps:
-              with ps; [
-                psycopg
-                igraph
-                numpy
-                matplotlib
-                folium
-                ujson
-                geopandas
-                scikit-learn
-                pandas
-              ]))
-            pkgs.osm2pgsql
-            (pkgs.callPackage ./dependencies/lkh.nix {})
-            (import ./dependencies/create_db.nix {inherit pkgs;})
-          ];
-          services.postgres = {
-            enable = true;
-            package = pkgs.postgresql_17;
-            extensions = extensions: with extensions; [postgis];
-          };
-        })
+        (
+          {pkgs, ...}: {
+            packages = [
+              (
+                pkgs.python3.withPackages (ps:
+                  with ps; [
+                    psycopg
+                    igraph
+                    numpy
+                    matplotlib
+                    folium
+                    ujson
+                    geopandas
+                    scikit-learn
+                    pandas
+                  ])
+              )
+              pkgs.osm2pgsql
+              (pkgs.callPackage ./dependencies/lkh.nix {})
+              (import ./dependencies/create_db.nix {inherit pkgs;})
+            ];
+            services.postgres = {
+              enable = true;
+              package = pkgs.postgresql_17;
+              extensions = extensions: with extensions; [postgis];
+            };
+          }
+        )
       ];
     };
   };
