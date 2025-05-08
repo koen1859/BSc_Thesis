@@ -39,7 +39,7 @@ def predict_path_lengths(y_pred):
     with open("final_results.json") as f:
         final_results = json.load(f)
     ml_results = {}
-    maes, mapes = [], []
+    maes, mapes, b_hat_preds = [], [], []
 
     for neighborhood in y_pred.index:
         area = final_results[neighborhood][3]
@@ -48,13 +48,11 @@ def predict_path_lengths(y_pred):
         line_pred = [b_hat_pred * math.sqrt(n * area) for n in sorted_keys]
         mae = mean_absolute_error(line, line_pred)
         mape = mean_absolute_percentage_error(line, line_pred)
-        ml_results[neighborhood] = (mae, mape)
+        ml_results[neighborhood] = (b_hat_pred, mae, mape)
+        b_hat_preds.append(b_hat_pred)
         maes.append(mae)
         mapes.append(mape)
 
-    ml_results["average"] = (np.mean(maes), np.mean(mapes))
-
-    with open("ml_results.json", "w") as f:
-        ujson.dump(ml_results, f)
+    ml_results["average"] = (np.mean(b_hat_preds), np.mean(maes), np.mean(mapes))
 
     return ml_results

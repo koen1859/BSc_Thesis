@@ -52,32 +52,31 @@ def run_simulation(DB, neighborhood):
 # written to the disk.
 def interpret_results(DB, neighborhood):
     key = f"{DB}-{neighborhood}"
-    roads = get_road_data(DB, neighborhood)
+    # roads = get_road_data(DB, neighborhood)
 
     building_data = get_addresses(DB, neighborhood)
     buildings = get_buildings(building_data)
     area = get_area(buildings)
 
-    nodes = get_nodes(roads)
-    edges, weights = get_edges(roads, nodes, buildings)
-    graph = make_graph(nodes, buildings, edges, weights)
-    # create_map(nodes, buildings, graph, f"{key}.html")
+    # nodes = get_nodes(roads)
+    # edges, weights = get_edges(roads, nodes, buildings)
+    # graph = make_graph(nodes, buildings, edges, weights)
 
     tours, distances = read_tours(f"tsps_{key}")
-    paths_subset(graph, nodes, buildings, tours, distances, key)
+    # paths_subset(graph, nodes, buildings, tours, distances, key)
 
-    # x, y, b_hat, b = find_beta(distances, area)
-    # line, errors, mae, mape = results(distances, x, y, b_hat, area)
+    x, y, b_hat, b = find_beta(distances, area)
+    line, errors, mae, mape = results(distances, x, y, b_hat, area)
     # scatterplot(distances, x, y, b_hat, line, f"scatter_{key}.png")
     # errorsplot(errors, f"errors_{key}.png")
-    #
+
     print(f"Solved TSPs for {key}")
-    #
-    # return (key, [b_hat, mae, mape, area, line])
+
+    return (key, [b_hat, mae, mape, area, line])
 
 
 def run_ml():
     df = features_df()
     r2, mae, mape, y_test, y_pred = linear_model(df)
-    predict_path_lengths(y_pred)
-    return r2, mae, mape, y_test, y_pred
+    ml_results = predict_path_lengths(y_pred)
+    return ml_results
