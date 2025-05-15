@@ -44,7 +44,7 @@ def run_simulation(DB, neighborhood):
 
     print(f"Solved TSPs for {key}")
 
-    return (key, [b_hat, mae, mape, area, line])
+    return (key, [b_hat, mae, mape, area, x, y])
 
 
 # The same as the above function but just without creating and solving new TSPs,
@@ -72,11 +72,11 @@ def interpret_results(DB, neighborhood):
 
     print(f"Solved TSPs for {key}")
 
-    return (key, [b_hat, mae, mape, area, line])
+    return (key, [b_hat, mae, mape, area, x, y])
 
 
 def run_ml():
     df = features_df()
     r2, mae, mape, y_test, y_pred = linear_model(df)
-    ml_results = predict_path_lengths(y_pred)
-    return ml_results
+    # ml_results = predict_path_lengths(y_pred)
+    return r2, mae, mape, y_test, y_pred

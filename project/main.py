@@ -11,11 +11,12 @@ tasks = [
 num_threads = multiprocessing.cpu_count()
 
 with multiprocessing.Pool(num_threads) as pool:
-    results = pool.starmap(run_simulation, tasks)
+    results = pool.starmap(interpret_results, tasks)
 
 final_results = dict(results)
 make_results_table(final_results)
 
 print("ML to estimate beta...")
-ml_results = run_ml()
-make_ml_table(ml_results)
+r2, mae, mape, y_test, y_pred = run_ml()
+print(r2, mae, mape, y_test, y_pred)
+# make_ml_table(ml_results)

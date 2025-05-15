@@ -15,13 +15,30 @@ def features_df():
             area_name = filename.replace(".json", "").replace("'", "")
             with open(os.path.join(features_dir, filename)) as f:
                 features = json.load(f)
-            beta = final_results.get(area_name, [None])[0]
-            features["area"] = area_name
-            features["beta"] = beta
-            data.append(features)
+            # beta = final_results.get(area_name, [None])[0]
+            # features["area"] = area_name
+            # features["beta"] = beta
+            # data.append(features)
+
+            result = final_results.get(area_name)
+            if result is None:
+                continue
+
+            beta, mae, mape, area, x, y = result
+
+            if len(x) != len(y):
+                continue
+
+            for x, y in zip(x, y):
+                row = {
+                    "area": area_name,
+                    "n": x,
+                    "TSP length": y,
+                }
+                row.update(features)
+                data.append(row)
 
     df = pd.DataFrame(data)
     df.set_index("area", inplace=True)
-    df.dropna(subset=["beta"], inplace=True)
     df.fillna(0, inplace=True)
     return df

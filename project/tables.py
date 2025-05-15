@@ -1,3 +1,6 @@
+import ujson
+
+
 def make_results_table(final_results):
     with open("final_results.json", "w") as f:
         ujson.dump(final_results, f)

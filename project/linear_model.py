@@ -14,8 +14,8 @@ import numpy as np
 
 
 def linear_model(df):
-    y = df["beta"]
-    X = df.drop(columns=["beta"])
+    y = df["TSP length"]
+    X = df.drop(columns=["TSP length"])
 
     scaler = StandardScaler()
     X_scaled = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index=X.index)

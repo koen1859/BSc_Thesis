@@ -1,7 +1,8 @@
 import math
 
 import matplotlib
-matplotlib.use('Agg')
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import os
@@ -42,9 +43,6 @@ def results(lengths, x, y, b_hat, area):
     y_pred = [line[sorted_keys.index(xi)] for xi in x]
     mae = mean_absolute_error(y, y_pred)
     mape = mean_absolute_percentage_error(y, y_pred)
-
-    # mae = np.mean(np.abs(errors))
-    # mape = np.mean(np.mean(np.abs(errors)) / line)
 
     return line, errors, mae, mape
 
