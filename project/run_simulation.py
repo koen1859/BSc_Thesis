@@ -10,7 +10,7 @@ from read_tour import read_tours
 from route import paths_subset
 from find_beta import find_beta, results, scatterplot, errorsplot
 from features_df import features_df
-from linear_model import linear_model, predict_path_lengths
+from ml_model import random_forest
 
 
 # This is the main simulation function. It creates, solves,
@@ -77,6 +77,5 @@ def interpret_results(DB, neighborhood):
 
 def run_ml():
     df = features_df()
-    r2, mae, mape, y_test, y_pred = linear_model(df)
-    # ml_results = predict_path_lengths(y_pred)
+    r2, mae, mape, y_test, y_pred = random_forest(df)
     return r2, mae, mape, y_test, y_pred
