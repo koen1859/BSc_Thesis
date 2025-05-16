@@ -62,6 +62,8 @@ def interpret_results(DB, neighborhood):
     # edges, weights = get_edges(roads, nodes, buildings)
     # graph = make_graph(nodes, buildings, edges, weights)
 
+    # get_features(DB, neighborhood, roads, graph, area)
+
     tours, distances = read_tours(f"tsps_{key}")
     # paths_subset(graph, nodes, buildings, tours, distances, key)
 

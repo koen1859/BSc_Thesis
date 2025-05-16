@@ -185,10 +185,29 @@ def get_features(DB, neighborhood, roads, graph, area):
                 'fitness_station', 'sports_hall', 'dog_park'
             )
         ),
+        landuse AS (
+            SELECT w.id,
+            w.tags->>'landuse' AS type,
+            ST_MakeLine(ARRAY(
+                    SELECT ST_SetSRID(ST_MakePoint(n.lon / 1e7, n.lat / 1e7), 4326)
+                    FROM unnest(w.nodes) WITH ORDINALITY AS u(node_id, ordinality)
+                    JOIN planet_osm_nodes n ON n.id = u.node_id
+                    ORDER BY u.ordinality
+                )) AS geom
+            FROM planet_osm_ways w
+            WHERE w.tags->>'landuse' IN (
+                'landfill', 'greenhouse_horticulture', 'animal_keeping', 'meadow', 'harbour', 'railway', 'farmyard', 'stockpile', 'education', 'quarry', 'vineyard', 
+                'cemetery', 'static_caravan', 'plant_nursery', 'brownfield', 'forest', 'commercial', 'basin', 'retail', 'farmland', 'industrial', 'garages', 'grass', 
+                'construction', 'religious', 'recreation_ground', 'military', 'depot', 'village_green', 'greenfield', 'residential', 'houseboat', 'flowerbed', 'orchard', 
+                'allotments'
+            )
+        ),
         features AS (
             SELECT * FROM natural_features
             UNION ALL
             SELECT * FROM leisure
+            UNION ALL
+            SELECT * FROM landuse
         ),
         filtered_features AS (
             SELECT f.*

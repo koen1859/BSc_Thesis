@@ -1,6 +1,7 @@
 import os
 import json
 import pandas as pd
+from psycopg import rows
 
 
 def features_df():
@@ -15,10 +16,6 @@ def features_df():
             area_name = filename.replace(".json", "").replace("'", "")
             with open(os.path.join(features_dir, filename)) as f:
                 features = json.load(f)
-            # beta = final_results.get(area_name, [None])[0]
-            # features["area"] = area_name
-            # features["beta"] = beta
-            # data.append(features)
 
             result = final_results.get(area_name)
             if result is None:
@@ -41,4 +38,5 @@ def features_df():
     df = pd.DataFrame(data)
     df.set_index("area", inplace=True)
     df.fillna(0, inplace=True)
+    print(f"df has {df.shape[0]} observations of {df.shape[1]} variables.")
     return df
