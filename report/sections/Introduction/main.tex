@@ -19,9 +19,9 @@ minimal data and computational effort.
 There is extensive research on such approximation methods and how they perform in the Euclidean
 plane.
 Consider $n$ uniformly drawn locations from some area in $\mathbb{R}^2$ with area $A$.
-\citet{beardwood1959shortest} prove the relation:
+\citet{beardwood1959shortest} find the relation:
 \begin{align}
-	L \to \beta \sqrt{nA}, \quad \text{as } n \to \infty
+	\frac{L}{\sqrt n} \to \beta \sqrt{A}, \quad \text{as } n \to \infty
 	\label{eq:beardwood}
 \end{align}
 as an estimation for the length of the shortest TSP path measured by Euclidean distance through
@@ -40,13 +40,15 @@ areas is compared.
 
 The core contributions of this research are:
 \begin{enumerate}
-	\item An analysis of the BHH formula under more realistic conditions, specifically:
+	\item An analysis of the BHH formula under the following conditions:
 	      \begin{enumerate}
-		      \item Relaxing the assumption of uniformly drawn locations. In this research,
-		            the locations are drawn from the set of postcodes in the area in question;
-		      \item Applied to realistically sized real-world parts of cities and villages in the Netherlands;
+		      \item The locations are drawn from the set of postcodes in the area in question, a relaxation of the uniform distribution of visited
+		            locations. In reality, delivery locations for companies are not uniformly distributed across the delivery area, but they are clustered
+		            in certain parts of the area, for example in highrise buildings;
+		      \item Applied to realistically sized (in the sense that a delivery person could serve this area in a single workday) real-world parts of
+		            cities and villages in the Netherlands;
 	      \end{enumerate}
-	\item A machine learning analysis to investigate how well the optimal TSP path length can be 
+	\item A machine learning analysis to investigate how well the optimal TSP path length can be
 	      predicted, based on features of the area the path is in, including road network density,
 	      address density and other natural and man-made features of the area.
 \end{enumerate}
@@ -55,5 +57,5 @@ have to download the OpenStreetMap \citep{openstreetmap} for another part of the
 to apply it to. The source code of this project is available on
 \href{https://github.com/koen1859/Bsc_Thesis}{GitHub}.
 
-In section 2 a deep dive in the context and previous research in this field is provided.
+In section 2 the context and previous research in this field is provided.
 In section 3 the experimental design is documented.

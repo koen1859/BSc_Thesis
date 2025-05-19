@@ -10,7 +10,7 @@ This data can be downloaded from Geofabrik, and then exported to a \url{PostgreS
 For this analysis, the database has three interesting tables: 
 \url{planet_osm_polygon}, \url{planet_osm_nodes} and \url{planet_osm_ways}.
 
-A large number of neighborhoods multiple towns and villages in the Netherlands have a polygon 
+Many of neighborhoods in the Netherlands have a polygon 
 defined in the data. In OpenStreetMap a polygon is a closed shape formed by a set of geographic coordinates 
 (\url{nodes}) that are connected by lines (\url{ways}). These objects can be used to define boundaries of
 geographic areas, such as lakes, parks, nature reserves and parts of cities and villages. In this
@@ -24,7 +24,7 @@ In the \url{tags}, a large amount of
 information about the way is stored, for instance whether it is a 
 one-way road, or the type of road that it is, i.e. primary, or trunk.
 The information about the roads that are needed for this analysis is the
-road id, the ids of the nodes the road consists of, the coordinates
+road ID, the IDs of the nodes the road consists of, the coordinates
 (Latitude, Longitude) of these nodes, and whether the road is a one-way
 road.
 
@@ -33,6 +33,6 @@ a large amount of other objects are stored as well. For this analysis,
 the potential delivery locations need to be extracted. Some of these 
 nodes have a postcode defined, which can be used to extract all buildings
 that a potential delivery could take place. This way, for example a little shed in 
-someones backyard is also filtered out, since this does not have its own 
-postcode. For this research only the node id and the coordinates are
+someone's backyard is also filtered out, since this does not have its own 
+postcode. For this research only the node ID and the coordinates are
 needed.

@@ -1,28 +1,30 @@
 \subsection{Data processing}
-In listing \ref{lst:sql-roads} (Appendix), the query that is used to extract
-all roads in an area is listed. This query is used inside an \url{f-string}
-in \url{Python}, to be able to loop over the different areas and extract
-the roads from it. Note that a buffer of a few meters around the neighborhood
-is used for the filtering, since otherwise this results in edge cases,
-where a road is ever so slightly more to the outside of the area than the boundary,
-and it would get left out. \url{ST_Intersects} is used to extract all roads
-that are at least partly inside or on the boundary. A similar query is used
-to extract the nodes, but this is easier since for a building which is only
-defined by a single node, it is not needed to define a new geometry object.
+% Listing \ref{lst:sql-roads} (Appendix) provides the query that is used to extract
+% all roads in an area is listed. This query is used inside a \url{f-string}
+% in \url{Python}, to be able to loop over the different areas and extract
+% the roads from it. Note that a buffer of a few meters around the neighborhood
+% is used for the filtering, since otherwise this results in edge cases,
+% where a road is ever so slightly more to the outside of the area than the boundary,
+% and it would get left out. \url{ST_Intersects} is used to extract all roads
+% that are at least partly inside or on the boundary. A similar query is used
+% to extract the nodes, but this is easier since for a building which is only
+% defined by a single node, it is not needed to define a new geometry object.
 
 One of the predictors of the TSP path length, is the area of the neighborhood
 the locations are drawn from. The OSM data provides the area of the polygons,
 but this value can not be used to predict TSP path length effectively.
 This value is a heavy overestimation of the correct value for $A$.
-In many cases, there are parts of the neighborhood that do not contain
-any buildings, for instance when there is a park in the neighborhood. To
-account for this, the value for $A$ that is used, is the area of the convex
+For many of the quarters, there is some area around where the buildings are, included in the quarter.
+To account for this, the value for $A$ that is used, is the area of the convex
 hull around all buildings, which is calculated using the \url{shapely}
 module in \url{Python}. As an example visualization, figure \ref{fig:binnenstad_quarter} displays
 how the quarter for the inner city of Groningen is defined in OpenStreetMap. Using the area of this
 entire quarter would be an overestimation. A significant portion of this area is the canal and outer
 road around the inner city. There are many examples of quarters where this overestimation is even
-more significant than this.
+more significant than this. Note that this is still not a good estimate for $A$ in some cases,
+for example when there is and area inside the neighborhood without addresses (for example a park or lake) 
+in the neighborhood. When using the convex hull, this area (or at least a portion of it) is still included
+in $A$, which is not correct.
 \begin{figure}[H]
 	\caption{The OpenStreetMap quarter for the inner city of Groningen (Binnenstad). \citep{openstreetmap}}
 	\label{fig:binnenstad_quarter}
@@ -55,7 +57,7 @@ efficient, but only works when the points the distance is calculated between is 
 that the rounding of the earth does not have a significant effect on the true distance.
 The nodes are all close enough together, so the effect of the
 rounding of earth's surface is negligible. Let $A$ and $B$ be two nodes,
-and $(x_A,y_A)$, $(x_B),y_B)$ be their coordinates, in \url{radians}. Let $R=6,371,000$ meters,
+and $(x_A,y_A)$, $(x_B,y_B)$ be their coordinates, in \url{radians}. Let $R=6,371,000$ meters,
 Earth's radius. Then the distance between these nodes (the weight of the edge connecting them),
 using the equirectangular approximation is:
 \begin{align}
