@@ -1,25 +1,4 @@
-\subsection{Processing}
-One of the predictors of the TSP path length, is the area of the neighborhood
-the locations are drawn from. The OSM data provides the area of the polygons,
-but this value can not be used to predict TSP path length effectively.
-This value is a heavy overestimation of the correct value for $A$.
-For many of the quarters, there is some area around where the buildings are, included in the quarter.
-To account for this, the value for $A$ that is used, is the area of the convex
-hull around all buildings, which is calculated using the \url{shapely}
-module in \url{Python}. As an example visualization, figure \ref{fig:binnenstad_quarter} displays
-how the quarter for the inner city of Groningen is defined in OpenStreetMap. Using the area of this
-entire quarter would be an overestimation. A significant portion of this area is the canal and outer
-road around the inner city. There are many examples of quarters where this overestimation is even
-more significant than this. Note that this is still not a good estimate for $A$ in some cases,
-for example when there is and area inside the neighborhood without addresses (for example a park or lake)
-in the neighborhood. When using the convex hull, this area (or at least a portion of it) is still included
-in $A$, which is still not the optimal way of calculating the area, although still better than using the
-pre-defined area in the data.
-\begin{figure}[H]
-	\caption{The OpenStreetMap quarter for the inner city of Groningen (Binnenstad). \citep{openstreetmap}}
-	\label{fig:binnenstad_quarter}
-	\includegraphics[width=\textwidth]{Pictures/Binnenstad_quarter.png}
-\end{figure}
+\subsection{Graph construction}
 Using the geographic information of the roads and buildings, a graph
 is constructed for each neighborhood, using the \url{igraph} module in \url{Python}. This graph
 connects all buildings to each other over the road network. First, using the information about the
@@ -29,7 +8,7 @@ since all roads already have an ordered list of nodes defined. The subsequent no
 be stored as pairs, and all edges are defined.
 
 When the road network is defined as a set of nodes and edges, the next step is to connect the buildings
-to the road network. This needs to be done manually, since no data is stored in OpenStreetMap
+to the road network. This needs to be implemented manually, since no data is stored in OpenStreetMap
 about to which road the buildings belong. This algorithm needs to be very efficient, since many
 buildings are added in each area. An R-tree can be used to accomplish this efficiency.
 An R-tree is a dynamic index structure that is able to retrieve data items quickly according to
@@ -57,7 +36,7 @@ using the equirectangular approximation is:
 	\text{and }\theta    & =\theta_B-\theta_A.
 \end{align}
 
-Using the \url{folium} module in \url{Python}, such a graph can be projected back onto the world map.
+Using the \url{folium} module in \url{Python}, such a graph can be visualized on a geographic map.
 One of such visualizations is provided in figure \ref{fig:overtoomse_sluis}. All maps like this one,
 for the areas in this analysis can be viewed and interacted with via this
 \href{https://koenstevens.nl/projects/BSc_thesis/maps/}{\url{webpage}}.
@@ -67,5 +46,39 @@ for the areas in this analysis can be viewed and interacted with via this
 	\includegraphics[width=\textwidth]{Pictures/Overtoomse_Sluis_roads.png}
 \end{figure}
 
-Additionally, a number of features is extracted, to be able to perform the machine learning analysis.
-In total, for each area information about 80 features is gathered.
+\subsection{Extracting features}
+One of the predictors of the TSP path length, is the area of the neighborhood
+the locations are drawn from. The OSM data provides the area of the polygons,
+but this value can not be used to predict TSP path length effectively.
+This value significantly overestimates the correct value for $A$.
+For many of the quarters, there is some area around where the buildings are, included in the quarter.
+To account for this, the value for $A$ that is used, is the area of the convex
+hull around all buildings, which is calculated using the \url{shapely}
+module in \url{Python}. As an example visualization, figure \ref{fig:binnenstad_quarter} displays
+how the quarter for the inner city of Groningen is defined in OpenStreetMap. Using the area of this
+entire quarter would be an overestimation. A significant portion of this area is the canal and outer
+road around the inner city. There are many examples of quarters where this overestimation is even
+more significant than this. Note that this is still not a good estimate for $A$ in some cases,
+for example when there is and area inside the neighborhood without addresses (for example a park or lake)
+in the neighborhood. When using the convex hull, this area (or at least a portion of it) is still included
+in $A$, which is still not the optimal way of calculating the area, although still better than using the
+pre-defined area in the data.
+\begin{figure}[H]
+	\caption{The OpenStreetMap quarter for the inner city of Groningen (Binnenstad). \citep{openstreetmap}}
+	\label{fig:binnenstad_quarter}
+	\includegraphics[width=\textwidth]{Pictures/Binnenstad_quarter.png}
+\end{figure}
+
+While the area of a neighborhood is an important predictor, it is only one of many features considered in this analysis.
+To train a supervised learning model that predicts the TSP path length based on neighborhood characteristics, a comprehensive set
+of features needs to be extracted.
+
+In total, approximately 80 features are gathered for each neighborhood. These features describe various aspects of the built environment, infrastructure,
+and spatial distribution of delivery locations. They fall broadly into the following categories:
+
+\begin{itemize}
+	\item \textbf{Geographic features:} Including the area of the convex hull around all postcodes, characteristics such as how much water or how many parks,
+	      and land use (i.e. residential or commercial).
+	\item \textbf{Building characteristics:} number of buildings divided by the area of the convex hull.
+	\item \textbf{Road network metrics:} Percentage of roads that are one-way, total length of road network divided by the area of the convex hull.
+\end{itemize}

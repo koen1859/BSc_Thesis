@@ -52,25 +52,25 @@ def run_simulation(DB, neighborhood):
 # written to the disk.
 def interpret_results(DB, neighborhood):
     key = f"{DB}-{neighborhood}"
-    # roads = get_road_data(DB, neighborhood)
+    roads = get_road_data(DB, neighborhood)
 
     building_data = get_addresses(DB, neighborhood)
     buildings = get_buildings(building_data)
     area = get_area(buildings)
 
-    # nodes = get_nodes(roads)
-    # edges, weights = get_edges(roads, nodes, buildings)
-    # graph = make_graph(nodes, buildings, edges, weights)
+    nodes = get_nodes(roads)
+    edges, weights = get_edges(roads, nodes, buildings)
+    graph = make_graph(nodes, buildings, edges, weights)
 
-    # get_features(DB, neighborhood, roads, graph, area)
+    get_features(DB, neighborhood, roads, graph, area)
 
     tours, distances = read_tours(f"tsps_{key}")
     # paths_subset(graph, nodes, buildings, tours, distances, key)
 
     x, y, b_hat, b = find_beta(distances, area)
     line, errors, mae, mape = results(distances, x, y, b_hat, area)
-    # scatterplot(distances, x, y, b_hat, line, f"scatter_{key}.png")
-    # errorsplot(errors, f"errors_{key}.png")
+    scatterplot(distances, x, y, b_hat, line, f"scatter_{key}.png")
+    errorsplot(errors, f"errors_{key}.png")
 
     print(f"Solved TSPs for {key}")
 

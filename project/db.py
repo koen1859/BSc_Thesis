@@ -1,6 +1,7 @@
 import psycopg
 import os
 import ujson
+import numpy as np
 
 
 # This function imports the roads from the database. It works as follows:
@@ -229,6 +230,7 @@ def get_features(DB, neighborhood, roads, graph, area):
         len([v["name"] for v in graph.vs if v["is_building"] == 1]) / area
     )
     features["road_density"] = sum(graph.es["weight"]) / area
+    features["edge_length"] = np.mean(graph.es["weight"])
     features["fraction_oneway"] = len([r[4] for r in roads if r[4] == "yes"]) / len(
         roads
     )

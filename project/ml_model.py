@@ -1,5 +1,3 @@
-import math
-import json
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import (
@@ -9,18 +7,16 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import train_test_split, GridSearchCV
 import pandas as pd
-import ujson
-import numpy as np
 
 
 def random_forest(df):
     y = df["TSP length"]
     X = df.drop(columns=["TSP length"])
 
-    scaler = StandardScaler()
-    X_scaled = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index=X.index)
+    # scaler = StandardScaler()
+    # X_scaled = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index=X.index)
     X_train, X_test, y_train, y_test = train_test_split(
-        X_scaled, y, test_size=0.2, random_state=42
+        X, y, test_size=0.2, random_state=42
     )
 
     param_grid = {
