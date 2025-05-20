@@ -1,0 +1,13 @@
+\section{Problem definition}
+This section provides a formal definition of the problem this research aims to solve.
+Define $N$ to be a set of neighborhoods, and define $X_n$ the set of all postal codes in a neighborhood
+$n\in N$. Let $TSP_{j,n}=\{x_i\}_{i=1}^j,\,x_i\in X_n$ be a subset of size $j$ of the postal codes in neighborhood $n$.
+Then, $L_{j,n}$ can be defined to be the length of the shortest path through the set $TSP_{j,n}$. This is the length of
+the solution of the traveling salesman problem consisting of the points in $TSP_{j,n}$.
+This research consists of two parts.
+\begin{enumerate}
+	\item Analyze the behavior of \( L_{j,n} \) for various sample sizes \( j \) and neighborhoods \( n \),
+	      in the context of evaluating the accuracy of predictions made by Equation~\ref{eq:beardwood}.
+	\item Investigate how well TSP path length can be predicted using $j$ and a number of features of the neighborhood
+	      the TSP is in, using supervised learning.
+\end{enumerate}

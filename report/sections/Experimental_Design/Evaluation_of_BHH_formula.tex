@@ -1,0 +1,36 @@
+\subsection{Evaluation of BHH formula}
+The following algorithm is used for the first part of the research.
+Let \( L = \{L_i\} \) and \( \hat{L} = \{\hat{L}_i\} \) be the lists of observed and predicted TSP tour lengths,
+respectively, aggregated over all sample sizes \( j \) and repetitions \( k \) for neighborhood \( n \).
+Let \( |L| \) denote the total number of evaluated instances per neighborhood.
+\begin{algorithm}[H]
+	\caption{Procedure for evaluating the predictive accuracy of Equation~\ref{eq:beardwood}}
+	\label{alg:evaluation}
+	\begin{algorithmic}[1]
+		\For{each neighborhood \( n \in N \)}
+		\State Extract features of this neighborhood and save to a file for later use
+		\State Construct a graph of the road network and visualize on a map
+		\State Initialize empty lists for \( L \) and \( \hat{L} \)
+		\For{each sample size \( j \in \{20, 22, \ldots, 86, 88\} \)}
+		\For{each repetition \( k \in \{0, 1, \ldots, 10\} \)}
+		\State Randomly sample a subset \( TSP_{j,n} \subset X_n \) of size \( j \) uniformly
+		\State Solve the TSP over \( TSP_{j,n} \) to compute \( L_{j,n}^{(k)} \)
+		\State Solve Equation \ref{eq:beardwood} for $\beta$ using these solutions \(L_{j,n}^{(k)}\)
+		\State Compute the predicted length \( \hat{L}_{j,n}^{(k)} \) using Equation~\ref{eq:beardwood} with the estimated $\beta$
+		\State Append \( L_{j,n}^{(k)} \) to list \( L \), and \( \hat{L}_{j,n}^{(k)} \) to list \( \hat{L} \)
+		\EndFor
+		\EndFor
+		\State Compute the Mean Absolute Error (MAE) for neighborhood \( n \):
+		\[
+			\text{MAE}_n = \frac{1}{|L|} \sum_{i=1}^{|L|} \left| L_i - \hat{L}_i \right|
+		\]
+		\State Compute the Mean Absolute Percentage Error (MAPE) for neighborhood \( n \):
+		\[
+			\text{MAPE}_n = \frac{100\%}{|L|} \sum_{i=1}^{|L|} \left| \frac{L_i - \hat{L}_i}{L_i} \right|
+		\]
+		\State Visualize the results in graph form, a scatter plot of TSP length against number of locations, with
+		a fitted equation \ref{eq:beardwood} and a histogram of the errors $\epsilon_i=L_i-\hat{L}_i$.
+		\State Save the results for $L$ to a file for later use.
+		\EndFor
+	\end{algorithmic}
+\end{algorithm}

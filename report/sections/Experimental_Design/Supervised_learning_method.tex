@@ -1,0 +1,23 @@
+\subsection{Supervised learning method}
+In the second part of this research, a supervised learning model is trained to predict the TSP path length from neighborhood-level features and the number of 
+points \( j \). Specifically, a Random Forest regression model is employed.
+
+The data set is constructed using the results from Algorithm \ref{alg:evaluation}. Each entry of $L$ (the list of TSP path lengths) is a separate observation
+in this data set. For every observation, the corresponding area features and the number of locations $j$ is stored in the data set. Then, the following steps
+are performed:
+\begin{enumerate}
+    \item Split the data into a training and test set, 80/20 split.
+    \item Normalize the features such that they all have mean 0 and variance 1.
+    \item Train a Random Forest regressor to predict TSP path length \( L \) using the number of points \( j \) and neighborhood-level features as input variables.
+    \item Evaluate model performance on the test set using the metrics (for the test data):
+    \begin{itemize}
+        \item Mean Absolute Error (MAE)
+        \item Mean Squared Error (MSE)
+        \item Coefficient of determination \( R^2 \)
+    \end{itemize}
+    % \item Analyze feature importance to assess which neighborhood characteristics most influence the TSP length.
+\end{enumerate}
+
+The goal of this part is to determine how accurately TSP path length can be predicted based on readily available spatial and demographic characteristics of 
+neighborhoods.
+% and to identify which features are most influential.
