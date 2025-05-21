@@ -1,6 +1,7 @@
 project/maps/
 project/routes/
-project/features
+project/features/
+project/plots/
 *.osm.pbf
 *.pbf
 *.toc
