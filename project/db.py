@@ -1,5 +1,5 @@
-import psycopg
 import os
+import psycopg
 import ujson
 import numpy as np
 
