@@ -47,27 +47,49 @@ for the areas in this analysis can be viewed and interacted with via this
 \end{figure}
 
 \subsection{Extracting features}
-One of the predictors of the TSP path length, is the area of the neighborhood
-the locations are drawn from. The OSM data provides the area of the polygons,
-but this value can not be used to predict TSP path length effectively.
+One of the predictors of the TSP path length, is the area of the neighborhood the locations are drawn from.
+The OSM data provides the area of the polygons, but this value can not be used to predict TSP path length effectively.
 This value significantly overestimates the correct value for $A$.
-For many of the quarters, there is some area around where the buildings are, included in the quarter.
-To account for this, the value for $A$ that is used, is the area of the convex
-hull around all buildings, which is calculated using the \url{shapely}
-module in \url{Python}. As an example visualization, figure \ref{fig:binnenstad_quarter} displays
-how the quarter for the inner city of Groningen is defined in OpenStreetMap. Using the area of this
-entire quarter would be an overestimation. A significant portion of this area is the canal and outer
-road around the inner city. There are many examples of quarters where this overestimation is even
-more significant than this. Note that this is still not a good estimate for $A$ in some cases,
-for example when there is and area inside the neighborhood without addresses (for example a park or lake)
-in the neighborhood. When using the convex hull, this area (or at least a portion of it) is still included
-in $A$, which is still not the optimal way of calculating the area, although still better than using the
-pre-defined area in the data.
+When there are things like parks, lakes, or large buildings like a stadium inside the quarter, then in that part of the
+area, there are no delivery locations. Consequently, this area should not be included in the area calculation.
+To account for this problem, alpha shapes are used to calculate $A$. Alpha shapes are generalizations of the convex hull,
+they capture the shape of a point set \citep{akkiraju1995alpha}. Figure \ref{fig:Beijum} displays the map of the Beijum
+quarter in Groningen with the alpha shape for its addresses, as it was used for calculating the area. 
+It can be seen that using this method, large areas without buildings, such as the greenspace in the middle is being left
+out, as desired.
 \begin{figure}[H]
-	\caption{The OpenStreetMap quarter for the inner city of Groningen (Binnenstad). \citep{openstreetmap}}
-	\label{fig:binnenstad_quarter}
-	\includegraphics[width=\textwidth]{Pictures/Binnenstad_quarter.png}
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{Pictures/Beijum_quarter.png}
+		\caption{Beijum on the map}
+		\label{fig:Beijummap}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{Pictures/hull_beijum.png}
+		\caption{The alpha shape for the addresses}
+		\label{fig:AlphaBeijum}
+	\end{subfigure}
+	\caption{The map of the Beijum quarter in Groningen, with the alpha shape around its addresses.}
+	\label{fig:Beijum}
 \end{figure}
+% For many of the quarters, there is some area around where the buildings are included in the quarter.
+% To account for this, the value for $A$ that is used, is the area of the convex
+% hull around all buildings, which is calculated using the \url{shapely}
+% module in \url{Python}. As an example visualization, figure \ref{fig:binnenstad_quarter} displays
+% how the quarter for the inner city of Groningen is defined in OpenStreetMap. Using the area of this
+% entire quarter would be an overestimation. A significant portion of this area is the canal and outer
+% road around the inner city. There are many examples of quarters where this overestimation is even
+% more significant than this. Note that this is still not a good estimate for $A$ in some cases,
+% for example when there is and area inside the neighborhood without addresses (for example a park or lake)
+% in the neighborhood. When using the convex hull, this area (or at least a portion of it) is still included
+% in $A$, which is still not the optimal way of calculating the area, although still better than using the
+% pre-defined area in the data.
+% \begin{figure}[H]
+% 	\caption{The OpenStreetMap quarter for the inner city of Groningen (Binnenstad). \citep{openstreetmap}}
+% 	\label{fig:binnenstad_quarter}
+% 	\includegraphics[width=\textwidth]{Pictures/Binnenstad_quarter.png}
+% \end{figure}
 
 While the area of a neighborhood is an important predictor, it is only one of many features considered in this analysis.
 To train a supervised learning model that predicts the TSP path length based on neighborhood characteristics, a comprehensive set
