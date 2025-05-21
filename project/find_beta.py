@@ -1,8 +1,5 @@
 import math
 
-import matplotlib
-
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import os
@@ -18,19 +15,15 @@ from sklearn.metrics import (
 # hence to be able to make good predictions we might need to let beta vary over n.
 def find_beta(lengths, area):
     b, x, y = [], [], []
-    b_hat_n = {}
 
     for n in sorted(lengths.keys()):
-        b_n = []
         for length in lengths[n]:
             b.append(length / math.sqrt(n * area))
-            b_n.append(length / math.sqrt(n * area))
             x.append(n)
             y.append(length)
-        b_hat_n[n] = np.mean(b_n)
     b_hat = np.mean(b)
 
-    return x, y, b_hat, b_hat_n
+    return x, y, b_hat
 
 
 # Here we make the line that relates the estimated tsp path length to n, the prediction errors

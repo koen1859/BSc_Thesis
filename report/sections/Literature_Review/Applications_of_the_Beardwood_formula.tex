@@ -1,16 +1,16 @@
 \subsection{Applications of the BHH formula}
 This research concerns the performance of formula \ref{eq:beardwood} for reasonable amounts of
-locations a delivery person can visit in a workday, say $10\leq n\leq90$.
-\citet{lei2015dynamic} estimates the values of $\beta$ for a selection of values for $n$.
+locations $j$ a delivery person can visit in a workday, say $20\leq j\leq90$.
+\citet{lei2015dynamic} estimates the values of $\beta$ for a selection of values for $j$.
 In their research, the points were generated uniformly and the $L_2$ distance metric was used.
 Table \ref{tab:beta-values} lists the results.
 \begin{table}[H]
 	\centering
-	\caption{Empirical estimates of $\beta$ as a function of $n$, $20 \leq n \leq 90$ \citep{lei2015dynamic}}
+	\caption{Empirical estimates of $\beta$ as a function of $j$, $20 \leq n \leq 90$ \citep{lei2015dynamic}}
 	\label{tab:beta-values}
 	\begin{tabular}{cc}
 		\toprule
-		$n$ & $\beta(n)$ \\
+		$j$ & $\beta(j)$ \\
 		\midrule
 		20  & 0.8584265  \\
 		30  & 0.8269698  \\
@@ -24,7 +24,7 @@ Table \ref{tab:beta-values} lists the results.
 	\end{tabular}
 \end{table}
 \citet{figliozzi2008planning} is the first research to apply approximation formulas to real-world
-instances of TSPs (and VRPs (Vehicle Routing Problems)), where distances between locations are measured over the actual road network.
+instances of TSPs (and VRPs (Vehicle Routing Problems)), in the sense that distances between locations are measured over the actual road network.
 An extension of formula \ref{eq:beardwood} that works for VRPs is assessed in this setting. It is found that this
 model has an $R^2$ of 0.99 (which means 0.99 of the variation in TSP path length is explained by the formula)
 and MAPE (Mean Absolute Prediction Error) of 4.2\%. This prediction error
