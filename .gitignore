@@ -1,4 +1,6 @@
 project/maps/
+project/routes/
+project/features
 *.osm.pbf
 *.pbf
 *.toc
@@ -13,6 +15,7 @@ project/maps/
 *.bbl
 *.blg
 project/__pycache__/
+project/tsps_*/
 
 .devenv.flake.nix
 .envrc
