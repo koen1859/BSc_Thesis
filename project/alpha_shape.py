@@ -1,11 +1,11 @@
-from shapely import union_all, concave_hull, convex_hull
-from shapely.geometry import Point
+from shapely import union_all, concave_hull
 from shapely.wkt import loads
 import geopandas as gpd
 import matplotlib.pyplot as plt
+from graph import Node
 
 
-# A test function to check whether the hull look correct
+# A test function to check whether the hull looks correct
 def plot_area(hull):
     polygon = loads(hull)
     x, y = polygon.exterior.xy
@@ -20,13 +20,11 @@ def plot_area(hull):
     plt.savefig("Testplot.png")
 
 
-# Function that returns the area of the convex hull around a set of buildings it takes as input
-def get_area(buildings):
-    points = [tuple(map(float, coord)) for coord in buildings.values()]
-    # Convert the lat,lon to correct format, to be able to calculate area in square meters.
+# Function that returns the area of the convex hull around the list of buildings
+def get_area(nodes: list[Node]) -> float:
     gdf = gpd.GeoDataFrame(
-        geometry=[Point(lon, lat) for lat, lon in points], crs="EPSG:4326"
+        geometry=[node.point_lon_lat() for node in nodes if node.is_building is True],
+        crs="EPSG:4326",
     ).to_crs("EPSG:28992")
     hull = concave_hull(union_all(gdf), ratio=0.05, allow_holes=True)
-    # plot_area(str(hull))
     return hull.area

@@ -1,7 +1,6 @@
 import os
 import json
 import pandas as pd
-from psycopg import rows
 
 
 def features_df():

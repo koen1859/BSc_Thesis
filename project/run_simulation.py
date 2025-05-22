@@ -1,13 +1,11 @@
-from db import get_addresses, get_road_data, get_features
-from area import get_area
-from map import create_map
-from buildings import get_buildings
-from nodes import get_nodes
-from edges import get_edges
-from graph import make_graph
-from tsp import create_tsps, solve_tsps
+from db import get_addresses, get_features, get_roads
+from node import Node, get_road_nodes, get_building_nodes
+from edge import Edge, get_road_edges
+from graph import Graph
+from alpha_shape import get_area
+from tsp import solve_tsps
 from read_tour import read_tours
-from route import paths_subset
+from route import random_path
 from find_beta import find_beta, results, scatterplot, errorsplot
 from features_df import features_df
 from ml_model import random_forest
@@ -16,33 +14,49 @@ from ml_model import random_forest
 # This is the main simulation function. It creates, solves,
 # visualizes and solves beardwood formula for a given neighborhood
 def run_simulation(DB, neighborhood):
-    key = f"{DB}-{neighborhood}"
-    roads = get_road_data(DB, neighborhood)
+    key: str = f"{DB}-{neighborhood}"
 
-    building_data = get_addresses(DB, neighborhood)
-    buildings = get_buildings(building_data)
+    roads: list[tuple[int, list[int], list[float], list[float], str]] = get_roads(
+        DB, neighborhood
+    )
+    buildings: list[tuple[int, float, float]] = get_addresses(DB, neighborhood)
 
-    nodes = get_nodes(roads)
-    edges, weights = get_edges(roads, nodes, buildings)
-    graph = make_graph(nodes, buildings, edges, weights)
+    road_nodes: list[Node] = get_road_nodes(roads=roads)
+    building_nodes: list[Node] = get_building_nodes(buildings=buildings)
 
-    create_map(nodes, buildings, graph, f"{key}.html")
-    create_tsps(graph, 10, range(20, 90, 2), f"tsps_{key}")
+    area: float = get_area(building_nodes)
 
-    area = get_area(buildings)
+    road_edges: list[Edge] = get_road_edges(roads=roads, road_nodes=road_nodes)
+    graph: Graph = (
+        Graph(nodes=road_nodes, edges=road_edges)
+        .connect_buildings(building_nodes)
+        .largest_component()
+    )
+
+    graph.create_map(key)
+    graph.create_tsps(10, list(range(20, 90, 2)), f"tsps_{key}")
+
     get_features(DB, neighborhood, roads, graph, area)
-    print(f"TSPs generated and features extracted for {key}")
-
     solve_tsps(f"tsps_{key}")
-    tours, distances = read_tours(f"tsps_{key}")
-    paths_subset(graph, nodes, buildings, tours, distances, key)
 
-    x, y, b_hat, = find_beta(distances, area)
+    tours: dict[int, list[list[str]]]
+    distances: dict[int, list[int]]
+    tours, distances = read_tours(f"tsps_{key}")
+
+    locations: list[str]
+    distance: int
+    locations, distance = random_path(tours, distances)
+
+    graph.plot_route(locations, distance, f"TSP_{neighborhood}")
+
+    (
+        x,
+        y,
+        b_hat,
+    ) = find_beta(distances, area)
     line, errors, mae, mape = results(distances, x, y, b_hat, area)
     scatterplot(distances, x, y, b_hat, line, f"scatter_{key}")
     errorsplot(errors, f"errors_{key}")
-
-    print(f"Solved TSPs for {key}")
 
     return (key, [b_hat, mae, mape, area, x, y])
 
@@ -52,32 +66,30 @@ def run_simulation(DB, neighborhood):
 # written to the disk.
 def interpret_results(DB, neighborhood):
     key = f"{DB}-{neighborhood}"
-    # roads = get_road_data(DB, neighborhood)
 
-    building_data = get_addresses(DB, neighborhood)
-    buildings = get_buildings(building_data)
-    area = get_area(buildings)
+    buildings = get_addresses(DB, neighborhood)
 
-    # nodes = get_nodes(roads)
-    # edges, weights = get_edges(roads, nodes, buildings)
-    # graph = make_graph(nodes, buildings, edges, weights)
-    #
-    # get_features(DB, neighborhood, roads, graph, area)
+    building_nodes: list[Node] = get_building_nodes(buildings=buildings)
+
+    area = get_area(building_nodes)
 
     tours, distances = read_tours(f"tsps_{key}")
-    # paths_subset(graph, nodes, buildings, tours, distances, key)
 
-    x, y, b_hat = find_beta(distances, area)
+    (
+        x,
+        y,
+        b_hat,
+    ) = find_beta(distances, area)
     line, errors, mae, mape = results(distances, x, y, b_hat, area)
-    # scatterplot(distances, x, y, b_hat, line, f"scatter_{key}.png")
-    # errorsplot(errors, f"errors_{key}.png")
 
     print(f"Solved TSPs for {key}")
 
     return (key, [b_hat, mae, mape, area, x, y])
 
 
-def run_ml():
+def run_ml() -> None:
     df = features_df()
     r2, mae, mape, y_test, y_pred = random_forest(df)
-    return r2, mae, mape, y_test, y_pred
+    print(r2, mae, mape)
+    with open("ml_results.txt", "w") as f:
+        f.write(f"""r2: {r2}\nmae: {mae}\nmape: {mape * 100}\n""")

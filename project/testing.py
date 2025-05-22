@@ -1,36 +1,52 @@
-from db import get_addresses, get_road_data, get_features
-from area import get_area
-from map import create_map
-from buildings import get_buildings
-from nodes import get_nodes
-from edges import get_edges
-from graph import make_graph
-from tsp import create_tsps, solve_tsps
+from db import get_addresses, get_features, get_road_data
+from node import Node, get_road_nodes, get_building_nodes
+from edge import Edge, get_road_edges
+from graph import Graph
+from alpha_shape import get_area
+from tsp import solve_tsps
 from read_tour import read_tours
-from route import paths_subset
+from route import random_path
 from find_beta import find_beta, results, scatterplot, errorsplot
-from features_df import features_df
 
 DB = "noord_holland"
 neighborhood = "Toolenburg"
+key = f"{DB}-{neighborhood}"
 
 roads = get_road_data(DB, neighborhood)
+buildings = get_addresses(DB, neighborhood)
 
-building_data = get_addresses(DB, neighborhood)
-buildings = get_buildings(building_data)
-area = get_area(buildings)
+road_nodes: list[Node] = get_road_nodes(roads=roads)
+building_nodes: list[Node] = get_building_nodes(buildings=buildings)
 
-# nodes = get_nodes(roads)
-# edges, weights = get_edges(roads, nodes, buildings)
-# graph = make_graph(nodes, buildings, edges, weights)
-#
-# tours, distances = read_tours(f"tsps_{DB}_{neighborhood}")
-# paths_subset(graph, nodes, buildings, tours, distances, DB)
-#
-# x, y, b_hat, b = find_beta(distances, area)
-# line, errors, mae, mape = results(distances, x, y, b_hat, area)
-# scatterplot(distances, x, y, b_hat, line, f"scatter_{DB}_{neighborhood}.png")
-# errorsplot(errors, f"errors_{DB}_{neighborhood}.png")
-#
-# key = f"{DB}-{neighborhood}"
-# print(f"Solved TSPs for {key}")
+area = get_area(building_nodes)
+
+road_edges: list[Edge] = get_road_edges(roads=roads, road_nodes=road_nodes)
+graph = (
+    Graph(nodes=road_nodes, edges=road_edges)
+    .connect_buildings(building_nodes)
+    .largest_component()
+)
+
+graph.create_map(key)
+graph.create_tsps(10, list(range(20, 90, 2)), "testdir")
+
+get_features(DB, neighborhood, roads, graph, area)
+solve_tsps("testdir")
+
+tours, distances = read_tours("testdir")
+locations, distance = random_path(tours, distances)
+
+graph.plot_route(locations, distance, f"TSP_{neighborhood}")
+
+(
+    x,
+    y,
+    b_hat,
+) = find_beta(distances, area)
+line, errors, mae, mape = results(distances, x, y, b_hat, area)
+scatterplot(distances, x, y, b_hat, line, f"scatter_{key}")
+errorsplot(errors, f"errors_{key}")
+
+print((key, [b_hat, mae, mape, area, x, y]))
+
+print(f"Solved TSPs for {key}")

@@ -44,6 +44,7 @@
                     geopandas
                     scikit-learn
                     pandas
+                    tqdm
                   ])
               )
               pkgs.osm2pgsql

@@ -13,11 +13,11 @@ from sklearn.metrics import (
 # neighborhood. b_hat_n is a dictionary with as index the number of locations and as values
 # the corresponding beta. We do this as in previous research it was found beta differs over n
 # hence to be able to make good predictions we might need to let beta vary over n.
-def find_beta(lengths, area):
+def find_beta(distances, area):
     b, x, y = [], [], []
 
-    for n in sorted(lengths.keys()):
-        for length in lengths[n]:
+    for n in sorted(distances.keys()):
+        for length in distances[n]:
             b.append(length / math.sqrt(n * area))
             x.append(n)
             y.append(length)
@@ -28,8 +28,8 @@ def find_beta(lengths, area):
 
 # Here we make the line that relates the estimated tsp path length to n, the prediction errors
 # to later plot these results and calculate the mean absolute prediction error.
-def results(lengths, x, y, b_hat, area):
-    sorted_keys = sorted(lengths.keys())
+def results(distances, x, y, b_hat, area):
+    sorted_keys = sorted(distances.keys())
     line = [b_hat * math.sqrt(n * area) for n in sorted_keys]
     errors = [line[sorted_keys.index(x[i])] - y[i] for i in range(len(x))]
 
@@ -42,12 +42,12 @@ def results(lengths, x, y, b_hat, area):
 
 # This function makes scatterplot of all tsp path lengths and their n, and the line that
 # relates tsp path length to n,
-def scatterplot(lengths, x, y, b_hat, line, filename):
+def scatterplot(distances, x, y, b_hat, line, filename):
     os.makedirs("plots/", exist_ok=True)
     fig = plt.figure(figsize=(20, 15))
     plt.scatter(np.log(x), np.log(y), label="Simulated values", alpha=0.6)
     plt.plot(
-        np.log(sorted(lengths.keys())),
+        np.log(sorted(distances.keys())),
         np.log(line),
         label=f"Estimated line b = {b_hat:.2f}",
     )
