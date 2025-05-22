@@ -3,7 +3,7 @@ import json
 import pandas as pd
 
 
-def features_df():
+def features_df() -> pd.DataFrame:
     with open("final_results.json") as f:
         final_results = json.load(f)
 
@@ -25,14 +25,13 @@ def features_df():
             if len(x) != len(y):
                 continue
 
-            for x, y in zip(x, y):
-                row = {
-                    "area": area_name,
-                    "n": x,
-                    "TSP length": y,
-                }
-                row.update(features)
-                data.append(row)
+            row = {
+                "area": area_name,
+                "n": x,
+                "TSP length": y,
+            }
+            row.update(features)
+            data.append(row)
 
     df = pd.DataFrame(data)
     df.set_index("area", inplace=True)
