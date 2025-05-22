@@ -50,7 +50,7 @@ def run_simulation(
     distance: int
     locations, distance = random_path(tours, distances)
 
-    graph.plot_route(locations, distance, f"TSP_{neighborhood}")
+    graph.plot_route(locations, distance, f"TSP_{key}")
 
     x: list[int]
     y: list[float]
