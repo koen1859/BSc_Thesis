@@ -1,4 +1,3 @@
-from shapely.lib import node
 from graph import distance
 from shapely.geometry import LineString, Point
 from shapely.strtree import STRtree
