@@ -214,7 +214,17 @@ def get_features(
     features["fraction_oneway"] = len(
         [road[4] for road in roads if road[4] == "yes"]
     ) / len(roads)
-
+    features["avg_path_length"] = graph.avg_path_length()
+    features["diameter"] = graph.diameter()
+    features["radius"] = graph.radius()
+    features["edge_connectivity"] = graph.edge_connectivity()
+    features["vertex_connectivity"] = graph.vertex_connectivity()
+    features["mincut_value"] = graph.mincut_value()
+    features["num_communities_infomap"] = graph.num_communities_infomap()
+    features["num_communities_springlass"] = graph.num_communities_springlass()
+    features["mean_degree"] = graph.mean_degree()
+    features["max_degree"] = graph.max_degree()
+    features["var_degree"] = graph.var_degree()
     os.makedirs("features/", exist_ok=True)
     with open(f"features/{DB}-{neighborhood}.json", "w") as f:
         ujson.dump(features, f)

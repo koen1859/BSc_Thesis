@@ -109,6 +109,45 @@ class Graph:
     def avg_edge_weight(self) -> float:
         return float(np.mean([edge.weight for edge in self.edges]))
 
+    def avg_path_length(self) -> float:
+        return self._g.average_path_length(weights="weight")
+
+    def diameter(self) -> float:
+        return self._g.diameter(weights="weight")
+
+    def radius(self) -> float:
+        return self._g.radius(weights="weight")
+
+    def edge_connectivity(self) -> float:
+        return self._g.edge_connectivity()
+
+    def vertex_connectivity(self) -> float:
+        return self._g.vertex_connectivity()
+
+    def mincut_value(self) -> float:
+        return self._g.mincut_value()
+
+    def num_communities_infomap(self) -> float:
+        return len(self._g.community_infomap())
+
+    def num_communities_springlass(self) -> float:
+        return len(self._g.community_spinglass())
+
+    def modularity_infomap(self):
+        return self._g.community_infomap().modularity
+
+    def modularity_springlass(self):
+        return self._g.community_springlass().modularity
+
+    def mean_degree(self) -> float:
+        return self._g.degree_distribution().mean
+
+    def var_degree(self) -> float:
+        return self._g.degree_distribution().var
+
+    def max_degree(self) -> float:
+        return self._g.degree_distribution()._max
+
     def largest_component(self) -> "Graph":
         subgraph = self._g.subgraph(max(self._g.components(), key=len))
         nodes: list[Node] = [self.name2node(name) for name in subgraph.vs["name"]]

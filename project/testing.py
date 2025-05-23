@@ -1,4 +1,4 @@
-from db import get_addresses, get_features, get_road_data
+from db import get_addresses, get_features, get_roads
 from node import Node, get_road_nodes, get_building_nodes
 from edge import Edge, get_road_edges
 from graph import Graph
@@ -9,10 +9,10 @@ from route import random_path
 from find_beta import find_beta, results, scatterplot, errorsplot
 
 DB = "noord_holland"
-neighborhood = "Toolenburg"
+neighborhood = "Stad van de Zon"
 key = f"{DB}-{neighborhood}"
 
-roads = get_road_data(DB, neighborhood)
+roads = get_roads(DB, neighborhood)
 buildings = get_addresses(DB, neighborhood)
 
 road_nodes: list[Node] = get_road_nodes(roads=roads)
@@ -26,6 +26,17 @@ graph = (
     .connect_buildings(building_nodes)
     .largest_component()
 )
+graph.avg_path_length()
+graph.diameter()
+graph.radius()
+graph.edge_connectivity()
+graph.vertex_connectivity()
+graph.mincut_value()
+graph.num_communities_infomap()
+graph.num_communities_springlass()
+graph.mean_degree()
+graph.max_degree()
+graph.var_degree()
 
 graph.create_map(key)
 graph.create_tsps(10, list(range(20, 90, 2)), "testdir")

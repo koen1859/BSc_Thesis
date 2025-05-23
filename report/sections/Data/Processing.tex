@@ -15,7 +15,7 @@ An R-tree is a dynamic index structure that is able to retrieve data items quick
 their spatial locations \citep{guttman1984r}. Listing \ref{lst:python-edges} displays the algorithm
 used to make the edges that connect the buildings to the road network. For each building node,
 the closest point on the closest road is found, using the shapely implementation of the R-tree,
-\url{STRtree}. Then, if this point is not an already existing node, a new virtual node is added,
+\pythoninline{STRtree}. Then, if this point is not an already existing node, a new virtual node is added,
 which splits this existing edge in two parts. The road is reconnected with the new node in between.
 Finally, the building is connected to this new node.
 
@@ -54,7 +54,7 @@ When there are things like parks, lakes, or large buildings like a stadium insid
 area, there are no delivery locations. Consequently, this area should not be included in the area calculation.
 To account for this problem, alpha shapes are used to calculate $A$. Alpha shapes are generalizations of the convex hull,
 they capture the shape of a point set \citep{akkiraju1995alpha}. Figure \ref{fig:Beijum} displays the map of the Beijum
-quarter in Groningen with the alpha shape for its addresses, as it was used for calculating the area. 
+quarter in Groningen with the alpha shape for its addresses, as it was used for calculating the area.
 It can be seen that using this method, large areas without buildings, such as the greenspace in the middle is being left
 out, as desired.
 \begin{figure}[H]

@@ -81,29 +81,42 @@ def interpret_results(
 ) -> tuple[str, list[float | list[int] | list[float]]]:
     key: str = f"{DB}-{neighborhood}"
 
+    roads: list[tuple[int, list[int], list[float], list[float], str]] = get_roads(
+        DB, neighborhood
+    )
     buildings: list[tuple[int, float, float]] = get_addresses(DB, neighborhood)
 
+    road_nodes: list[Node] = get_road_nodes(roads=roads)
     building_nodes: list[Node] = get_building_nodes(buildings=buildings)
 
     area: float = get_area(building_nodes)
 
-    tours: dict[int, list[list[str]]]
-    distances: dict[int, list[int]]
-    tours, distances = read_tours(f"tsps_{key}")
+    road_edges: list[Edge] = get_road_edges(roads=roads, road_nodes=road_nodes)
+    graph: Graph = (
+        Graph(nodes=road_nodes, edges=road_edges)
+        .connect_buildings(building_nodes)
+        .largest_component()
+    )
 
-    (
-        x,
-        y,
-        b_hat,
-    ) = find_beta(distances, area)
+    get_features(DB, neighborhood, roads, graph, area)
 
-    line: list[float]
-    errors: list[float]
-    mae: float
-    mape: float
-    line, errors, mae, mape = results(distances, x, y, b_hat, area)
-
-    return (key, [b_hat, mae, mape, area, x, y])
+    # tours: dict[int, list[list[str]]]
+    # distances: dict[int, list[int]]
+    # tours, distances = read_tours(f"tsps_{key}")
+    #
+    # (
+    #     x,
+    #     y,
+    #     b_hat,
+    # ) = find_beta(distances, area)
+    #
+    # line: list[float]
+    # errors: list[float]
+    # mae: float
+    # mape: float
+    # line, errors, mae, mape = results(distances, x, y, b_hat, area)
+    #
+    # return (key, [b_hat, mae, mape, area, x, y])
 
 
 def run_ml() -> None:
