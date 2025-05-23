@@ -25,13 +25,14 @@ def features_df() -> pd.DataFrame:
             if len(x) != len(y):
                 continue
 
-            row = {
-                "area": area_name,
-                "n": x,
-                "TSP length": y,
-            }
-            row.update(features)
-            data.append(row)
+            for x, y in zip(x, y):
+                row = {
+                    "area": area_name,
+                    "n": x,
+                    "TSP length": y,
+                }
+                row.update(features)
+                data.append(row)
 
     df = pd.DataFrame(data)
     df.set_index("area", inplace=True)

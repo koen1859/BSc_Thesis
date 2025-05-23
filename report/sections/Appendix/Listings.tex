@@ -1,59 +1,48 @@
 \subsection{Listings}
-\begin{lstlisting}[language=Python, caption={The algorithm to extract the edges to connect the buildings to the road network}, label={lst:python-edges}]
-tree = STRtree(road_segments)  # make a tree of the road network
+\begin{python}[caption={The algorithm to connect the buildings to the road network}, label={lst:python-edges}]
+for building in building_nodes:
+    building_point: Point = building.point_lat_lon()
+    nearest_index = tree.nearest(building_point)
+    nearest_line: LineString = linestrings[nearest_index]
+    nearest_edge: Edge = edge_map[nearest_line]
+    start: Node = nearest_edge.start_node
+    end: Node = nearest_edge.end_node
 
-# Counter to add new nodes to connect buildings to road network correctly
-new_node_idx = 0
-for building_id, building_coords in buildings.items():
-    building_point = Point(building_coords)
-
-    # find the nearest edge
-    nearest_segment_idx = tree.nearest(building_point)  
-    start_node, end_node, oneway = segment_info[nearest_segment_idx]
-
-    # Project the building onto this nearest edge
-    nearest_segment = road_segments[nearest_segment_idx]
-    projected_point = nearest_segment.interpolate(
-	nearest_segment.project(building_point)
+    projected_point: Point = nearest_line.interpolate(
+        nearest_line.project(building_point)
+    )
+    projected_coords: tuple[float, float] = (
+        projected_point.x,
+        projected_point.y,
     )
 
-    # If the projected point is one of the segments end points, use this
-    if projected_point.equals(Point(nodes[start_node])):
-	connect_to = start_node
-    elif projected_point.equals(Point(nodes[end_node])):
-	connect_to = end_node
-    # else, we need to create a virtual node
-    else:
-	virtual_node_id = f"virtual_{new_node_idx}"
-	nodes[virtual_node_id] = (projected_point.x, projected_point.y)
-	new_node_idx += 1
+    if projected_point.equals(Point((start.lat, start.lon))):
+        self.add_edge(Edge(building, start))
+        self.add_edge(Edge(start, building))
+        continue
+    if projected_point.equals(Point((end.lat, end.lon))):
+        self.add_edge(Edge(building, end))
+        self.add_edge(Edge(end, building))
+        continue
 
-	# We split the road segment and add the virtual node
-	edges.append((start_node, virtual_node_id))
-	weights.append(
-	  distance(nodes[start_node], nodes[virtual_node_id])
-	  )
-	edges.append((virtual_node_id, end_node))
-	weights.append(
-	  distance(nodes[virtual_node_id], nodes[end_node])
-	  )
+    virtual_node_name: str = 
+        f"virtual_{next(node_id_counter)}"
+    virtual_node: Node = Node(
+        name=virtual_node_name,
+        lat=float(projected_coords[0]),
+        lon=float(projected_coords[1]),
+        is_building=False,
+    )
+    new_nodes.append(virtual_node)
 
-	if oneway != "yes":  # if not one-way, add reverse
-	    edges.append((virtual_node_id, start_node))
-	    weights.append(
-	      distance(nodes[virtual_node_id], nodes[start_node])
-	      )
-	    edges.append((end_node, virtual_node_id))
-	    weights.append(
-	    distance(nodes[end_node], nodes[virtual_node_id])
-	    )
+    self.delete_edge(nearest_edge)
 
-	# And we need to connect the building to the newly created node
-	connect_to = virtual_node_id
+    new_edges.append(Edge(start, virtual_node))
+    new_edges.append(Edge(virtual_node, end))
 
-    # Finally, we make the connections
-    edges.append((str(building_id), connect_to))
-    weights.append(distance(building_coords, nodes[connect_to]))
-    edges.append((connect_to, str(building_id)))
-    weights.append(distance(nodes[connect_to], building_coords))
-\end{lstlisting}
+    new_edges.append(Edge(building, virtual_node))
+    new_edges.append(Edge(virtual_node, building))
+
+self.add_vertices(new_nodes)
+self.add_edges(new_edges)
+\end{python}

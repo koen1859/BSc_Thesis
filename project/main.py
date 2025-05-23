@@ -19,7 +19,6 @@ def main() -> None:
     num_threads = multiprocessing.cpu_count()
 
     with multiprocessing.Pool(num_threads) as pool:
-        # results = pool.starmap(interpret_results, tasks)
         results = list(tqdm(pool.imap(wrapper, tasks), total=len(tasks)))
 
     final_results = dict(results)

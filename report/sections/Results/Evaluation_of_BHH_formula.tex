@@ -1,33 +1,33 @@
 \subsection{Evaluation of BHH formula}
 The value for $\beta$ differs strongly from area to area, as expected: some areas have a estimated $\beta$ as low as 1.5, while others have $\beta$ close to 6.
 These results are tabulated in Table \ref{tab:results}.
-It is found that fitting Equation \ref{eq:beardwood} yields a Mean Absolute Percentage error of about 6.8\%, over all observations together, when
+It is found that fitting Equation \ref{eq:beardwood} yields a Mean Absolute Percentage error of about 6.6\%, over all observations together, when
 letting $\beta$ differ per neighborhood ("Average" row in Table \ref{tab:results}).
-When $\beta$ is restricted to be equal for all neighborhoods ("Total row in Table \ref{tab:results}"), this MAPE increases to above 22\%.
-The prediction accuracy differs vastly per neighborhood: the Mean Absolute Percentage Error is below 4\% for some areas, and above 18\% for others
+The prediction accuracy differs vastly per neighborhood: the Mean Absolute Percentage Error is below 4\% for some areas, and above 15\% for others
 (using their own $\beta$).
 Potential reasons can best be analyzed using some of the visualizations that were created.
 
-For example, the accuracy for the Schepenbuurt quarter in Friesland, and the Stad van de Zon quarter in Noord-Holland is
-especially bad. These areas, among more examples, have an important feature in common. In these quarters, there is a cluster of
+For example, the prediction error for the Schepenbuurt quarter in Friesland, and the Stad van de Zon quarter in Noord-Holland is
+especially high. These areas, among more examples, have an important feature in common. In these quarters, there is a cluster of
 addresses somewhere in the area, and another cluster of addresses somewhere else, with empty space between them, as can be seen in Figure \ref{fig:combined}.
-Schepenbuurt has a large cluster in the bottom left, with some addresses spread out over the rest of the area. A similar pattern holds for Stad van de Zon.
+Both quarters have a large cluster, with some addresses spread out over the rest of the area.
 \begin{figure}[H]
 	\centering
-	\begin{subfigure}[b]{0.473\textwidth}
+	\begin{subfigure}[b]{0.45\textwidth}
 		\includegraphics[width=\textwidth]{Pictures/Schepenbuurt_quarter.png}
 		\caption{Schepenbuurt}
 		\label{fig:Schepenbuurt}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{0.49\textwidth}
+	\begin{subfigure}[b]{0.462\textwidth}
 		\includegraphics[width=\textwidth]{Pictures/Stad_van_de_Zon_quarter.png}
 		\caption{Stad van de Zon}
 		\label{fig:StadvdZon}
 	\end{subfigure}
-	\caption{Maps of the quarters Schepenbuurt and Stad van de Zon.}
+	\caption{Maps of Schepenbuurt and Stad van de Zon quarters.}
 	\label{fig:combined}
 \end{figure}
+
 An explanation for the higher prediction errors is that when the number of locations to visit $j$ is small, and (as in these examples) one of the clusters is much smaller than
 the other, in the sense of number of addresses in it, that there is a significant probability that no addresses in the smaller cluster are in the TSP.
 This would result in a significantly lower path length, as the distance to the other cluster and back does not need to be traveled. But, there is also
@@ -56,7 +56,7 @@ only in the large cluster, since the probability of this happening decreases wit
 	\label{fig:combinedScatter}
 \end{figure}
 
-It is also interesting to consider neighborhoods where the approximations perform especially well. Figure \ref{fig:combined2} displays maps for two quarters,
+It is also interesting to consider neighborhoods where the prediction errors are especially low. Figure \ref{fig:combined2} displays maps for two quarters,
 Westeinde in Friesland and Bornholm in Noord-Holland. These two neighborhoods also share some features. The most important one is that the addresses seem
 distributed close to uniformly across the area. There are some 'clusters', for example Westeinde can visually be split into four clusters that are only
 connected by one or two main road connections. However, they all contain a large amount of addresses, so each TSP will likely visit all of them. Additionally,
@@ -96,3 +96,6 @@ levels of variation, compared to Figure \ref{fig:combinedScatter}.
 	\caption{Scatter plots of TSP path length vs number of locations for the quarters Westeinde and Bornholm (log-log scale).}
 	\label{fig:combinedScatter2}
 \end{figure}
+When $\beta$ is restricted to be equal for all neighborhoods ("Total row in Table \ref{tab:results}"), the MAPE increases to almost 22\%.
+This is a problem for entities that want to estimate TSP path length for neighborhoods they do not know the $\beta$ of, since then they would get prediction 
+errors almost four times as high, or have to run simulations to estimate the correct value of $\beta$.

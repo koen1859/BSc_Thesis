@@ -302,7 +302,7 @@ areas = {
         "Katendrecht",
         "Kleinpolder",
         "Kleiwegkwartier",
-        "Kop van Zuid",
+        # "Kop van Zuid",
         "Kop van Zuid-Entrepot",
         "Kort Haarlem",
         "Korte Akkeren",

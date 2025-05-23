@@ -71,6 +71,18 @@ class Graph:
                 edge.weight for edge in new_edges
             ]
 
+    def delete_edge(self, edge: Edge) -> None:
+        if edge in self.edges:
+            self.edges.remove(edge)
+            # Remove from igraph as well
+            start: Node = edge.start_node
+            end: Node = edge.end_node
+            es_to_delete = self._g.es.select(
+                _source=self.node2index(start),
+                _target=self.node2index(end),
+            )
+            es_to_delete.delete()
+
     def index2name(self, index: int) -> str:
         return self._g.vs[index]["name"]
 
@@ -168,14 +180,7 @@ class Graph:
             )
             new_nodes.append(virtual_node)
 
-            if nearest_edge in self.edges:
-                self.edges.remove(nearest_edge)
-                # Remove from igraph as well
-                es_to_delete = self._g.es.select(
-                    _source=self.node2index(start),
-                    _target=self.node2index(end),
-                )
-                es_to_delete.delete()
+            self.delete_edge(nearest_edge)
 
             new_edges.append(Edge(start, virtual_node))
             new_edges.append(Edge(virtual_node, end))

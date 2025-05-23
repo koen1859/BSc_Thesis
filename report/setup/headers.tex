@@ -18,7 +18,7 @@
 \usepackage{longtable}
 \usepackage{caption}
 \usepackage{listings}
-\usepackage{xcolor}
+% \usepackage{xcolor}
 \usepackage[numbib]{tocbibind}
 \usepackage{adjustbox}
 \usepackage{varwidth}
@@ -29,33 +29,51 @@
 \bibliographystyle{rug-econometrics}
 \settocbibname{References}
 
-\lstdefinelanguage{SQL}{
-	keywords={SELECT, FROM, WHERE, INSERT, INTO, UPDATE, DELETE, CREATE, TABLE, ALTER, DROP, JOIN, ON, AND, OR, NOT, NULL, PRIMARY, KEY},
-	keywordstyle=\color{blue}\bfseries,
-	comment=[l]{--},
-	commentstyle=\color{gray}\ttfamily,
-	stringstyle=\color{red},
-	morestring=[b]',
-	morestring=[b]"
-}
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{12}  % for normal
 
-\lstdefinelanguage{Python}{
-	keywords={def, return, if, elif, else, while, for, in, try, except, finally, with, as, import, from, class, pass, break, continue, and, or, not, is, None, True, False, lambda, yield, global, nonlocal, assert, raise},
-	keywordstyle=\color{blue}\bfseries,
-	comment=[l]\#,
-	commentstyle=\color{gray}\ttfamily,
-	stringstyle=\color{red},
-	morestring=[b]',
-	morestring=[b]"
-}
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
 
-\lstset{
-	basicstyle=\ttfamily,
-	columns=fullflexible,
-	language=SQL,
-	frame=single,
-	backgroundcolor=\color{gray!10}
+\usepackage{listings}
+
+% Python style for highlighting
+\newcommand\pythonstyle{\lstset{
+		language=Python,
+		basicstyle=\ttm,
+		morekeywords={self},
+		keywordstyle=\ttb\color{deepblue},
+		moreemph=[1]{Point,LineString,Edge,Node,__init__},
+		emphstyle=[1]\ttb\color{deepred},
+		moreemph=[2]{point_lat_lon,nearest,interpolate,add_edge,append,delete_edge,add_vertices,add_edges,project},
+		emphstyle=[2]\ttb\color{teal},
+		moreemph=[3]{True,False},
+		emphstyle=[3]\ttb\color{orange},
+		stringstyle=\color{deepgreen},
+		frame=tb,
+		showstringspaces=false
+	}}
+
+
+% Python environment
+\lstnewenvironment{python}[1][]
+{
+	\pythonstyle
+	\lstset{#1}
 }
+{}
+
+% Python for external files
+\newcommand\pythonexternal[2][]{{
+			\pythonstyle
+			\lstinputlisting[#1]{#2}}}
+
+% Python for inline
+\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
 
 % \setlength{\parindent}{0pt}     % No paragraph indentation
 % \setlength{\parskip}{1em}       % Add vertical space between paragraphs
