@@ -3,7 +3,6 @@ from node import Node, get_road_nodes, get_building_nodes
 from edge import Edge, get_road_edges
 from graph import Graph
 from alpha_shape import get_area
-from numpy._typing import _UnknownType
 from tsp import solve_tsps
 from read_tour import read_tours
 from route import random_path

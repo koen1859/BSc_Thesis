@@ -202,12 +202,12 @@ class Graph:
             )
 
             if projected_point.equals(Point((start.lat, start.lon))):
-                self.add_edge(Edge(building, start))
-                self.add_edge(Edge(start, building))
+                new_edges.append(Edge(building, start))
+                new_edges.append(Edge(start, building))
                 continue
             if projected_point.equals(Point((end.lat, end.lon))):
-                self.add_edge(Edge(building, end))
-                self.add_edge(Edge(end, building))
+                new_edges.append(Edge(building, end))
+                new_edges.append(Edge(end, building))
                 continue
 
             virtual_node_name: str = f"virtual_{next(node_id_counter)}"

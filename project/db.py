@@ -217,11 +217,7 @@ def get_features(
     features["avg_path_length"] = graph.avg_path_length()
     features["diameter"] = graph.diameter()
     features["radius"] = graph.radius()
-    features["edge_connectivity"] = graph.edge_connectivity()
-    features["vertex_connectivity"] = graph.vertex_connectivity()
-    features["mincut_value"] = graph.mincut_value()
-    features["num_communities_infomap"] = graph.num_communities_infomap()
-    features["num_communities_springlass"] = graph.num_communities_springlass()
+    features["num_communities_infomap"] = graph.num_communities_infomap() / area
     features["mean_degree"] = graph.mean_degree()
     features["max_degree"] = graph.max_degree()
     features["var_degree"] = graph.var_degree()
