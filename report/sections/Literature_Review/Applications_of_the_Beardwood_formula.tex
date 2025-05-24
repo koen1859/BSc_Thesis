@@ -23,27 +23,26 @@ Table \ref{tab:beta-values} lists the results.
 		\bottomrule
 	\end{tabular}
 \end{table}
-\citet{figliozzi2008planning} is the first research to apply approximation formulas to real-world
-instances of TSPs (and VRPs (Vehicle Routing Problems)), in the sense that distances between locations are measured over the actual road network.
-An extension of formula \ref{eq:beardwood} that works for VRPs is assessed in this setting. It is found that this
-model has an $R^2$ of 0.99 (which means 0.99 of the variation in TSP path length is explained by the formula)
-and MAPE (Mean Absolute Prediction Error) of 4.2\%. This prediction error
-is slightly higher than when it is applied to a setting where Euclidean distances are considered (3.0\%),
-but the formula still performs well \citep{figliozzi2008planning}.
+\citet{figliozzi2008planning} is the first research to apply approximation formulas to real-world instances of TSPs (and VRPs (Vehicle Routing Problems)),
+in the sense that distances between locations are measured over the actual road network.
+An extension of formula \ref{eq:beardwood} that works for VRPs is assessed in this setting.
+It is found that this model has an $R^2$ of 0.99 (which means 0.99 of the variation in TSP path length is explained by the formula) and MAPE
+(Mean Absolute Prediction Error) of 4.2\%.
+This prediction error is slightly higher than when it is applied to a setting where Euclidean distances are considered (3.0\%), but the formula still performs well
+\citep{figliozzi2008planning}.
 
-\citet{merchan2019empirical} use circuity factors to measure the relative detour incurred for
-traveling in a road network, compared to the Euclidean distance. This circuity factor for locations $p$ and $q$ is defined as:
+\citet{merchan2019empirical} use circuity factors to measure the relative detour incurred for traveling in a road network, compared to the Euclidean distance.
+This circuity factor for locations $p$ and $q$ is defined as:
 \begin{align}
 	c = \frac{d_{c}(p,q)}{d_{L_{2}}(p,q)}
 	\label{eq:circuity}
 \end{align}
 By definition, $c \geq 1$, as the Euclidean distance is the shortest possible path between two points in a plane.
-Then, $\beta_c$ is estimated by $\beta_c=c\beta$. This value $c$, is estimated for three different areas in
-São Paulo, for which the results are listed in Table \ref{tab:beta-merchan}. These values indicate
-real travel distances are on average 2.76 times longer in area 1 compared to the $L_2$ metric.
-These values were obtained by uniformly generating $n$ locations (for $n$ ranging from 3 to 250),
-computing near-optimal tour lengths under the Euclidean metric, and solving for $\beta$, then
-scaling by the empirical circuity factor.
+Then, $\beta_c$ is estimated by $\beta_c=c\beta$. This value $c$, is estimated for three different areas in São Paulo, for which the results are listed in Table
+\ref{tab:beta-merchan}.
+These values indicate real travel distances are on average 2.76 times longer in area 1 compared to the $L_2$ metric.
+These values were obtained by uniformly generating $n$ locations (for $n$ ranging from 3 to 250), computing near-optimal tour lengths under the Euclidean metric,
+and solving for $\beta$, then scaling by the empirical circuity factor.
 \begin{table}[H]
 	\centering
 	\caption{Estimates of the circuity factor $c$ and its corresponding $\beta_c$ \citep{merchan2019empirical}}
@@ -57,14 +56,8 @@ scaling by the empirical circuity factor.
 		\bottomrule
 	\end{tabular}
 \end{table}
-It is important to note, however, that the assumptions in this study may limit the generality of
-the findings. In particular, the use of uniformly distributed locations does not accurately reflect
-the spatial distribution of delivery points in real urban environments, where locations tend to
-cluster in residential, commercial, or industrial zones. Additionally, within small urban areas,
-high-rise buildings and single-family homes may coexist in the same neighborhoods, further
-challenging the assumption of uniformly distributed delivery points.
-Furthermore, The circuity factor $c$ may vary significantly within a single city, depending on local
-street patterns, infrastructure, and topography. This seems plausible given observed variability in urban
-design, although further empirical investigation would be required to confirm this. These variations
-suggest that a fixed circuity factor may oversimplify the complexity of real-world delivery contexts,
-especially when applied to smaller sub-regions or neighborhoods.
+It is important to note, however, that the assumptions in this study may limit the generality of the findings.
+In particular, the use of uniformly distributed locations does not accurately reflect the spatial distribution of delivery points in real urban environments,
+where locations tend to cluster.
+Within small urban areas, high-rise buildings and single-family homes may coexist in the same neighborhoods, challenging the assumption of uniformly distributed
+delivery points.

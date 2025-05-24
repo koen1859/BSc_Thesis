@@ -94,12 +94,16 @@ and spatial distribution of delivery locations. They fall broadly into the follo
 	\item \textbf{Graph-technical properties}: average edge length, average path length between all nodes in the graph, clustering properties.
 \end{itemize}
 
-The clustering properties might be particularly interesting. The assumption in the BHH formula that the locations are uniformly distributed across the area is
-the one the setup in this research violates. Using these properties in the supervised learning model might lead to more accurate predictions. The metrics that were
-used for this are:
+The clustering properties might be particularly interesting.
+The assumption in the BHH formula that the locations are uniformly distributed across the area is the one the setup in this research violates.
+The assumption is violated on two levels: there might be different sub-neighborhoods, of different size and address density in a quarter, with space in between
+them.
+Additionally, on a smaller scale, a neighborhood might contain mostly detached houses or semi-detached houses, with a few larger apartment buildings.
+Then, the assumption of uniformly distributed locations is also violated.
+Using these properties in the supervised learning model might lead to more accurate predictions. The metrics that were used for this are:
 \begin{itemize}
-	\item The number of communities according to the \url{infomap} method\\ \citep{rosvall2008maps}. This might provide information about clustering of
-	      addresses on the scale of sub-neighborhoods inside a quarter with space in between.
+	\item The number of communities according to the \url{infomap} method, divided by the area of the alpha shape \citep{rosvall2008maps}.
+	      This might provide information about clustering of addresses on the scale of sub-neighborhoods inside a quarter with space in between.
 	\item The mean, max, and variance of the degree of the nodes. The degree of a node is the number of edges are connected to it.
 	      For example, when there is a large apartment building, often times all these different addresses connect to the exact same spot on a road.
 	      Then, this road node has a very large degree, sometimes more than 100. The mean, variance and maximum of this number all might provide some information
