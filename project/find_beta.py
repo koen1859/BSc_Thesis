@@ -61,7 +61,7 @@ def scatterplot(
     filename: str,
 ) -> None:
     os.makedirs("plots/", exist_ok=True)
-    fig = plt.figure(figsize=(20, 15))
+    fig = plt.figure(figsize=(8, 6))
     plt.scatter(np.log(x), np.log(y), label="Simulated values", alpha=0.6)
     plt.plot(
         np.log(sorted(distances.keys())),
@@ -79,7 +79,7 @@ def scatterplot(
 # We also make a Histogram of all prediction errors
 def errorsplot(errors: list[float], filename: str):
     os.makedirs("plots/", exist_ok=True)
-    fig = plt.figure(figsize=(20, 15))
+    fig = plt.figure(figsize=(8, 6))
     plt.hist(errors, label="Prediction errors", alpha=0.6)
     plt.xlabel("Prediction error (m)")
     plt.ylabel("Frequency")

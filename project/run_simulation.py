@@ -94,25 +94,31 @@ def interpret_results(
     )
 
     area: float = graph.alpha_shape(key)
-    # get_features(DB, neighborhood, roads, graph, area)
+    get_features(DB, neighborhood, roads, graph, area)
 
-    # tours: dict[int, list[list[str]]]
-    # distances: dict[int, list[int]]
-    # tours, distances = read_tours(f"tsps_{key}")
-    #
-    # (
-    #     x,
-    #     y,
-    #     b_hat,
-    # ) = find_beta(distances, area)
-    #
-    # line: list[float]
-    # errors: list[float]
-    # mae: float
-    # mape: float
-    # line, errors, mae, mape = results(distances, x, y, b_hat, area)
-    #
-    # return (key, [b_hat, mae, mape, area, x, y])
+    tours: dict[int, list[list[str]]]
+    distances: dict[int, list[int]]
+    tours, distances = read_tours(f"tsps_{key}")
+
+    locations, distance = random_path(tours, distances)
+    graph.plot_route(locations, distance, f"TSP_{key}")
+
+    (
+        x,
+        y,
+        b_hat,
+    ) = find_beta(distances, area)
+
+    line: list[float]
+    errors: list[float]
+    mae: float
+    mape: float
+    line, errors, mae, mape = results(distances, x, y, b_hat, area)
+
+    scatterplot(distances, x, y, b_hat, line, f"scatter_{key}")
+    errorsplot(errors, f"errors_{key}")
+
+    return (key, [b_hat, mae, mape, area, x, y])
 
 
 def run_ml() -> None:
