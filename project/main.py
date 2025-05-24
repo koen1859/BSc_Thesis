@@ -6,8 +6,8 @@ from tqdm import tqdm
 
 
 def wrapper(args):
-    return interpret_results(*args)
-    # return run_simulation(*args)
+    # return interpret_results(*args)
+    return run_simulation(*args)
 
 
 def main() -> None:

@@ -18,7 +18,6 @@ project/alpha_shapes/
 *.blg
 project/__pycache__/
 project/tsps_*/
-pyrightconfig.json
 
 .devenv.flake.nix
 .envrc

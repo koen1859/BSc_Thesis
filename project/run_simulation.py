@@ -123,7 +123,7 @@ def interpret_results(
 
 def run_ml() -> None:
     df = features_df()
-    r2, mae, mape, y_test, y_pred = random_forest(df)
+    r2, mae, mape, _, _ = random_forest(df)
     print(r2, mae, mape)
     with open("ml_results.txt", "w") as f:
         f.write(f"""r2: {r2}\nmae: {mae}\nmape: {mape * 100}\n""")

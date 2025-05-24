@@ -45,6 +45,7 @@
                     scikit-learn
                     pandas
                     tqdm
+                    ipython
                   ])
               )
               pkgs.osm2pgsql

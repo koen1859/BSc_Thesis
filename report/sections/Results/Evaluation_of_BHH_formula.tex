@@ -1,5 +1,5 @@
 \subsection{Evaluation of BHH formula}
-The value for $\beta$ differs strongly from area to area, as expected: some areas have a estimated $\beta$ as low as 1.5, while others have $\beta$ close to 6.
+The value for $\beta$ differs strongly from area to area, as expected: some areas have an estimated $\beta$ as low as 1.5, while others have $\beta$ close to 6.
 These results are tabulated in Table \ref{tab:results}.
 It is found that fitting Equation \ref{eq:beardwood} yields a Mean Absolute Percentage error of about 6.6\%, over all observations together, when
 letting $\beta$ differ per neighborhood ("Average" row in Table \ref{tab:results}).
@@ -60,7 +60,7 @@ It is also interesting to consider neighborhoods where the prediction errors are
 Westeinde in Friesland and Bornholm in Noord-Holland. These two neighborhoods also share some features. The most important one is that the addresses seem
 distributed close to uniformly across the area. There are some 'clusters', for example Westeinde can visually be split into four clusters that are only
 connected by one or two main road connections. However, they all contain a large amount of addresses, so each TSP will likely visit all of them. Additionally,
-these clusters are all close to each other, there is not much empty space between them, apart from some small greenspace or water. This could explain why the
+these clusters are all close to each other, there is not much empty space between them, apart from some small green-space or water. This could explain why the
 formula works so much better for these areas, compared to Schepenbuurt and Stad van de Zon.
 \begin{figure}[H]
 	\centering
@@ -84,18 +84,18 @@ levels of variation, compared to Figure \ref{fig:combinedScatter}.
 	\centering
 	\begin{subfigure}[b]{0.49\textwidth}
 		\includegraphics[width=\textwidth]{../project/plots/scatter_friesland-Westeinde.png}
-		\caption{Schepenbuurt}
+		\caption{Westeinde}
 		\label{fig:WesteindeScatter}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[b]{0.49\textwidth}
 		\includegraphics[width=\textwidth]{../project/plots/scatter_noord_holland-Bornholm.png}
-		\caption{Stad van de Zon}
+		\caption{Bornholm}
 		\label{fig:BornholmScatter}
 	\end{subfigure}
 	\caption{Scatter plots of TSP path length vs number of locations for the quarters Westeinde and Bornholm (log-log scale).}
 	\label{fig:combinedScatter2}
 \end{figure}
 When $\beta$ is restricted to be equal for all neighborhoods ("Total row in Table \ref{tab:results}"), the MAPE increases to almost 22\%.
-This is a problem for entities that want to estimate TSP path length for neighborhoods they do not know the $\beta$ of, since then they would get prediction 
+This is a problem for entities that want to estimate TSP path length for neighborhoods they do not know the $\beta$ of, since then they would get prediction
 errors almost four times as high, or have to run simulations to estimate the correct value of $\beta$.
