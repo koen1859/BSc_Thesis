@@ -57,39 +57,28 @@ they capture the shape of a point set \citep{akkiraju1995alpha}. Figure \ref{fig
 quarter in Groningen with the alpha shape for its addresses, as it was used for calculating the area.
 It can be seen that using this method, large areas without buildings, such as the greenspace in the middle is being left
 out, as desired.
+% \begin{figure}[H]
+% 	\centering
+% 	\begin{subfigure}[b]{0.45\textwidth}
+% 		\includegraphics[width=\textwidth]{Pictures/Beijum_quarter.png}
+% 		\caption{Beijum on the map}
+% 		\label{fig:Beijummap}
+% 	\end{subfigure}
+% 	\hfill
+% 	\begin{subfigure}[b]{0.45\textwidth}
+% 		\includegraphics[width=\textwidth]{Pictures/hull_beijum.png}
+% 		\caption{The alpha shape for the addresses}
+% 		\label{fig:AlphaBeijum}
+% 	\end{subfigure}
+% 	\caption{The map of the Beijum quarter in Groningen, with the alpha shape around its addresses.}
+% 	\label{fig:Beijum}
+% \end{figure}
 \begin{figure}[H]
 	\centering
-	\begin{subfigure}[b]{0.45\textwidth}
-		\includegraphics[width=\textwidth]{Pictures/Beijum_quarter.png}
-		\caption{Beijum on the map}
-		\label{fig:Beijummap}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.45\textwidth}
-		\includegraphics[width=\textwidth]{Pictures/hull_beijum.png}
-		\caption{The alpha shape for the addresses}
-		\label{fig:AlphaBeijum}
-	\end{subfigure}
+	\includegraphics[width=\textwidth]{Pictures/better_hull_beijum.png}
 	\caption{The map of the Beijum quarter in Groningen, with the alpha shape around its addresses.}
 	\label{fig:Beijum}
 \end{figure}
-% For many of the quarters, there is some area around where the buildings are included in the quarter.
-% To account for this, the value for $A$ that is used, is the area of the convex
-% hull around all buildings, which is calculated using the \url{shapely}
-% module in \url{Python}. As an example visualization, figure \ref{fig:binnenstad_quarter} displays
-% how the quarter for the inner city of Groningen is defined in OpenStreetMap. Using the area of this
-% entire quarter would be an overestimation. A significant portion of this area is the canal and outer
-% road around the inner city. There are many examples of quarters where this overestimation is even
-% more significant than this. Note that this is still not a good estimate for $A$ in some cases,
-% for example when there is and area inside the neighborhood without addresses (for example a park or lake)
-% in the neighborhood. When using the convex hull, this area (or at least a portion of it) is still included
-% in $A$, which is still not the optimal way of calculating the area, although still better than using the
-% pre-defined area in the data.
-% \begin{figure}[H]
-% 	\caption{The OpenStreetMap quarter for the inner city of Groningen (Binnenstad). \citep{openstreetmap}}
-% 	\label{fig:binnenstad_quarter}
-% 	\includegraphics[width=\textwidth]{Pictures/Binnenstad_quarter.png}
-% \end{figure}
 
 While the area of a neighborhood is an important predictor, it is only one of many features considered in this analysis.
 To train a supervised learning model that predicts the TSP path length based on neighborhood characteristics, a comprehensive set
@@ -99,8 +88,22 @@ In total, approximately 80 features are gathered for each neighborhood. These fe
 and spatial distribution of delivery locations. They fall broadly into the following categories:
 
 \begin{itemize}
-	\item \textbf{Geographic features:} Including the area of the convex hull around all postcodes, characteristics such as how much water or how many parks,
+	\item \textbf{Geographic features:} the area of the alpha shape around all postcodes, characteristics such as how much water or how many parks,
 	      and land use (i.e. residential or commercial).
-	\item \textbf{Building characteristics:} number of buildings divided by the area of the convex hull.
-	\item \textbf{Road network metrics:} Percentage of roads that are one-way, total length of road network divided by the area of the convex hull.
+	\item \textbf{Road network metrics:} Percentage of roads that are one-way, total length of road network divided by the area of the alpha shape.
+	\item \textbf{Graph-technical properties}: average edge length, average path length between all nodes in the graph, clustering properties.
+\end{itemize}
+
+The clustering properties might be particularly interesting. The assumption in the BHH formula that the locations are uniformly distributed across the area is
+the one the setup in this research violates. Using these properties in the supervised learning model might lead to more accurate predictions. The metrics that were
+used for this are:
+\begin{itemize}
+	\item The number of communities according to the \url{infomap} method\\ \citep{rosvall2008maps}. This might provide information about clustering of
+	      addresses on the scale of sub-neighborhoods inside a quarter with space in between.
+	\item The mean, max, and variance of the degree of the nodes. The degree of a node is the number of edges are connected to it.
+	      For example, when there is a large apartment building, often times all these different addresses connect to the exact same spot on a road.
+	      Then, this road node has a very large degree, sometimes more than 100. The mean, variance and maximum of this number all might provide some information
+	      about this local clustering.
+	\item The diameter of the graph: the maximum shortest-path distance between any two nodes.
+	\item The radius of the graph: the minimum eccentricity of any node, where eccentricity is the maximum shortest-path distance to any other node.
 \end{itemize}
