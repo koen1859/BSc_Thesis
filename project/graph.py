@@ -7,6 +7,8 @@ import numpy as np
 import ujson
 from shapely.geometry import LineString, Point
 from shapely.strtree import STRtree
+from shapely import union_all, concave_hull
+import geopandas as gpd
 from node import Node
 from edge import Edge
 
@@ -145,7 +147,7 @@ class Graph:
     def var_degree(self) -> float:
         return self._g.degree_distribution().var
 
-    def max_degree(self) -> float:
+    def max_degree(self) -> int:
         return self._g.degree_distribution()._max
 
     def largest_component(self) -> "Graph":
@@ -187,7 +189,7 @@ class Graph:
 
         for building in building_nodes:
             building_point: Point = building.point_lat_lon()
-            nearest_index = tree.nearest(building_point)
+            nearest_index: int = tree.nearest(building_point)
             nearest_line: LineString = linestrings[nearest_index]
             nearest_edge: Edge = edge_map[nearest_line]
             start: Node = nearest_edge.start_node
@@ -247,6 +249,35 @@ class Graph:
         return random.sample(
             [node for node in self.nodes if node.is_building is True], k=size
         )
+
+    def alpha_shape(self, filename: str) -> float:
+        gdf = gpd.GeoDataFrame(
+            geometry=[
+                node.point_lon_lat() for node in self.nodes if node.is_building is True
+            ],
+            crs="EPSG:4326",
+        ).to_crs("EPSG:28992")
+        hull = concave_hull(union_all(gdf), ratio=0.04, allow_holes=True)
+        area = hull.area
+
+        hull_wgs = gpd.GeoSeries([hull], crs="EPSG:28992").to_crs("EPSG:4326")[0]
+        coords: list[tuple[float, float]] = [
+            (y, x) for x, y in hull_wgs.exterior.coords
+        ]
+
+        m = folium.Map(location=list(self.avg_coords()), zoom_start=15)
+
+        folium.Polygon(
+            locations=coords,
+            color="blue",
+            fill=True,
+            fill_opacity=0.3,
+            weight=2,
+            popup=f"Area: {area / 10**6:.2f} km²",
+        ).add_to(m)
+
+        m.save(f"alpha_shapes/{filename}.html")
+        return area
 
     def distance_dict(self, nodes: list[Node]) -> dict[tuple[str, str], float]:
         indices: list[int] = [self.node2index(node) for node in nodes]

@@ -6,8 +6,8 @@ from tqdm import tqdm
 
 
 def wrapper(args):
-    # return interpret_results(*args)
-    return run_simulation(*args)
+    return interpret_results(*args)
+    # return run_simulation(*args)
 
 
 def main() -> None:
@@ -21,10 +21,10 @@ def main() -> None:
     with multiprocessing.Pool(num_threads) as pool:
         results = list(tqdm(pool.imap(wrapper, tasks), total=len(tasks)))
 
-    final_results = dict(results)
-    make_results_table(final_results)
-
-    run_ml()
+    # final_results = dict(results)
+    # make_results_table(final_results)
+    #
+    # run_ml()
 
 
 if __name__ == "__main__":

@@ -2,7 +2,6 @@ from db import get_addresses, get_features, get_roads
 from node import Node, get_road_nodes, get_building_nodes
 from edge import Edge, get_road_edges
 from graph import Graph
-from alpha_shape import get_area
 from tsp import solve_tsps
 from read_tour import read_tours
 from route import random_path
@@ -26,8 +25,6 @@ def run_simulation(
     road_nodes: list[Node] = get_road_nodes(roads=roads)
     building_nodes: list[Node] = get_building_nodes(buildings=buildings)
 
-    area: float = get_area(building_nodes)
-
     road_edges: list[Edge] = get_road_edges(roads=roads, road_nodes=road_nodes)
     graph: Graph = (
         Graph(nodes=road_nodes, edges=road_edges)
@@ -36,6 +33,7 @@ def run_simulation(
     )
 
     graph.create_map(key)
+    area: float = graph.alpha_shape(key)
     graph.create_tsps(10, list(range(20, 90, 2)), f"tsps_{key}")
 
     get_features(DB, neighborhood, roads, graph, area)
@@ -88,8 +86,6 @@ def interpret_results(
     road_nodes: list[Node] = get_road_nodes(roads=roads)
     building_nodes: list[Node] = get_building_nodes(buildings=buildings)
 
-    area: float = get_area(building_nodes)
-
     road_edges: list[Edge] = get_road_edges(roads=roads, road_nodes=road_nodes)
     graph: Graph = (
         Graph(nodes=road_nodes, edges=road_edges)
@@ -97,7 +93,8 @@ def interpret_results(
         .largest_component()
     )
 
-    get_features(DB, neighborhood, roads, graph, area)
+    area: float = graph.alpha_shape(key)
+    # get_features(DB, neighborhood, roads, graph, area)
 
     # tours: dict[int, list[list[str]]]
     # distances: dict[int, list[int]]
