@@ -4,12 +4,12 @@ The value for $\beta$ differs strongly from area to area: some areas have an est
 It is found that fitting Equation \ref{eq:beardwood} yields a Mean Absolute Percentage error of about 6.6\%, averaged over all observations, when
 letting $\beta$ differ per neighborhood ("Average" row in Table \ref{tab:results}).
 The prediction accuracy differs vastly per neighborhood: the Mean Absolute Percentage Error is below 4\% for some areas, and above 15\% for others
-(using their own $\beta$).
+(using their individual $\beta$).
 
-Potential reasons can best be analyzed using some of the visualizations that were created.
-For example, the prediction error for the Schepenbuurt quarter in Friesland, and the Stad van de Zon quarter in Noord-Holland is especially high.
-These areas, among others, have an important feature in common.
-Such quarters have a large cluster, with some addresses spread out over the rest of the area. Figure \ref{fig:combined} displays two of such areas.
+Potential reasons for the variation in accuracy can be analyzed using visualizations.
+For example, the prediction error for the Schepenbuurt quarter in Friesland, and the Stad van de Zon quarter in Noord-Holland is especially high, compared to the other areas.
+These low-accuracy areas have an important feature in common.
+Figure \ref{fig:combined} displays two of such areas.
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[b]{0.45\textwidth}
@@ -27,20 +27,17 @@ Such quarters have a large cluster, with some addresses spread out over the rest
 	\label{fig:combined}
 \end{figure}
 
-A possible explanation for the higher prediction errors is that when the number of locations to visit $j$ is small, and (as in these examples) one of the clusters
-is much smaller than the other, in the sense of number of addresses in it, that there is a significant probability that no addresses in the smaller cluster are in
-the TSP.
+Such quarters have one or more clusters of addresses, with some addresses spread out over the rest of the area, where the number of addresses in the cluster is significantly higher
+than the number of addresses spread out.
+A possible explanation for the higher prediction errors is that when the number of locations to visit, $j$, is small and one of the clusters is significantly smaller than the other
+in terms of the number of addresses it contains, there is a substantial probability that none of the addresses from the smaller cluster are included in the TSP instance.
 This would result in a significantly lower path length, as the distance to the other cluster and back does not need to be traveled.
-However, there is also significant probability that there are addresses of the smaller cluster in the TSP, which would in turn lead to a significantly higher path
+However, there is also significant probability that there are addresses of the smaller cluster in the TSP, which in turn leads to a significantly higher path
 length.
 Based on this, a higher variation in the TSP path length is to be expected, which explains the higher prediction error.
-This problem would likely disappear when the number of locations in the TSP $j$ is large enough, since then always locations from the other clusters would be
-included as well.
+This problem is likely to disappear when the number of locations in the TSP $j$ is large enough, since in that case locations from all clusters would be included.
 
-This pattern is again implied by the visualizations in Figure \ref{fig:combinedScatter}. It can be seen especially well for the Stad van de Zon scatter plot,
-that there are two separate clusters in the data points. There is a cluster of points far below the fitted line for the BHH formula, and a cluster of points far above it.
-As $j$ increases, the amount of data points in the lower cluster decreases. Both of these observations imply these data points are for a TSP that contains locations
-only in the large cluster, since the probability of this happening decreases with $j$.
+This pattern is again implied by the visualizations in Figure \ref{fig:combinedScatter}. The Stad van de Zon scatter plot is a good example of this phenomenon.
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[b]{0.49\textwidth}
@@ -57,13 +54,17 @@ only in the large cluster, since the probability of this happening decreases wit
 	\caption{Scatter plots of TSP path length vs number of locations for the quarters Schepenbuurt and Stad van de Zon (log-log scale).}
 	\label{fig:combinedScatter}
 \end{figure}
+There is a group of points far below the fitted line for the BHH formula, and a group of points far above it.
+The randomness in whether locations from outside the main cluster are included in a TSP decides whether its data point it in the upper or lower group of points.
+As $j$ increases, the number of data points in the lower group decreases.
+Both of these observations imply these data points are for a TSP that contains locations only in the main cluster, since the probability of this happening decreases with $j$.
 
-Furthermore, it is interesting to consider neighborhoods where the prediction errors are especially low. Figure \ref{fig:combined2} displays maps for two quarters,
-Westeinde in Friesland and Bornholm in Noord-Holland. These two neighborhoods also share some features. The most important one is that the addresses seem
-distributed close to uniformly across the area. There are some 'clusters', for example Westeinde can visually be split into four clusters that are only
-connected by one or two main road connections. However, they all contain a large amount of addresses, so each TSP will likely visit all of them. Additionally,
-these clusters are all close to each other, there is not much empty space between them, apart from some small green-space or water. This could explain why the
-formula works so much better for these areas, compared to Schepenbuurt and Stad van de Zon.
+Additionally, it is interesting to consider neighborhoods where the prediction errors are especially low. Figure \ref{fig:combined2} displays maps for two quarters,
+Westeinde in Friesland and Bornholm in Noord-Holland. Such low-prediction error neighborhoods also share characteristics.
+One is that the addresses seem distributed close to uniformly across the area.
+There are some 'clusters', for example Westeinde can visually be split into four clusters that are only connected by one or two main road connections.
+However, they all contain a similar number of addresses, such that each TSP will likely visit all of them.
+This could explain why the formula gives lower prediction errors for these areas, compared to Schepenbuurt and Stad van de Zon.
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[b]{0.4\textwidth}
@@ -80,7 +81,7 @@ formula works so much better for these areas, compared to Schepenbuurt and Stad 
 	\caption{Maps of the quarters Westeinde and Bornholm.}
 	\label{fig:combined2}
 \end{figure}
-For these neighborhoods, there is still some variation around the fitted BHH formula, but Figure \ref{fig:combinedScatter2} shows vastly different
+For these neighborhoods, there is still some variation around the fitted BHH formula, however Figure \ref{fig:combinedScatter2} shows vastly different
 levels of variation, compared to Figure \ref{fig:combinedScatter}.
 \begin{figure}[H]
 	\centering
@@ -98,6 +99,6 @@ levels of variation, compared to Figure \ref{fig:combinedScatter}.
 	\caption{Scatter plots of TSP path length vs number of locations for the quarters Westeinde and Bornholm (log-log scale).}
 	\label{fig:combinedScatter2}
 \end{figure}
-When $\beta$ is restricted to be equal for all neighborhoods ("Total row in Table \ref{tab:results}"), the MAPE increases to almost 22\%.
-This is a problem for entities that want to estimate TSP path length for neighborhoods they do not know the $\beta$ of, since then they would get prediction
-errors almost four times as high, or have to run simulations to estimate the correct value of $\beta$.
+When $\beta$ is restricted to be equal for all neighborhoods ("Total row in Table \ref{tab:results}") the MAPE is almost 22\%.
+Entities that want to estimate TSP path length by the BHH formula for areas they do not now the true value for $\beta$ of, either have to accept the high prediction error
+or run simulations to estimate the true value of $\beta$ to achieve better predictions.

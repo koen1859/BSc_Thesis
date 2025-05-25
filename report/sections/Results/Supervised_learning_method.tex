@@ -1,12 +1,17 @@
 \subsection{Supervised learning method}
-A summary of the results of the Random Forest model is listed in Table \ref{tab:ml_results_small}. An $R^2$ of 0.96 is found on the train data for both the full
-and the reduced model, and an $R^2$ of 0.81 for the full model on the test data, and 0.82 for the reduced model. The Mean Absolute Percentage Error for the
-reduced model is slightly lower for the reduced model, on the test data. This implies the full model is slightly over-fitting on the training data.
+A summary of the results of the Random Forest model is listed in Table \ref{tab:ml_results_small}. 
 \input{../project/small_ml_results_table.tex}
+An $R^2$ of 0.96 is found on the train data for both the full
+and the reduced model, and an $R^2$ of 0.81 for the full model on the test data, and 0.82 for the reduced model. The Mean Absolute Percentage Error for the
+reduced model is slightly lower compared to the full model, on the test data. This implies the full model is slightly over-fitting on the training data.
 
-Figure \ref{tab:feature-importance} displays the most important features for predicting TSP path length, according to the Random Forest model that is used.
-The average path length between all nodes in the graph of the road network, $n$ (the number of locations in the TSP) and the area of the neighborhood the TSP is
-in are by far the most important features.
+Figure \ref{tab:feature-importance} displays the most important features for predicting TSP path length, according to the Random Forest model.
+The most important features are:
+\begin{itemize}
+	\item average path length between all nodes in the graph of the road network,
+	\item the number of locations in the TSP $n$,
+	\item the area of the neighborhood the TSP is in.
+\end{itemize}
 
 It is obvious why the number of locations is an important predictor.
 The average path length, the radius, as well as the area say something about how spread out an area is.

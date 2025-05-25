@@ -1,23 +1,21 @@
 \section{Conclusion}
 This research evaluated the applicability of the Beardwood-Halton-Hammersley (BHH) formula to real-world delivery scenarios by analyzing its performance on TSP 
 instances constructed from OpenStreetMap data across various Dutch neighborhoods.
-It is found that the BHH formula provides predictions with Mean Absolute Percentage (MAPE) error of 6.6\% on the TSP path length, when the true value
+It is found that the BHH formula provides predictions with Mean Absolute Percentage (MAPE) error of 6.6\% on the TSP path length provided the true value
 $\beta$ for the area is known.
-The proportionality constant $\beta$ varies substantially between neighborhoods, depending on spatial characteristics such as clustering, barriers, and address 
-density.
+The proportionality constant $\beta$ varies substantially between neighborhoods.
 As a result, when this value $\beta$ is not known, and a nationwide average is used, this MAPE increases to more than 22\% on average. 
-This implies that this formula might not be suitable for practical applications, where a delivery company might not know the true $\beta$ for areas it serves.
+This implies that this formula might not be suitable for practical applications, where a delivery company might not know the true $\beta$ for new areas it wants to serve.
 
 Even when estimating a separate $\beta$ per area, the prediction accuracy remains inconsistent. Neighborhoods with evenly distributed addresses and good 
-connectivity tend to conform better to the BHH formula, while those with fragmented clusters or natural barriers show larger deviations and higher variance in 
-TSP path lengths.
+connectivity tend to conform better to the BHH formula, while those with uneven-sized clusters show larger deviations in TSP path lengths.
 
 To address these limitations of the BHH formula, a supervised leaning model is used to predict TSP path length based on area features about the spatial distribution
-and other geographic features. This model is able to provide more accurate predictions to the BHH formula when the true $\beta$ is unknown, with a MAPE of 12\% on 
+and other geographic features. This model is able to provide more accurate predictions compared to the BHH formula with unknown true $\beta$, with a MAPE of 12\% on 
 the test set. 
 This model offers a more scalable and generalizable approach for real-world applications, however it does not solve all limitations of the BHH formula. 
 The predictions for areas with a clustered, irregular distribution of delivery locations still have a relatively high MAPE.
-It is debatable how much this matters for real-world applications, since a delivery company is likely to distribute their delivery areas in a way that decreases
+The importance of this for real-world applications is debatable, since a delivery company is likely to distribute their delivery areas in a way that decreases
 this irregularity.
 
 An important caveat for the models used in this research is that it is assumed delivery locations are on a flat, 2d plane.
