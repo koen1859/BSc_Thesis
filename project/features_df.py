@@ -28,7 +28,7 @@ def features_df() -> pd.DataFrame:
 
             for x, y in zip(x, y):
                 row = {
-                    "area": area_name,
+                    "area_name": area_name,
                     "n": x,
                     "TSP length": y,
                 }
@@ -36,7 +36,7 @@ def features_df() -> pd.DataFrame:
                 data.append(row)
 
     df = pd.DataFrame(data)
-    df.set_index("area", inplace=True)
+    df.set_index("area_name", inplace=True)
     df.fillna(0, inplace=True)
     print(f"df has {df.shape[0]} observations of {df.shape[1]} variables.")
     return df
