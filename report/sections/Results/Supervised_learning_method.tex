@@ -1,11 +1,18 @@
 \subsection{Supervised learning method}
-A summary of the results of the Random Forest model is listed in Table \ref{tab:ml_results_small}. 
+A summary of the results of the Random Forest model is listed in Table \ref{tab:ml_results_small}.
 \input{../project/small_ml_results_table.tex}
-An $R^2$ of 0.96 is found on the train data for both the full
-and the reduced model, and an $R^2$ of 0.81 for the full model on the test data, and 0.82 for the reduced model. The Mean Absolute Percentage Error for the
-reduced model is slightly lower compared to the full model, on the test data. This implies the full model is slightly over-fitting on the training data.
-
+An $R^2$ of 0.96 is found on the train data for both the full and the reduced model, and an $R^2$ of 0.85 for both models on the test data.
+The MAPE is also nearly equal for both models.
 Figure \ref{tab:feature-importance} displays the most important features for predicting TSP path length, according to the Random Forest model.
+\begin{figure}[H]
+	\centering
+	\caption{The most important features in the reduced model.}
+	\includegraphics[width=0.9\textwidth]{../project/plots/feature_importances_reduced.png}
+	\label{tab:feature-importance}
+\end{figure}
+These nine features are the only ones that are left in the reduced model.
+All other features get dropped out from the full model due to too low importance.
+The reduced model still provides equal prediction accuracy, requiring less data collection.
 The most important features are:
 \begin{itemize}
 	\item average path length between all nodes in the graph of the road network,
@@ -14,20 +21,13 @@ The most important features are:
 \end{itemize}
 
 It is obvious why the number of locations is an important predictor.
-The average path length, the radius, as well as the area say something about how spread out an area is.
-All three of these features are at the top of the most important features.
+The average path length as well as the area say something about how spread out an area is.
 The average edge length also carries some importance.
 This value might mostly imply something about how straight or curvy the roads are.
 A road with a lot of curves has many short edges, and a long straight road consists of a few long edges.
-The mean, variance and maximum value of the node degree also provide some predictive value.
+The maximum value of the node degree also provides some predictive value.
 It is difficult to interpret the importance of the features, since it might be that a feature that carries some importance does not directly affect TSP path length,
 but is correlated with some other variable that is not known which in turn has an effect on TSP path length.
-\begin{figure}[H]
-	\centering
-	\caption{The 15 most important features in the reduced model.}
-	\includegraphics[width=0.9\textwidth]{../project/plots/feature_importances_reduced.png}
-	\label{tab:feature-importance}
-\end{figure}
 
 Table \ref{tab:ml_results} shows per-neighborhood Mean Absolute Percentage errors, for the test data, comparing the full and the reduced model.
 The model is able to predict TSP path length with below 5\% for some areas, but for other areas the prediction errors are close to or above 30\%.
@@ -37,5 +37,5 @@ even though some features were included in the Random Forest model that could pr
 A potential reason for this might be that this clustering causes larger variation in the TSP path length, especially for smaller numbers of visited locations,
 which would imply that any approximation would yield higher prediction errors in such area.
 
-Overall, the Random Forest model provides estimates with MAPE almost half of the MAPE of the predictions of the BHH formula (with estimated value for $\beta$).
+Overall, the Random Forest model provides estimates with MAPE less than half of the MAPE of the predictions of the BHH formula (with estimated value for $\beta$).
 This is a strong improvement in performance, requiring little data collection to extend this to completely new areas.

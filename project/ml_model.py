@@ -6,7 +6,6 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import GridSearchCV
 import pandas as pd
-import ujson
 import matplotlib.pyplot as plt
 
 
@@ -73,7 +72,7 @@ def random_forest(df_train: pd.DataFrame, df_test: pd.DataFrame):
 
     results["feature_importances"].head(15).plot(kind="barh")
     plt.gca().invert_yaxis()
-    plt.title("Top 15 Feature Importances")
+    plt.title("Top Feature Importances")
     plt.xlabel("Importance")
     plt.tight_layout()
     plt.savefig("plots/feature_importances_full.png")
@@ -93,7 +92,7 @@ def feature_importance(df_train, df_test, results):
 
     results_reduced["feature_importances"].head(15).plot(kind="barh")
     plt.gca().invert_yaxis()
-    plt.title("Top 15 Feature Importances")
+    plt.title("Top Feature Importances")
     plt.xlabel("Importance")
     plt.tight_layout()
     plt.savefig("plots/feature_importances_reduced.png")
