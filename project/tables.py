@@ -64,3 +64,74 @@ def make_results_table(final_results):
 
         f.write("\\hline\n")
         f.write("\\end{longtable}\n")
+
+
+def make_ml_results_table(results, results_reduced):
+    train_results_full = results["train"]
+    test_results_full = results["test"]
+    train_results_reduced = results_reduced["train"]
+    test_results_reduced = results_reduced["test"]
+
+    with open("small_ml_results_table.tex", "w") as f:
+        f.write("\\begin{longtable}{lccc}\n")
+        f.write(
+            "\\caption{Performance metrics for the Random forest models using all features and reduced features.} \\label{tab:ml_results_small} \\\\\n"
+        )
+        f.write("\\hline\n")
+        f.write("Model & $R^2$ & MAE (m) & MAPE (\\%) \\\\\n")
+        f.write("\\hline\n")
+        f.write("\\endfirsthead\n")
+        f.write("\\hline\n")
+        f.write("Model & $R^2$ & MAE (m) & MAPE (\\%) \\\\\n")
+        f.write("\\hline\n")
+        f.write("\\endhead\n")
+
+        f.write(
+            f"Full (train) & {train_results_full['r2']:.2f} & {train_results_full['mae']:.2f} & {train_results_full['mape'] * 100:.2f}\\\\\n"
+        )
+        f.write(
+            f"Full (test) & {test_results_full['r2']:.2f} & {test_results_full['mae']:.2f} & {test_results_full['mape'] * 100:.2f}\\\\\n"
+        )
+        f.write(
+            f"Reduced (train) & {train_results_reduced['r2']:.2f} & {train_results_reduced['mae']:.2f} & {train_results_reduced['mape'] * 100:.2f}\\\\\n"
+        )
+        f.write(
+            f"Reduced (test) & {test_results_reduced['r2']:.2f} & {test_results_reduced['mae']:.2f} & {test_results_reduced['mape'] * 100:.2f}\\\\\n"
+        )
+
+        f.write("\\hline\n")
+        f.write("\\end{longtable}\n")
+
+    per_area_full = results["per_area_metrics"]
+    per_area_reduced = results_reduced["per_area_metrics"]
+    with open("ml_results_table.tex", "w") as f:
+        f.write("\\begin{longtable}{lcc}\n")
+        f.write(
+            "\\caption{Per-area MAPE from Random Forest models using all features and reduced features.} \\label{tab:ml_results} \\\\\n"
+        )
+        f.write("\\hline\n")
+        f.write("Province-Neighborhood & MAPE (\\%) (F) & MAPE (\\%) (R) \\\\\n")
+        f.write("\\hline\n")
+        f.write("\\endfirsthead\n")
+        f.write("\\hline\n")
+        f.write("Province-Neighborhood & MAPE (\\%) (F) & MAPE (\\%) (R) \\\\\n")
+        f.write("\\hline\n")
+        f.write("\\endhead\n")
+
+        for area in per_area_full.index:
+            mape_full = per_area_full.loc[area, "mape"] * 100
+            mape_reduced = (
+                per_area_reduced.loc[area, "mape"] * 100
+                if area in per_area_reduced.index
+                else float("nan")
+            )
+
+            area_name = area.replace("_", " ")
+            f.write(f"{area_name} & {mape_full:.2f} & {mape_reduced:.2f} \\\\\n")
+
+        total_mape_full = results["test"]["mape"] * 100
+        total_mape_reduced = results_reduced["test"]["mape"] * 100
+
+        f.write(f"Total & {total_mape_full:.2f} & {total_mape_reduced:.2f} \\\\\n")
+        f.write("\\hline\n")
+        f.write("\\end{longtable}\n")

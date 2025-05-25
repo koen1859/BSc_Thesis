@@ -6,8 +6,10 @@ from tsp import solve_tsps
 from read_tour import read_tours
 from route import random_path
 from find_beta import find_beta, results, scatterplot, errorsplot
-from features_df import features_df
-from ml_model import random_forest
+from features_df import features_df, split_train_test
+from ml_model import random_forest, feature_importance
+from tables import make_ml_results_table
+import pandas as pd
 
 
 # This is the main simulation function. It creates, solves,
@@ -96,34 +98,41 @@ def interpret_results(
     area: float = graph.alpha_shape(key)
     get_features(DB, neighborhood, roads, graph, area)
 
-    tours: dict[int, list[list[str]]]
-    distances: dict[int, list[int]]
-    tours, distances = read_tours(f"tsps_{key}")
+    # tours: dict[int, list[list[str]]]
+    # distances: dict[int, list[int]]
+    # tours, distances = read_tours(f"tsps_{key}")
+    #
+    # locations, distance = random_path(tours, distances)
+    # graph.plot_route(locations, distance, f"TSP_{key}")
+    #
+    # (
+    #     x,
+    #     y,
+    #     b_hat,
+    # ) = find_beta(distances, area)
+    #
+    # line: list[float]
+    # errors: list[float]
+    # mae: float
+    # mape: float
+    # line, errors, mae, mape = results(distances, x, y, b_hat, area)
+    #
+    # scatterplot(distances, x, y, b_hat, line, f"scatter_{key}")
+    # errorsplot(errors, f"errors_{key}")
+    #
+    # return (key, [b_hat, mae, mape, area, x, y])
 
-    locations, distance = random_path(tours, distances)
-    graph.plot_route(locations, distance, f"TSP_{key}")
 
-    (
-        x,
-        y,
-        b_hat,
-    ) = find_beta(distances, area)
-
-    line: list[float]
-    errors: list[float]
-    mae: float
-    mape: float
-    line, errors, mae, mape = results(distances, x, y, b_hat, area)
-
-    scatterplot(distances, x, y, b_hat, line, f"scatter_{key}")
-    errorsplot(errors, f"errors_{key}")
-
-    return (key, [b_hat, mae, mape, area, x, y])
-
-
-def run_ml() -> None:
-    df = features_df()
-    r2, mae, mape, _, _ = random_forest(df)
-    print(r2, mae, mape)
+def run_ml():
+    df: pd.DataFrame = features_df()
+    df_train: pd.DataFrame
+    df_test: pd.DataFrame
+    df_train, df_test = split_train_test(df)
+    results = random_forest(df_train, df_test)
+    results_reduced = feature_importance(df_train, df_test, results)
     with open("ml_results.txt", "w") as f:
-        f.write(f"""r2: {r2}\nmae: {mae}\nmape: {mape * 100}\n""")
+        f.write(f"Full model:\n{results['train']}\n{results['test']}")
+        f.write(
+            f"Reduced model:\n{results_reduced['train']}\n{results_reduced['test']}"
+        )
+    make_ml_results_table(results, results_reduced)

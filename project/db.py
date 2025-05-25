@@ -208,6 +208,7 @@ def get_features(
     cursor.close()
     connection.close()
     features = {feature_type: count / area for feature_type, count in data}
+    features["area"] = area
     features["building_density"] = graph.num_buildings() / area
     features["road_density"] = graph.total_edge_weight() / area
     features["edge_length"] = graph.avg_edge_weight()

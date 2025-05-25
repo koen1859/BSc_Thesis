@@ -25,33 +25,33 @@ Consider $n$ uniformly drawn locations from some area in $\mathbb{R}^2$ with are
 	\label{eq:beardwood}
 \end{align}
 as an estimation for the length of the shortest TSP path measured by Euclidean distance through
-these random locations, where $\beta$ is some proportionality constant. 
+these random locations, where $\beta$ is some proportionality constant.
 
-The BHH formula is a neat result, the formula makes intuitive sense. However, in contrast to the 
-Euclidean plane, based on different features of the area, TSP path lengths in this area might 
-behave differently. For example, when there are clusters of locations with empty space in between 
-them, or natural boundaries such as canals could have impact on TSP path length in an area. The 
+The BHH formula is a neat result, the formula makes intuitive sense. However, in contrast to the
+Euclidean plane, based on different features of the area, TSP path lengths in this area might
+behave differently. For example, when there are clusters of locations with empty space in between
+them, or natural boundaries such as canals could have impact on TSP path length in an area. The
 BHH formula might not be able to capture such complex relations, and fail to provide accurate results.
 The value for $\beta$ might differ vastly across different types of areas, as a result of varying geographic
 features.
-This would result in having to use a different value for $\beta$ for every different area, making it less 
+This would result in having to use a different value for $\beta$ for every different area, making it less
 viable to use this formula for delivery services, especially they do not know the true value of $\beta$ for the areas they serve.
-A potential solution to this might be to use supervised learning methods to predict the length of the shortest TSP path, 
+A potential solution to this might be to use supervised learning methods to predict the length of the shortest TSP path,
 aimed at capturing more complex relations between area features and the TSP path length in this area.
 This would result in one central formula to predict TSP path length accurately, removing the need to calculate
 separate parameters for each area.
 
-This research investigates how well Equation \ref{eq:beardwood} performs, predicting TSP path length on real road networks. 
+This research investigates how well Equation \ref{eq:beardwood} performs, predicting TSP path length on real road networks.
 Using OpenStreetMap \citep{openstreetmap} data, TSP instances are simulated in a wide variety of different urban areas
 in the Netherlands, then solve these for the actual shortest paths using the Lin–Kernighan heuristic \citep{lin1973effective}.
-Then, the $\beta$ from equation \ref{eq:beardwood} is estimated and the performance of this formula is analyzed. 
+Then, the $\beta$ from equation \ref{eq:beardwood} is estimated and the performance of this formula is analyzed.
 Additionally, the results for $\beta$ and the performance across the selected areas is compared. In an attempt to capture
-more complex relations between area features and TSP path length, a supervised learning method is used as an alternative 
+more complex relations between area features and TSP path length, a supervised learning method is used as an alternative
 model to predict TSP paths.
 
 The core contributions of this research are:
 \begin{enumerate}
-	\item An analysis of the BHH formula under the following conditions:
+	\item An analysis of the performance of the BHH formula under the following conditions:
 	      \begin{enumerate}
 		      \item The locations are drawn from the set of postcodes in the area in question, a relaxation of the uniform distribution of visited
 		            locations. In reality, delivery locations for companies are not uniformly distributed across the delivery area, but they are clustered
@@ -69,7 +69,7 @@ to apply it to. The source code of this project is available on
 \href{https://github.com/koen1859/BSc_Thesis}{GitHub}.
 
 In section 2 the context and previous research in this field is provided.
-In section 3 a formal problem definition is stated. 
+In section 3 a formal problem definition is stated.
 Section 4 contains a description of the data that is used, and explains how it is processed.
 In section 5 the design of the experiment is documented, section 6 displays the results.
 In section 7 the research is concluded.

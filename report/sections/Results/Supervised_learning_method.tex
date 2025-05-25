@@ -1,6 +1,35 @@
 \subsection{Supervised learning method}
-The supervised learning model results in an $R^2$ of 0.95, Mean Absolute Error of 943 meters, and Mean Absolute Percentage error of about 6.4\%, for the test
-sample. This is a strong improvement on the BHH formula when restricting $\beta$ to be equal across areas. This method also outperforms the BHH formula
-when considering the estimated true values for $\beta$ for each neighborhood. 
-When the correct value for $\beta$ is unknown, this model yields far superior estimates compared to the BHH formula. However, when the true value for 
-$\beta$ is known, the difference in prediction errors is negligible.
+A summary of the results of the Random Forest model is listed in Table \ref{tab:ml_results_small}. An $R^2$ of 0.96 is found on the train data for both the full
+and the reduced model, and an $R^2$ of 0.81 for the full model on the test data, and 0.82 for the reduced model. The Mean Absolute Percentage Error for the
+reduced model is slightly lower for the reduced model, on the test data. This implies the full model is slightly over-fitting on the training data.
+\input{../project/small_ml_results_table.tex}
+
+Figure \ref{tab:feature-importance} displays the most important features for predicting TSP path length, according to the Random Forest model that is used.
+The average path length between all nodes in the graph of the road network and $n$ (the number of locations in the) TSP are by far the most important features.
+
+It is obvious why the number of locations is an important predictor.
+The average path length, the radius, as well as the area say something about how spread out an area is.
+All three of these features are at the top of the most important features.
+The average edge length also carries some importance.
+This value might mostly imply something about how straight or curvy the roads are.
+A road with a lot of curves has many short edges, and a long straight road consists of a few long edges.
+The mean, variance and maximum value of the node degree also provide some predictive value.
+It is difficult to interpret the importance of the features, since it might be that a feature that carries some importance does not directly affect TSP path length,
+but is correlated with some other variable that is not known which in turn has an effect on TSP path length.
+\begin{figure}[H]
+	\centering
+	\caption{The 15 most important features in the reduced model.}
+	\includegraphics[width=0.9\textwidth]{../project/plots/feature_importances_reduced.png}
+	\label{tab:feature-importance}
+\end{figure}
+
+Table \ref{tab:ml_results} shows per-neighborhood Mean Absolute Percentage errors, for the test data, comparing the full and the reduced model.
+The model is able to predict TSP path length with below 5\% for some areas, but for other areas the prediction errors are close to or above 30\%.
+Again, similarly to the results for the BHH formula, the predictions for the Stad van de Zon quarter have the highest MAPE, of all areas.
+It seems that the Random Forest model is also not able to provide accurate results for areas with strong clustering of locations, as was the BHH formula,
+even though some features were included in the Random Forest model that could provide some information about this clustering.
+A potential reason for this might be that this clustering causes larger variation in the TSP path length, especially for smaller numbers of visited locations,
+which would imply that any approximation would yield higher prediction errors in such area.
+
+Overall, the Random Forest model provides estimates with MAPE almost half of the MAPE of the predictions of the BHH formula (with estimated value for $\beta$).
+This is a strong improvement in performance, requiring little data collection to extend this to completely new areas.

@@ -1,1 +1,31 @@
 \section{Conclusion}
+This research evaluated the applicability of the Beardwood-Halton-Hammersley (BHH) formula to real-world delivery scenarios by analyzing its performance on TSP 
+instances constructed from OpenStreetMap data across various Dutch neighborhoods.
+It is found that the BHH formula provides predictions with Mean Absolute Percentage (MAPE) error of 6.6\% on the TSP path length, when the true value
+$\beta$ for the area is known.
+The proportionality constant $\beta$ varies substantially between neighborhoods, depending on spatial characteristics such as clustering, barriers, and address 
+density.
+As a result, when this value $\beta$ is not known, and a nationwide average is used, this MAPE increases to more than 22\% on average. 
+This implies that this formula might not be suitable for practical applications, where a delivery company might not know the true $\beta$ for areas it serves.
+
+Even when estimating a separate $\beta$ per area, the prediction accuracy remains inconsistent. Neighborhoods with evenly distributed addresses and good 
+connectivity tend to conform better to the BHH formula, while those with fragmented clusters or natural barriers show larger deviations and higher variance in 
+TSP path lengths.
+
+To address these limitations of the BHH formula, a supervised leaning model is used to predict TSP path length based on area features about the spatial distribution
+and other geographic features. This model is able to provide more accurate predictions to the BHH formula when the true $\beta$ is unknown, with a MAPE of 12\% on 
+the test set. 
+This model offers a more scalable and generalizable approach for real-world applications, however it does not solve all limitations of the BHH formula. 
+The predictions for areas with a clustered, irregular distribution of delivery locations still have a relatively high MAPE.
+It is debatable how much this matters for real-world applications, since a delivery company is likely to distribute their delivery areas in a way that decreases
+this irregularity.
+
+An important caveat for the models used in this research is that it is assumed delivery locations are on a flat, 2d plane.
+This is a reasonable assumption when considering Dutch neighborhoods, since the Netherlands does not contain much variation in terrain height.
+Terrain height does have a significant impact on the length of the shortest path between two locations, which this research omits from the list of features.
+For this reason it might not be valid to extend such approximation methods to areas with a large variation in terrain height. 
+
+Future research might be to extend the approximation methods for TSP path length to areas of varying terrain height. 
+However, this might prove to be difficult to apply, since (to the best of my knowledge) no data about elevation is included in OpenStreetMap. 
+The data from OpenStreetMap would require to be combined with other data sets containing elevation information.
+Furthermore, approximation methods could also be applied to travel times instead of distances.
