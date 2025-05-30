@@ -18,57 +18,80 @@ class Graph:
         self._g = ig.Graph(directed=True)
         self.nodes: list[Node] = []
         self.edges: list[Edge] = []
-        self._name2node: dict["str", Node] = {}
+        self._name2node: dict["str", Node] = {}  # Mapping from name to node
+
+        # Fill the graph with the given nodes and edges
         self.add_vertices(nodes)
         self.add_edges(edges)
 
+    # Functions for checking whether a Node/Edge is in the graph
     def contains_node(self, node: Node) -> bool:
         return node in self.nodes
 
     def contains_edge(self, edge: Edge) -> bool:
         return edge in self.edges
 
+    # Function to add a vertex to the graph (we try to not use this since this is slow, adding in bulk is faster)
     def add_vertex(self, node: Node) -> None:
         if not self.contains_node(node):
+            # We add it in igraph, and to our list of nodes and name to node mapping
             self._g.add_vertex(name=node.name)
             self.nodes.append(node)
             self._name2node[node.name] = node
 
+    # Function to add the vertices in bulk
     def add_vertices(self, nodes: list[Node]) -> None:
+        # List of the nodes not already in the graph
         new_nodes: list[Node] = [node for node in nodes if not self.contains_node(node)]
+
         if new_nodes:
-            self._g.add_vertices(len(new_nodes))
+            self._g.add_vertices(len(new_nodes))  # Add the new nodes to igraph
+            # The new nodes are added at the end in igraph, so we can get the last nodes from the list of nodes
+            # to give the correct names
             self._g.vs[-len(new_nodes) :]["name"] = [node.name for node in new_nodes]
+
+            # Also add to the list of nodes and name to node mapping
             self.nodes.extend(new_nodes)
             for node in nodes:
                 self._name2node[node.name] = node
 
+    # Function to add an edge to the graph (we try to not use this since this is slow, adding in bulk is faster)
     def add_edge(self, edge: Edge) -> None:
+        # First add the vertices of the edges (the check whether they are already in the graph happens in add_vertex)
         self.add_vertex(edge.start_node)
         self.add_vertex(edge.end_node)
         if not self.contains_edge(edge):
-            self._g.add_edge(edge.start_node.name, edge.end_node.name)
-            self._g.es[-1]["weight"] = edge.weight
-            self.edges.append(edge)
+            self._g.add_edge(edge.start_node.name, edge.end_node.name)  # Add to igraph
+            self._g.es[-1]["weight"] = (
+                edge.weight
+            )  # The last edge is the new one, also add the weight in igraph
+            self.edges.append(edge)  # Add to list of edges
 
+    # Function to add the edges in bulk
     def add_edges(self, edges: list[Edge]) -> None:
-        new_nodes: dict["str", Node] = {}
+        new_nodes: dict[
+            "str", Node
+        ] = {}  # Mapping of name to node for the nodes not already in the graph
+        # Find any nodes from the list of edges that are not already in the graph
         for edge in edges:
             if not self.contains_node(edge.start_node):
                 new_nodes[edge.start_node.name] = edge.start_node
             if not self.contains_node(edge.end_node):
                 new_nodes[edge.end_node.name] = edge.end_node
 
+        # If any are found, add them
         if new_nodes:
             self.add_vertices(list(new_nodes.values()))
 
         new_edges: list[Edge] = [edge for edge in edges if not self.contains_edge(edge)]
 
+        # If new edges are found, add them
         if new_edges:
             self._g.add_edges(
                 [edge.start_node.name, edge.end_node.name] for edge in new_edges
             )
             self.edges.extend(new_edges)
+            # The new edges are added at the end, so add the weights to the end of the list of edges
             self._g.es[-len(new_edges) :]["weight"] = [
                 edge.weight for edge in new_edges
             ]
@@ -76,7 +99,7 @@ class Graph:
     def delete_edge(self, edge: Edge) -> None:
         if edge in self.edges:
             self.edges.remove(edge)
-            # Remove from igraph as well
+            # Remove from igraph as well, we need to filter by start node and end node index
             start: Node = edge.start_node
             end: Node = edge.end_node
             es_to_delete = self._g.es.select(
@@ -85,23 +108,29 @@ class Graph:
             )
             es_to_delete.delete()
 
+    # Map igraph node index to node name
     def index2name(self, index: int) -> str:
         return self._g.vs[index]["name"]
 
+    # Map node name to node
     def name2node(self, name: str) -> Node:
         return self._name2node[name]
 
+    # Map igraph node index to node
     def index2node(self, index: int) -> Node:
         return self.name2node(self.index2name(index))
 
+    # Map node to igraph index
     def node2index(self, node: Node) -> int:
         return self._g.vs.find(name=node.name).index
 
+    # Find the average coordinates of a graph, to center the maps correctly
     def avg_coords(self) -> tuple[float, float]:
         all_lats = [float(node.lat) for node in self.nodes]
         all_lons = [float(node.lon) for node in self.nodes]
         return (float(np.mean(all_lats)), float(np.mean(all_lons)))
 
+    # A bunch of functions that calculate some interesting features of the graph
     def total_edge_weight(self) -> float:
         return sum(edge.weight for edge in self.edges)
 
@@ -150,8 +179,12 @@ class Graph:
     def max_degree(self) -> int:
         return self._g.degree_distribution()._max
 
+    # We only want to have the largest connected component when making TSPs on this graph
     def largest_component(self) -> "Graph":
-        subgraph = self._g.subgraph(max(self._g.components(), key=len))
+        subgraph = self._g.subgraph(
+            max(self._g.components(), key=len)
+        )  # Find the largest connected component
+        # Then extract the nodes and edges from this subgraph
         nodes: list[Node] = [self.name2node(name) for name in subgraph.vs["name"]]
         edges: list[Edge] = [
             Edge(
@@ -160,15 +193,18 @@ class Graph:
             )
             for edge in subgraph.es
         ]
-        return Graph(nodes, edges)
+        return Graph(nodes, edges)  # Return the subgraph
 
+    # We also need to connect the buildings to the graph
     def connect_buildings(self, building_nodes: list[Node]) -> "Graph":
+        # Define some mappings we will need to find the closest edge to a building
         edge_to_linestring: dict[Edge, LineString] = {}
         linestrings: list[LineString] = []
         edge_map: dict[LineString, Edge] = {}
         new_nodes: list[Node] = []
         new_edges: list[Edge] = []
 
+        # Load in the graph as a list of linestrings, to create a tree of this graph
         for edge in self.edges:
             start: Node = edge.start_node
             end: Node = edge.end_node
@@ -177,7 +213,9 @@ class Graph:
             linestrings.append(line)
             edge_map[line] = edge
 
-        tree: STRtree = STRtree(linestrings)
+        tree: STRtree = STRtree(linestrings)  # Create the tree
+
+        # Counter to see how many virtual nodes were added
         node_id_counter = itertools.count(
             start=max(
                 int(n.name.split("_")[-1]) for n in self.nodes if "virtual" in n.name
@@ -188,21 +226,30 @@ class Graph:
         )
 
         for building in building_nodes:
-            building_point: Point = building.point_lat_lon()
-            nearest_index: int = tree.nearest(building_point)
-            nearest_line: LineString = linestrings[nearest_index]
-            nearest_edge: Edge = edge_map[nearest_line]
+            building_point: Point = building.point_lat_lon()  # Convert to Point
+            nearest_index: int = tree.nearest(
+                building_point
+            )  # Find the index of the nearest edge
+            nearest_line: LineString = linestrings[
+                nearest_index
+            ]  # Find the corresponding linestring
+            nearest_edge: Edge = edge_map[nearest_line]  # Map to the nearest edge
             start: Node = nearest_edge.start_node
             end: Node = nearest_edge.end_node
 
+            # Find the closest point on this nearest edge to the building
             projected_point: Point = nearest_line.interpolate(
                 nearest_line.project(building_point)
             )
+
+            # Find the coordinates of this nearest point
             projected_coords: tuple[float, float] = (
                 projected_point.x,
                 projected_point.y,
             )
 
+            # For example if the building is on the outside of a corner of a street,
+            # then the closest point on the edge is its end or start node. Then we do not need to have a virtual node
             if projected_point.equals(Point((start.lat, start.lon))):
                 new_edges.append(Edge(building, start))
                 new_edges.append(Edge(start, building))
@@ -212,6 +259,7 @@ class Graph:
                 new_edges.append(Edge(end, building))
                 continue
 
+            # If the closest point on the edge is not the end or start point we need to make virtual node on this edge
             virtual_node_name: str = f"virtual_{next(node_id_counter)}"
             virtual_node: Node = Node(
                 name=virtual_node_name,
@@ -219,16 +267,22 @@ class Graph:
                 lon=float(projected_coords[1]),
                 is_building=False,
             )
-            new_nodes.append(virtual_node)
+            new_nodes.append(virtual_node)  # Add to list of new nodes
 
-            self.delete_edge(nearest_edge)
+            self.delete_edge(nearest_edge)  # Then we remove the edge from the graph
 
+            # Reconnect the start and end node of the old edge, with the virtual node in it
+            # (we do not need to add the other way since the other way is another edge)
+            # (this is not perfect since then the building is only connected to the street if you come from the correct side,
+            # but I do not think this matters too much)
             new_edges.append(Edge(start, virtual_node))
             new_edges.append(Edge(virtual_node, end))
 
+            # Connect the building to the newly created virtual node
             new_edges.append(Edge(building, virtual_node))
             new_edges.append(Edge(virtual_node, building))
 
+        # Add all the newly created nodes and edges to the graph in bulk
         self.add_vertices(new_nodes)
         self.add_edges(new_edges)
 
@@ -245,11 +299,13 @@ class Graph:
             folium.PolyLine(coords, color="red").add_to(m)
         m.save(f"maps/{filename}.html")
 
+    # Get a random sample from the buildings in the graph
     def sample_buildings(self, size: int) -> list[Node]:
         return random.sample(
             [node for node in self.nodes if node.is_building is True], k=size
         )
 
+    # Make a alpha shape of the buildings in the graph, return the area and visualize on a map
     def alpha_shape(self, filename: str) -> float:
         gdf = gpd.GeoDataFrame(
             geometry=[
@@ -279,6 +335,7 @@ class Graph:
         m.save(f"alpha_shapes/{filename}.html")
         return area
 
+    # Make a distance dictionary {(start_name, end_name): distance} between a list of nodes
     def distance_dict(self, nodes: list[Node]) -> dict[tuple[str, str], float]:
         indices: list[int] = [self.node2index(node) for node in nodes]
         distances: dict[tuple[str, str], float] = {}
@@ -293,9 +350,12 @@ class Graph:
 
         return distances
 
+    # Write a TSP to the disk that LKH can solve
     def generate_tsp(self, size: int, run: int, dirname: str) -> None:
         locations: list[Node] = self.sample_buildings(size)
         distances: dict[tuple[str, str], float] = self.distance_dict(locations)
+
+        # Mapping of the LKH node indices back to our node names (LKH starts counting from 1)
         index_to_location: dict[int, str] = {
             idx + 1: loc.name for idx, loc in enumerate(locations)
         }
@@ -304,11 +364,12 @@ class Graph:
             "TYPE : TSP",
             f"DIMENSION : {len(locations)}",
             "EDGE_WEIGHT_TYPE : EXPLICIT",
-            "EDGE_WEIGHT_FORMAT : FULL_MATRIX",
+            "EDGE_WEIGHT_FORMAT : FULL_MATRIX",  # We need full matrix since the graph is directed
             "EDGE_WEIGHT_SECTION",
         ]
         rows: list[str] = []
 
+        # Add the distances separated by spaces
         for loc1 in locations:
             row = [str(int(distances[(loc1.name, loc2.name)])) for loc2 in locations]
             rows.append(" ".join(row))
@@ -318,13 +379,16 @@ class Graph:
         with open(f"{dirname}/problem_{size}_{run}.tsp", "w") as f:
             f.write(body)
 
+        # Write the mapping to json so we can load dictionary back in easily
         with open(f"{dirname}/index_to_location_{size}_{run}.json", "w") as f:
             ujson.dump(index_to_location, f)
 
+        # Write parameter file so LKH uses the correct problem file and writes output to correct output file
         with open(f"{dirname}/problem_{size}_{run}.par", "w") as f:
             f.write(f"PROBLEM_FILE = {dirname}/problem_{size}_{run}.tsp\n")
             f.write(f"OUTPUT_TOUR_FILE = {dirname}/tour_{size}_{run}.txt\n")
 
+    # Loop over the number of locations and number of runs to make all TSPs
     def create_tsps(
         self, num_runs: int, num_locations: list[int], dirname: str
     ) -> None:
@@ -333,6 +397,8 @@ class Graph:
             for run in range(num_runs):
                 self.generate_tsp(size, run, dirname)
 
+    # LKH returns the node indices in the order of the shortest path, but we do not know this shortest path.
+    # We also want to visualize paths so we need to find the exact shortest paths between nodes
     def get_shortest_path(self, source: Node, target: Node) -> list[Node]:
         path: list[int] = []
         path = self._g.get_shortest_path(
@@ -343,6 +409,7 @@ class Graph:
         )
         return [self.index2node(index) for index in path]
 
+    # Given an ordered list of locations (node names) plot the route on a map
     def plot_route(self, locations: list[str], distance: int, filename: str) -> None:
         route: list[Node] = []
         route_nodes: list[Node] = [self.name2node(name) for name in locations]

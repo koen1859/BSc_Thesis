@@ -113,6 +113,8 @@ def get_addresses(DB: str, neighborhood: str) -> list[tuple[int, float, float]]:
     return addresses
 
 
+# This function fetches all features we use for the supervised learning model from the
+# data, and writes this to json file so we can access this easily afterward.
 def get_features(
     DB: str,
     neighborhood: str,

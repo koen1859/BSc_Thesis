@@ -10,7 +10,7 @@ class Node:
         self.is_building: bool = is_building
 
     def distance(self, other: "Node") -> float:
-        radius = 6371000
+        radius = 6371000  # Earth's radius
         lat1, lon1, lat2, lon2 = map(
             radians, [self.lat, self.lon, other.lat, other.lon]
         )
@@ -18,16 +18,21 @@ class Node:
         y = lat2 - lat1
         return radius * sqrt(x**2 + y**2)
 
+    # To use a node for certain libraries we need to convert to Point
+    # object. (some use lat,lon, some use lon,lat)
     def point_lat_lon(self) -> Point:
         return Point(self.lat, self.lon)
+
     def point_lon_lat(self) -> Point:
         return Point(self.lon, self.lat)
 
+    # To make nice print
     def __repr__(self) -> str:
         r: str = f"Node(name={self.name}, lat={self.lat}, lon={self.lon}, is_building={self.is_building})"
         return r
 
 
+# Fetch road nodes from the raw data we extracted in db.py
 def get_road_nodes(
     roads: list[tuple[int, list[int], list[float], list[float], str]],
 ) -> list[Node]:
@@ -45,6 +50,7 @@ def get_road_nodes(
     return road_nodes
 
 
+# Fetch building nodes from the raw data we extracted in db.py
 def get_building_nodes(buildings: list[tuple[int, float, float]]) -> list[Node]:
     building_nodes: list[Node] = []
     for name, lat, lon in buildings:

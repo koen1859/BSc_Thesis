@@ -1,6 +1,7 @@
 import random
 
 
+# Given the LKH solutions this functions gets a random one
 def random_path(
     tours: dict[int, list[list[str]]], distances: dict[int, list[int]]
 ) -> tuple[list[str], int]:

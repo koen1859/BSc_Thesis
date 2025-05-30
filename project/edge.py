@@ -5,19 +5,24 @@ class Edge:
     def __init__(self, start_node: Node, end_node: Node) -> None:
         self.start_node: Node = start_node
         self.end_node: Node = end_node
-        self.weight: float = self.start_node.distance(self.end_node)
+        self.weight: float = self.start_node.distance(
+            self.end_node
+        )  # We need to calculate weight for all edges anyway so just put it as an attribute
 
     def __repr__(self) -> str:
         r: str = f"Edge(start_node={self.start_node.name}, end_node={self.end_node.name}, weight={self.weight})"
         return r
 
 
+# Extract all road edges from the raw data combined with the nodes we extracted from this area.
 def get_road_edges(
     roads: list[tuple[int, list[int], list[float], list[float], str]],
     road_nodes: list[Node],
 ) -> list[Edge]:
     edges: list[Edge] = []
-    name_to_node: dict[str, Node] = {node.name: node for node in road_nodes}
+    name_to_node: dict[str, Node] = {
+        node.name: node for node in road_nodes
+    }  # Mapping of node names to their Node object
 
     for _, road_node_names, _, _, oneway in roads:
         node_names: list[str] = [str(name) for name in road_node_names]

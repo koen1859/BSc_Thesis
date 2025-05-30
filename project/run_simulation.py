@@ -17,40 +17,56 @@ import pandas as pd
 def run_simulation(
     DB: str, neighborhood: str
 ) -> tuple[str, list[float | list[int] | list[float]]]:
-    key: str = f"{DB}-{neighborhood}"
+    key: str = f"{DB}-{neighborhood}"  # Key to name files and directories consistently
 
+    # Extract all roads
     roads: list[tuple[int, list[int], list[float], list[float], str]] = get_roads(
         DB, neighborhood
     )
+    # Extract all buildings
     buildings: list[tuple[int, float, float]] = get_addresses(DB, neighborhood)
 
+    # Create the nodes from the roads and buildings
     road_nodes: list[Node] = get_road_nodes(roads=roads)
     building_nodes: list[Node] = get_building_nodes(buildings=buildings)
 
+    # Make the road edges
     road_edges: list[Edge] = get_road_edges(roads=roads, road_nodes=road_nodes)
+
+    # First make a graph of all the roads, then connect all buildings to it, and keep the largest connected component
     graph: Graph = (
         Graph(nodes=road_nodes, edges=road_edges)
         .connect_buildings(building_nodes)
         .largest_component()
     )
 
+    # Visualize graph
     graph.create_map(key)
+
+    # Get area and also plot the alpha shape
     area: float = graph.alpha_shape(key)
+
+    # Create the TSPs and write to disk
     graph.create_tsps(10, list(range(20, 90, 2)), f"tsps_{key}")
 
+    # Extract the features and write to disk
     get_features(DB, neighborhood, roads, graph, area)
+
+    # Solve the TSPs with LKH
     solve_tsps(f"tsps_{key}")
 
+    # Read the LKH output
     tours: dict[int, list[list[str]]]
     distances: dict[int, list[int]]
     tours, distances = read_tours(f"tsps_{key}")
 
+    # Take a random TSP solution and plot it
     locations: list[str]
     distance: int
     locations, distance = random_path(tours, distances)
-
     graph.plot_route(locations, distance, f"TSP_{key}")
 
+    # Solve for the BHH formula using the TSP solutions
     x: list[int]
     y: list[float]
     b_hat: float
@@ -60,12 +76,12 @@ def run_simulation(
         b_hat,
     ) = find_beta(distances, area)
 
+    # Get BHH formula accuracy metrics and make plots
     line: list[float]
     errors: list[float]
     mae: float
     mape: float
     line, errors, mae, mape = results(distances, x, y, b_hat, area)
-
     scatterplot(distances, x, y, b_hat, line, f"scatter_{key}")
     errorsplot(errors, f"errors_{key}")
 
@@ -73,8 +89,8 @@ def run_simulation(
 
 
 # The same as the above function but just without creating and solving new TSPs,
-# since this takes quite long and is not needed if they have already been
-# written to the disk.
+# since this takes quite long and is not needed if this has already been done.
+# This is just to test some changes to other parts of the project
 def interpret_results(
     DB: str, neighborhood: str
 ) -> tuple[str, list[float | list[int] | list[float]]]:
