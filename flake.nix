@@ -55,7 +55,7 @@
               )
               pkgs.osm2pgsql
 
-              # The LKH packages
+              # The LKH package
               (pkgs.callPackage ./dependencies/lkh.nix {})
 
               # Small script i wrote to fill DBs
