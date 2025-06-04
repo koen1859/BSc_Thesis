@@ -2,13 +2,12 @@
 
 \usepackage[a4paper,margin=1in]{geometry}
 \usepackage{setspace}
-% \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
 \usepackage{mathtools,amsthm,amssymb,amsmath}
-\usepackage{booktabs} % For better-looking tables
-\usepackage{dcolumn}  % For aligning decimal points in tables
+\usepackage{booktabs}
+\usepackage{dcolumn}
 \usepackage{hyperref}
-\usepackage{ marvosym }
+\usepackage{marvosym}
 \usepackage{eurosym}
 \usepackage{bm}
 \usepackage{graphicx}
@@ -16,30 +15,26 @@
 \usepackage{float}
 \usepackage{longtable}
 \usepackage{caption}
-\usepackage{listings}
 \usepackage[numbib]{tocbibind}
 \usepackage{adjustbox}
 \usepackage{varwidth}
 \usepackage{algpseudocodex}
 \usepackage{algorithm}
 \usepackage{subcaption}
+\usepackage{color}
+\usepackage{listings}
 
 \bibliographystyle{rug-econometrics}
 \settocbibname{References}
 
-% Default fixed font does not support bold face
 \DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
 \DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{12}  % for normal
 
-% Custom colors
-\usepackage{color}
 \definecolor{deepblue}{rgb}{0,0,0.5}
 \definecolor{deepred}{rgb}{0.6,0,0}
 \definecolor{deepgreen}{rgb}{0,0.5,0}
 
-\usepackage{listings}
 
-% Python style for highlighting
 \newcommand\pythonstyle{\lstset{
 		language=Python,
 		basicstyle=\ttm,
@@ -72,9 +67,6 @@
 
 % Python for inline
 \newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
-
-% \setlength{\parindent}{0pt}     % No paragraph indentation
-% \setlength{\parskip}{1em}       % Add vertical space between paragraphs
 
 \newcommand{\N}[1]{\mathcal{N}\left(#1\right)}
 \newcommand{\Z}{\mathbb{Z}}
