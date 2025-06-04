@@ -38,7 +38,7 @@
             packages = [
               (
                 # The python environment
-                pkgs.python3.withPackages (ps:
+                pkgs.python313.withPackages (ps:
                   with ps; [
                     psycopg
                     igraph
