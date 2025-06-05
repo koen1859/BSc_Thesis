@@ -1,12 +1,41 @@
 import ujson
+import json
 import math
-from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error
+from sklearn.metrics import (
+    mean_absolute_error,
+    mean_absolute_percentage_error,
+    r2_score,
+)
 import numpy as np
 
 
-def make_results_table(final_results):
-    with open("final_results.json", "w") as f:
-        ujson.dump(final_results, f)
+def make_results_tables():
+    with open("final_results.json", "r") as f:
+        final_results = json.load(f)
+
+    with open("beta_values.tex", "w") as f:
+        f.write("\\begin{longtable}{llccc}\n")
+        f.write(
+            "\\caption{Empirical estimates for $\\beta$, with prediction errors this beta gives for TSP path length in selected neighborhoods.} \\label{tab:results}\\\\\n"
+        )
+        f.write("\\hline\n")
+        f.write("Province-Neighborhood & $\\beta$ & MAE (m) & MAPE (\\%) \\\\\n")
+        f.write("\\hline\n")
+        f.write("\\endfirsthead\n")
+        f.write("\\hline\n")
+        f.write("Province-Neighborhood & $\\beta$ & MAE (m) & MAPE (\\%) \\\\\n")
+        f.write("\\hline\n")
+        f.write("\\endhead\n")
+
+        for key, values in final_results.items():
+            b_hat = values[0]
+            mae = values[1]
+            mape = values[2]
+            key = key.replace("_", " ")
+            f.write(f"{key} & {b_hat:.4f} & {mae:.4f} & {mape * 100:.4f} \\\\\n")
+
+        f.write("\\hline\n")
+        f.write("\\end{longtable}\n")
 
     b_total, x_total, y_total, area_total = [], [], [], []
     b_avg, y_pred_avg = [], []
@@ -33,34 +62,32 @@ def make_results_table(final_results):
     ]
     mae_total = mean_absolute_error(y_total, y_pred_total)
     mape_total = mean_absolute_percentage_error(y_total, y_pred_total)
+    r2_total = r2_score(y_total, y_pred_total)
 
-    b_hat_avg = np.mean(b_avg)
     mae_avg = mean_absolute_error(y_total, y_pred_avg)
     mape_avg = mean_absolute_percentage_error(y_total, y_pred_avg)
+    r2_avg = r2_score(y_total, y_pred_avg)
 
-    final_results["Average"] = [b_hat_avg, mae_avg, mape_avg]
-    final_results["Total"] = [b_hat_total, mae_total, mape_total]
-
-    with open("beta_values.tex", "w") as f:
-        f.write("\\begin{longtable}{llccc}\n")
+    with open("small_results_table.tex", "w") as f:
+        f.write("\\begin{longtable}{lccc}\n")
         f.write(
-            "\\caption{Empirical estimates for $\\beta$, with prediction errors this beta gives for TSP path length in selected neighborhoods.} \\label{tab:results}\\\\\n"
+            "\\caption{Performance metrics for the BHH formula.} \\label{tab:results_small} \\\\\n"
         )
         f.write("\\hline\n")
-        f.write("Province-Neighborhood & $\\beta$ & MAE (m) & MAPE (\\%) \\\\\n")
+        f.write("Model & $R^2$ & MAE (m) & MAPE (\\%) \\\\\n")
         f.write("\\hline\n")
         f.write("\\endfirsthead\n")
         f.write("\\hline\n")
-        f.write("Province-Neighborhood & $\\beta$ & MAE (m) & MAPE (\\%) \\\\\n")
+        f.write("Model & $R^2$ & MAE (m) & MAPE (\\%) \\\\\n")
         f.write("\\hline\n")
         f.write("\\endhead\n")
 
-        for key, values in final_results.items():
-            b_hat = values[0]
-            mae = values[1]
-            mape = values[2]
-            key = key.replace("_", " ")
-            f.write(f"{key} & {b_hat:.4f} & {mae:.4f} & {mape * 100:.4f} \\\\\n")
+        f.write(
+            f"Varying $\\beta$ & {r2_avg:.2f} & {mae_avg:.2f} & {mape_avg * 100:.2f}\\\\\n"
+        )
+        f.write(
+            f"Restricted $\\beta$ & {r2_total:.2f} & {mae_total:.2f} & {mape_total * 100:.2f}\\\\\n"
+        )
 
         f.write("\\hline\n")
         f.write("\\end{longtable}\n")
@@ -135,3 +162,7 @@ def make_ml_results_table(results, results_reduced):
         f.write(f"Total & {total_mape_full:.2f} & {total_mape_reduced:.2f} \\\\\n")
         f.write("\\hline\n")
         f.write("\\end{longtable}\n")
+
+
+if __name__ == "__main__":
+    make_results_tables()

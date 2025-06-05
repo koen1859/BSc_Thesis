@@ -112,14 +112,12 @@ def interpret_results(
     )
 
     area: float = graph.alpha_shape(key)
-    get_features(DB, neighborhood, roads, graph, area)
 
     tours: dict[int, list[list[str]]]
     distances: dict[int, list[int]]
     tours, distances = read_tours(f"tsps_{key}")
 
     locations, distance = random_path(tours, distances)
-    graph.plot_route(locations, distance, f"TSP_{key}")
 
     (
         x,
@@ -147,8 +145,10 @@ def run_ml():
     results = random_forest(df_train, df_test)
     results_reduced = feature_importance(df_train, df_test, results)
     with open("ml_results.txt", "w") as f:
-        f.write(f"Full model:\n{results['train']}\n{results['test']}")
         f.write(
-            f"Reduced model:\n{results_reduced['train']}\n{results_reduced['test']}"
+            f"Full model:\nTrain:{results['train']}\nTest:{results['test']}\nParams:{results['best_parameters']}\n"
+        )
+        f.write(
+            f"Reduced model:\n{results_reduced['train']}\n{results_reduced['test']}\nParams:{results_reduced['best_parameters']}\n"
         )
     make_ml_results_table(results, results_reduced)

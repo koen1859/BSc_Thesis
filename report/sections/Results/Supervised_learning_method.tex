@@ -1,5 +1,7 @@
 \subsection{Supervised learning method}
 A summary of the results of the Random Forest model is listed in Table \ref{tab:ml_results_small}.
+A grid search is used to find the hyper-parameters that provide the lowest out-of-sample prediction errors.
+This results in the selection of \url{max\_depth}=10 and \url{n\_estimators}=300 for the full model, and \url{max\_depth}=20 and \url{n\_estimators}=300 for the reduced model.
 \input{../project/small_ml_results_table.tex}
 An $R^2$ of 0.96 is found on the train data for both the full and the reduced model, and an $R^2$ of 0.85 for both models on the test data.
 The MAPE is also nearly equal for both models.
@@ -20,6 +22,7 @@ The most important features are:
 	\item the area of the neighborhood the TSP is in.
 \end{itemize}
 
+Interestingly, the most important feature according to the Random Forest, is a feature that does not appear in the BHH formula.
 It is obvious why the number of locations is an important predictor.
 The average path length as well as the area say something about how spread out an area is.
 The average edge length also carries some importance.

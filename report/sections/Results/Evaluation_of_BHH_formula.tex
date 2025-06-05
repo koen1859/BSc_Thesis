@@ -1,10 +1,13 @@
 \subsection{Evaluation of BHH formula}
-The results for $\beta$, the MAE and MAPE using the BHH formula are tabulated in Table \ref{tab:results} (Appendix).
+The results for $\beta$, the MAE and MAPE using the BHH formula are tabulated in \Cref{tab:results} (Appendix).
 The value for $\beta$ differs strongly from area to area: some areas have an estimated $\beta$ as low as 1.5, while others have $\beta$ close to 6.
-It is found that fitting Equation \ref{eq:beardwood} yields a Mean Absolute Percentage error of about 6.6\%, averaged over all observations, when
-letting $\beta$ differ per neighborhood ("Average" row in Table \ref{tab:results}).
-The prediction accuracy differs vastly per neighborhood: the Mean Absolute Percentage Error is below 4\% for some areas, and above 15\% for others
-(using their individual $\beta$).
+A histogram of the values for $\beta$ is provided in \Cref{fig:Histogram} (Appendix).
+The prediction accuracy differs vastly per neighborhood: the Mean Absolute Percentage Error is below 4\% for some areas, and above 15\% for others (using their individual $\beta$).
+It is found that fitting Equation \ref{eq:beardwood} yields a Mean Absolute Percentage error of about 6.6\%, averaged over all observations, when letting $\beta$ differ per neighborhood, as can be seen in \Cref{tab:results_small}.
+When using the nationwide average as the value for $\beta$ to predict TSP path length, the model performance drops significantly, with a MAPE of more than 22\%.
+Entities that want to estimate TSP path length by the BHH formula for areas they do not now the true value for $\beta$ of, either have to accept the high prediction error or run simulations to estimate the true value of $\beta$ to achieve better predictions.
+\Cref{fig:mape_vs_beta} (Appendix) shows there is a slight positive correlation between $\beta$ and the MAPE.
+\input{../project/small_results_table.tex}
 
 Potential reasons for the variation in accuracy can be analyzed using visualizations.
 For example, the prediction error for the Schepenbuurt quarter in Friesland, and the Stad van de Zon quarter in Noord-Holland is especially high, compared to the other areas.
@@ -56,8 +59,8 @@ This pattern is again implied by the visualizations in Figure \ref{fig:combinedS
 \end{figure}
 There is a group of points far below the fitted line for the BHH formula, and a group of points far above it.
 The randomness in whether locations from outside the main cluster are included in a TSP decides whether its data point it in the upper or lower group of points.
-As $j$ increases, the number of data points in the lower group decreases.
-Both of these observations imply these data points are for a TSP that contains locations only in the main cluster, since the probability of this happening decreases with $j$.
+As $n$ increases, the number of data points in the lower group decreases.
+Both of these observations imply these data points are for a TSP that contains locations only in the main cluster, since the probability of this happening decreases with $n$.
 
 Additionally, it is interesting to consider neighborhoods where the prediction errors are especially low. Figure \ref{fig:combined2} displays maps for two quarters,
 Westeinde in Friesland and Bornholm in Noord-Holland. Such low-prediction error neighborhoods also share characteristics.
@@ -81,8 +84,7 @@ This could explain why the formula gives lower prediction errors for these areas
 	\caption{Maps of the quarters Westeinde and Bornholm.}
 	\label{fig:combined2}
 \end{figure}
-For these neighborhoods, there is still some variation around the fitted BHH formula, however Figure \ref{fig:combinedScatter2} shows vastly different
-levels of variation, compared to Figure \ref{fig:combinedScatter}.
+Although some variation around the fitted BHH formula remains, Figure \ref{fig:combinedScatter2} exhibits significantly lower prediction error compared to Figure \ref{fig:combinedScatter}.
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[b]{0.49\textwidth}
@@ -99,6 +101,3 @@ levels of variation, compared to Figure \ref{fig:combinedScatter}.
 	\caption{Scatter plots of TSP path length vs number of locations for the quarters Westeinde and Bornholm (log-log scale).}
 	\label{fig:combinedScatter2}
 \end{figure}
-When $\beta$ is restricted to be equal for all neighborhoods ("Total row in Table \ref{tab:results}") the MAPE is almost 22\%.
-Entities that want to estimate TSP path length by the BHH formula for areas they do not now the true value for $\beta$ of, either have to accept the high prediction error
-or run simulations to estimate the true value of $\beta$ to achieve better predictions.

@@ -1,13 +1,14 @@
 import multiprocessing
 from run_simulation import run_simulation, interpret_results, run_ml
-from tables import make_results_table
+from tables import make_results_tables, make_small_final_results_table
 from areas import areas
 from tqdm import tqdm
+import ujson
 
 
 def wrapper(args):
-    # return interpret_results(*args)
-    return run_simulation(*args)
+    return interpret_results(*args)
+    # return run_simulation(*args)
 
 
 def main() -> None:
@@ -22,7 +23,9 @@ def main() -> None:
         results = list(tqdm(pool.imap(wrapper, tasks), total=len(tasks)))
 
     final_results = dict(results)
-    make_results_table(final_results)
+    with open("final_results.json", "w") as f:
+        ujson.dump(final_results, f)
+    make_results_tables()
 
     run_ml()
 
