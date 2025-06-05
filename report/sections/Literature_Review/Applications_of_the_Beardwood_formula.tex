@@ -1,16 +1,15 @@
 \subsection{Applications of the BHH formula}
-This research concerns the performance of formula \ref{eq:beardwood} for reasonable amounts of
-locations $j$ a delivery person can visit in a workday, say $20\leq j\leq90$.
-\citet{lei2015dynamic} estimates the values of $\beta$ for a selection of values for $j$.
-In their research, the points were generated uniformly and the $L_2$ distance metric was used.
+This research concerns the performance of formula \ref{eq:beardwood} for reasonable amounts of locations $n$ a delivery person can visit in a workday, say $20\leq n\leq90$.
+\citet{lei2015dynamic} estimates the values of $\beta$ for a selection of values for $n$.
+In their research, the points were generated uniformly across the area and the $L_2$ distance metric was used.
 Table \ref{tab:beta-values} lists the results.
 \begin{table}[H]
 	\centering
-	\caption{Empirical estimates of $\beta$ as a function of $j$, $20 \leq n \leq 90$ \citep{lei2015dynamic}}
+	\caption{Empirical estimates of $\beta$ as a function of $n$, $20 \leq n \leq 90$ \citep{lei2015dynamic}}
 	\label{tab:beta-values}
 	\begin{tabular}{cc}
 		\toprule
-		$j$ & $\beta(j)$ \\
+		$n$ & $\beta(n)$ \\
 		\midrule
 		20  & 0.8584265  \\
 		30  & 0.8269698  \\
@@ -23,26 +22,22 @@ Table \ref{tab:beta-values} lists the results.
 		\bottomrule
 	\end{tabular}
 \end{table}
-\citet{figliozzi2008planning} is the first research to apply approximation formulas to real-world instances of TSPs (and VRPs (Vehicle Routing Problems)),
-in the sense that distances between locations are measured over the actual road network.
+\citet{figliozzi2008planning} is the first research to apply approximation formulas to real-world instances of TSPs (and VRPs (Vehicle Routing Problems)), in the sense that distances between locations are measured over the actual road network.
 An extension of formula \ref{eq:beardwood} that works for VRPs is assessed in this setting.
-It is found that this model has an $R^2$ of 0.99 (which means 0.99 of the variation in TSP path length is explained by the formula) and MAPE
-(Mean Absolute Prediction Error) of 4.2\%.
-This prediction error is slightly higher than when it is applied to a setting where Euclidean distances are considered (3.0\%), but the formula still performs well
-\citep{figliozzi2008planning}.
+It is found that this model has an $R^2$ of 0.99 (which means 0.99 of the variation in TSP path length is explained by the formula) and MAPE (Mean Absolute Prediction Error) of 4.2\%.
+This prediction error is slightly higher than when it is applied to a setting where Euclidean distances are considered (3.0\%) \citep{figliozzi2008planning}.
 
 \citet{merchan2019empirical} use circuity factors to measure the relative detour incurred for traveling in a road network, compared to the Euclidean distance.
 This circuity factor for locations $p$ and $q$ is defined as:
 \begin{align}
 	c = \frac{d_{c}(p,q)}{d_{L_{2}}(p,q)}
-	\label{eq:circuity}
 \end{align}
 By definition, $c \geq 1$, as the Euclidean distance is the shortest possible path between two points in a plane.
-Then, $\beta_c$ is estimated by $\beta_c=c\beta$. This value $c$, is estimated for three different areas in São Paulo, for which the results are listed in Table
+Then, $\beta_c$ is estimated by $\beta_c=c\beta_{L_2}$, where $\beta_{L_2}$ is estimated by minimizing the errors of \Cref{eq:beardwood} using the $L_2$ distance metric.
+This value $c$, is estimated for three different areas in São Paulo, for which the results are listed in Table
 \ref{tab:beta-merchan}.
 These values indicate real travel distances are on average 2.76 times longer in area 1 compared to the $L_2$ metric.
-These values were obtained by uniformly generating $n$ locations (for $n$ ranging from 3 to 250), computing near-optimal tour lengths under the Euclidean metric,
-and solving for $\beta$, then scaling by the empirical circuity factor.
+The values are obtained by generating $n$ locations (for $n$ ranging from 3 to 250) uniformly across the area, computing near-optimal tour lengths under the $L_2$ metric, solving for $\beta_{L_2}$ by minimizing the errors of \Cref{eq:beardwood} and then scaling by the circuity factor.
 \begin{table}[H]
 	\centering
 	\caption{Estimates of the circuity factor $c$ and its corresponding $\beta_c$ \citep{merchan2019empirical}}
@@ -53,11 +48,13 @@ and solving for $\beta$, then scaling by the empirical circuity factor.
 		\midrule
 		$c$       & 2.76   & 2.34   & 1.82   \\
 		$\beta_c$ & 2.48   & 2.10   & 1.64   \\
+		MAPE (\%) & 12.65  & 8.72   & 10.62  \\
 		\bottomrule
 	\end{tabular}
 \end{table}
+Their model is able to predict TSP path length much more accurately compared to when using the $L_1$ distance metric, predicting TSP path length using the $L_1$ distance metric they find MAPEs between 24\% and 58\%.
+
 It is important to note, however, that the assumptions in this study may limit the generality of the findings.
-In particular, the use of uniformly distributed locations does not accurately reflect the spatial distribution of delivery points in real urban environments,
-where locations tend to cluster.
-Within small urban areas, high-rise buildings and single-family homes may coexist in the same neighborhoods, challenging the assumption of uniformly distributed
-delivery points.
+In particular, the use of locations uniformly distributed across the area does not accurately reflect the spatial distribution of delivery points in real urban environments, where locations tend to cluster.
+Within urban areas, large apartment buildings and single-family homes may coexist in the same neighborhoods, which implies that addresses and thus delivery locations are not distributed uniformly across the area in reality.
+The usage of uniformly generated delivery locations might imply that the prediction errors found in their research are underestimating the true prediction errors when their models are applied to real-world scenarios.

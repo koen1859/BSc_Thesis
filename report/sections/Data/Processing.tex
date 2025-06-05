@@ -1,22 +1,20 @@
 \subsection{Graph construction}
-Using the geographic information of the roads and buildings, a graph
-is constructed for each neighborhood, using the \url{igraph} module in \url{Python}. This graph
-connects all buildings to each other over the road network. First, using the information about the
-roads and buildings the sets of nodes and edges need to be defined. An edge is a line that connects
-two edges to each other. Extracting the edges that connect the road network is straightforward,
-since all roads already have an ordered list of nodes defined. The subsequent nodes simply need to
-be stored as pairs, and all edges are defined.
+Using the geographic information of the roads and buildings, a graph is constructed for each neighborhood, using the \url{igraph} module in \url{Python}. 
+This graph connects all buildings to each other over the road network. 
+First, using the information about the roads and buildings the sets of nodes and edges need to be defined. 
+An edge is a line that connects two nodes to each other. 
+Extracting the edges that connect the road network is straightforward, since all roads already have an ordered list of nodes defined. 
+The subsequent nodes simply need to be stored as pairs, and all edges are defined.
 
-When the road network is defined as a set of nodes and edges, the next step is to connect the buildings
-to the road network. This needs to be implemented manually, since no data is stored in OpenStreetMap
-about to which road the buildings belong. This algorithm needs to be very efficient, since many
-buildings are added in each area. An R-tree can be used to accomplish this efficiency.
-An R-tree is a dynamic index structure that is able to retrieve data items quickly according to
-their spatial locations \citep{guttman1984r}. Listing \ref{lst:python-edges} displays the algorithm
-used to make the edges that connect the buildings to the road network. For each building node,
-the closest point on the closest road is found, using the shapely implementation of the R-tree,
-\pythoninline{STRtree}. Then, if this point is not an already existing node, a new virtual node is added,
-which splits this existing edge in two parts. The road is reconnected with the new node in between.
+When the road network is defined as a set of nodes and edges, the next step is to connect the buildings to the road network. 
+This needs to be implemented manually, since no data is stored in OpenStreetMap about to which road the buildings belong. 
+This algorithm needs to be very efficient, since many buildings are added in each area. 
+An R-tree can be used to accomplish this efficiency.
+An R-tree is a dynamic index structure that is able to retrieve data items quickly according to their spatial locations \citep{guttman1984r}. 
+Listing \ref{lst:python-edges} displays the algorithm used to make the edges that connect the buildings to the road network. 
+For each building node, the closest point on the closest road is found, using the shapely implementation of the R-tree, \pythoninline{STRtree}. 
+Then, if this point is not an already existing node, a new virtual node is added, which splits this existing edge in two parts. 
+The road is reconnected with the new node in between.
 Finally, the building is connected to this new node.
 
 In order to find the shortest path in terms of real distance, and to calculate the length of the
@@ -25,7 +23,7 @@ The equirectangular approximation is used to calculate these weights. This appro
 efficient, but only works when the points the distance is calculated between is small enough such
 that the rounding of the earth does not have a significant effect on the true distance.
 The nodes are all close enough together, so the effect of the
-rounding of earth's surface is negligible. Let $A$ and $B$ be two nodes,
+rounding of Earth's surface is negligible. Let $A$ and $B$ be two nodes,
 and $(\varphi_A,\theta_A)$, $(\varphi_B,\theta_B)$ be their coordinates, in \url{radians}. Let $R=6,371,000$ meters,
 Earth's radius. Then the distance between these nodes (the weight of the edge connecting them),
 using the equirectangular approximation is:
@@ -37,7 +35,7 @@ using the equirectangular approximation is:
 \end{align}
 
 Using the \url{folium} module in \url{Python}, such a graph can be visualized on a geographic map.
-One of such visualizations is provided in figure \ref{fig:overtoomse_sluis}. All maps like this one,
+One of such visualizations is provided in \Cref{fig:overtoomse_sluis}. All maps like this one,
 for the areas in this analysis can be viewed and interacted with via this
 \href{https://koenstevens.nl/projects/BSc_thesis/maps/}{\url{webpage}}.
 \begin{figure}[H]
@@ -53,26 +51,9 @@ This value significantly overestimates the correct value for $A$.
 When there are things like parks, lakes, or large buildings like a stadium inside the quarter, then in that part of the
 area, there are no delivery locations. Consequently, this area should not be included in the area calculation.
 To account for this problem, alpha shapes are used to calculate $A$. Alpha shapes are generalizations of the convex hull,
-they capture the shape of a point set \citep{akkiraju1995alpha}. Figure \ref{fig:Beijum} displays the map of the Beijum
+they capture the shape of a point set \citep{akkiraju1995alpha}. Figure \Cref{fig:Beijum} displays the map of the Beijum
 quarter in Groningen with the alpha shape for its addresses, as it was used for calculating the area.
-It can be seen that using this method, large areas without buildings, such as the greenspace in the middle is being left
-out, as desired.
-% \begin{figure}[H]
-% 	\centering
-% 	\begin{subfigure}[b]{0.45\textwidth}
-% 		\includegraphics[width=\textwidth]{Pictures/Beijum_quarter.png}
-% 		\caption{Beijum on the map}
-% 		\label{fig:Beijummap}
-% 	\end{subfigure}
-% 	\hfill
-% 	\begin{subfigure}[b]{0.45\textwidth}
-% 		\includegraphics[width=\textwidth]{Pictures/hull_beijum.png}
-% 		\caption{The alpha shape for the addresses}
-% 		\label{fig:AlphaBeijum}
-% 	\end{subfigure}
-% 	\caption{The map of the Beijum quarter in Groningen, with the alpha shape around its addresses.}
-% 	\label{fig:Beijum}
-% \end{figure}
+It can be seen that using this method, large areas without buildings, such as the green-space in the middle is being left out, as desired.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth]{Pictures/better_hull_beijum.png}
@@ -101,7 +82,7 @@ The assumption is violated on two levels: there might be different sub-neighborh
 them.
 Additionally, on a smaller scale, a neighborhood might contain mostly detached houses or semi-detached houses, with a few larger apartment buildings.
 Then, the assumption of uniformly distributed locations is also violated.
-Using these properties in the supervised learning model might lead to more accurate predictions. The metrics that were used for this are:
+Using these properties in the supervised learning model might lead to more accurate predictions. The features that were used for this are:
 \begin{itemize}
 	\item The number of communities according to the \url{infomap} method, divided by the area of the alpha shape \citep{rosvall2008maps}.
 	      This might provide information about clustering of addresses on the scale of sub-neighborhoods inside a quarter with space in between.

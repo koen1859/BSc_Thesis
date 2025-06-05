@@ -7,29 +7,29 @@ Let \( |L| \) denote the total number of evaluated instances per neighborhood.
 	\caption{Procedure for evaluating the predictive accuracy of Equation~\ref{eq:beardwood}}
 	\label{alg:evaluation}
 	\begin{algorithmic}[1]
-		\For{each neighborhood \( n \in N \)}
+		\For{each neighborhood \( j \)}
 		\State Extract features of this neighborhood and save to a file for later use
 		\State Construct a graph of the road network and visualize on a map
-		\State Initialize empty lists for \( L \) and \( \hat{L} \)
-		\For{each sample size \( j \in \{20, 22, \ldots, 86, 88\} \)}
-		\For{each repetition \( k \in \{0, 1, \ldots, 10\} \)}
-		\State Randomly sample a subset \( TSP_{j,n} \subset X_n \) of size \( j \) uniformly
-		\State Solve the TSP over \( TSP_{j,n} \) to compute \( L_{j,n}^{(k)} \)
-		\State Solve Equation \ref{eq:beardwood} for $\beta$ using these solutions \(L_{j,n}^{(k)}\)
-		\State Compute the predicted length \( \hat{L}_{j,n}^{(k)} \) using Equation~\ref{eq:beardwood} with the estimated $\beta$
-		\State Append \( L_{j,n}^{(k)} \) to list \( L \), and \( \hat{L}_{j,n}^{(k)} \) to list \( \hat{L} \)
+		\State Initialize empty lists for \( L \), \( \hat{L} \) and $\beta$
+		\For{each sample size \( n \in \{20, 22, \ldots, 86, 88\} \)}
+		\For{each repetition \( k \in \{0, 1, \ldots, 9\} \)}
+		\State Randomly sample a subset \( TSP_{n,j} \subset N_j \) of size \( n \) uniformly over the addresses
+		\State Solve the TSP over \( TSP_{n,j} \) to compute \( L_{n,j}^{(k)} \)
+		\State Estimate $\beta_j^{(k)}$ by solving \Cref{eq:beardwood} for $\beta$ using \(L_{n,j}^{(k)}\)
+		\State Append \( L_{n,j}^{(k)} \) to list \( L \), and $\beta_j^{(k)}$ to list $\beta$
 		\EndFor
 		\EndFor
-		\State Compute the Mean Absolute Error (MAE) for neighborhood \( n \):
+		\State Compute $\hat\beta=\E{\beta}$
+		\State Compute the predicted lengths \( \hat{L} \) using \Cref{eq:beardwood} with the estimated value $\hat\beta$
+		\State Compute the Mean Absolute Error (MAE) for neighborhood \( j \):
 		\[
-			\text{MAE}_n = \frac{1}{|L|} \sum_{i=1}^{|L|} \left| L_i - \hat{L}_i \right|
+			\text{MAE}_j = \frac{1}{|L|} \sum_{i=1}^{|L|} \left| L_i - \hat{L}_i \right|
 		\]
-		\State Compute the Mean Absolute Percentage Error (MAPE) for neighborhood \( n \):
+		\State Compute the Mean Absolute Percentage Error (MAPE) for neighborhood \( j \):
 		\[
-			\text{MAPE}_n = \frac{100\%}{|L|} \sum_{i=1}^{|L|} \left| \frac{L_i - \hat{L}_i}{L_i} \right|
+			\text{MAPE}_j = \frac{100\%}{|L|} \sum_{i=1}^{|L|} \left| \frac{L_i - \hat{L}_i}{L_i} \right|
 		\]
-		\State Visualize the results in graph form, a scatter plot of TSP length against number of locations, with
-		a fitted equation \ref{eq:beardwood} and a histogram of the errors $\epsilon_i=L_i-\hat{L}_i$.
+		\State Visualize the results in graph form, a scatter plot of TSP length against number of locations, with a fitted \Cref{eq:beardwood} and a histogram of the errors $\epsilon_i=L_i-\hat{L}_i$.
 		\State Visualize a random TSP solution on a map.
 		\State Save the results for $L$ to a file for later use.
 		\EndFor
