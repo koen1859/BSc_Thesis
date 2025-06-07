@@ -1,19 +1,19 @@
 \subsection{Graph construction}
-Using the geographic information of the roads and buildings, a graph is constructed for each neighborhood, using the \url{igraph} module in \url{Python}. 
-This graph connects all buildings to each other over the road network. 
-First, using the information about the roads and buildings the sets of nodes and edges need to be defined. 
-An edge is a line that connects two nodes to each other. 
-Extracting the edges that connect the road network is straightforward, since all roads already have an ordered list of nodes defined. 
+Using the geographic information of the roads and buildings, a graph is constructed for each neighborhood, using the \url{igraph} module in \url{Python}.
+This graph connects all buildings to each other over the road network.
+First, using the information about the roads and buildings the sets of nodes and edges need to be defined.
+An edge is a line that connects two nodes.
+Extracting the edges connecting the road networks is straightforward, since all roads already have an ordered list of nodes defined.
 The subsequent nodes simply need to be stored as pairs, and all edges are defined.
 
-When the road network is defined as a set of nodes and edges, the next step is to connect the buildings to the road network. 
-This needs to be implemented manually, since no data is stored in OpenStreetMap about to which road the buildings belong. 
-This algorithm needs to be very efficient, since many buildings are added in each area. 
+When the road network is defined as a set of nodes and edges, the next step is to connect the buildings to the road network.
+This needs to be implemented manually, since no data is stored in OpenStreetMap about to which road the buildings belong.
+This algorithm needs to be very efficient, since many buildings are added in each area.
 An R-tree can be used to accomplish this efficiency.
-An R-tree is a dynamic index structure that is able to retrieve data items quickly according to their spatial locations \citep{guttman1984r}. 
-Listing \ref{lst:python-edges} displays the algorithm used to make the edges that connect the buildings to the road network. 
-For each building node, the closest point on the closest road is found, using the shapely implementation of the R-tree, \pythoninline{STRtree}. 
-Then, if this point is not an already existing node, a new virtual node is added, which splits this existing edge in two parts. 
+An R-tree is a dynamic index structure that is able to retrieve data items quickly according to their spatial locations \citep{guttman1984r}.
+\Cref{lst:python-edges} displays the algorithm used to make the edges that connect the buildings to the road network.
+For each building node, the closest point on the closest road is found, using the shapely implementation of the R-tree, \pythoninline{STRtree}.
+Then, if this point is not an already existing node, a new virtual node is added, which splits this existing edge in two parts.
 The road is reconnected with the new node in between.
 Finally, the building is connected to this new node.
 
@@ -65,9 +65,8 @@ While the area of a neighborhood is an important predictor, it is only one of ma
 research.
 To train a supervised learning model that predicts the TSP path length based on neighborhood characteristics, a comprehensive set
 of features needs to be extracted.
-
-In total, approximately 80 features are gathered for each neighborhood. These features describe various aspects of the built environment, infrastructure,
-and spatial distribution of delivery locations. They fall broadly into the following categories:
+In total, approximately 80 features are gathered for each neighborhood. These features describe various aspects of the built environment, infrastructure, and spatial distribution of delivery locations.
+The features fall broadly into the following categories:
 
 \begin{itemize}
 	\item \textbf{Geographic features:} the area of the alpha shape around all postcodes, characteristics such as how much water or how many parks,

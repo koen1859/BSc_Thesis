@@ -1,5 +1,5 @@
 \subsection{Applications of the BHH formula}
-This research concerns the performance of formula \ref{eq:beardwood} for reasonable amounts of locations $n$ a delivery person can visit in a workday, say $20\leq n\leq90$.
+This research concerns the performance of \Cref{eq:beardwood} for reasonable amounts of locations $n$ a delivery person can visit in a workday, say $20\leq n\leq90$.
 \citet{lei2015dynamic} estimates the values of $\beta$ for a selection of values for $n$.
 In their research, the points were generated uniformly across the area and the $L_2$ distance metric was used.
 Table \ref{tab:beta-values} lists the results.
@@ -23,7 +23,7 @@ Table \ref{tab:beta-values} lists the results.
 	\end{tabular}
 \end{table}
 \citet{figliozzi2008planning} is the first research to apply approximation formulas to real-world instances of TSPs (and VRPs (Vehicle Routing Problems)), in the sense that distances between locations are measured over the actual road network.
-An extension of formula \ref{eq:beardwood} that works for VRPs is assessed in this setting.
+An extension of \Cref{eq:beardwood} that works for VRPs is assessed in this setting.
 It is found that this model has an $R^2$ of 0.99 (which means 0.99 of the variation in TSP path length is explained by the formula) and MAPE (Mean Absolute Prediction Error) of 4.2\%.
 This prediction error is slightly higher than when it is applied to a setting where Euclidean distances are considered (3.0\%) \citep{figliozzi2008planning}.
 
@@ -52,9 +52,9 @@ The values are obtained by generating $n$ locations (for $n$ ranging from 3 to 2
 		\bottomrule
 	\end{tabular}
 \end{table}
-Their model is able to predict TSP path length much more accurately compared to when using the $L_1$ distance metric, predicting TSP path length using the $L_1$ distance metric they find MAPEs between 24\% and 58\%.
+Their model is able to predict TSP path length more accurately compared to when using the $L_1$ distance metric, predicting TSP path length using the $L_1$ distance metric they find MAPEs between 24\% and 58\%.
 
-It is important to note, however, that the assumptions in this study may limit the generality of the findings.
+It is important to note that the assumptions in \cite{merchan2019empirical} may limit the generality of the findings.
 In particular, the use of locations uniformly distributed across the area does not accurately reflect the spatial distribution of delivery points in real urban environments, where locations tend to cluster.
 Within urban areas, large apartment buildings and single-family homes may coexist in the same neighborhoods, which implies that addresses and thus delivery locations are not distributed uniformly across the area in reality.
 The usage of uniformly generated delivery locations might imply that the prediction errors found in their research are underestimating the true prediction errors when their models are applied to real-world scenarios.

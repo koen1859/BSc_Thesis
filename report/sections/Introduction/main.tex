@@ -7,7 +7,7 @@ The TSP is an NP-hard problem, it is computationally intensive to find the exact
 In many real-world scenarios, the exact optimal routes may not be needed, but instead a rough, reliable estimate of the optimal route length.
 For instance, consider a last-mile carrier expanding to a new area for service.
 This firm may need to hire new delivery persons.
-Then, this firm needs to estimate how many delivery persons they need to hire, and what kind of contract they should provide.
+Then, this firm needs to estimate how many delivery persons they need to hire, and what kinds of contracts they should provide.
 Reliable estimates for the route length can provide valuable information for making such decisions.
 
 Efficient approximation methods provide a solution for such practical applications where exact solutions are too computationally intensive to conduct or not feasible due to insufficient data.
@@ -23,7 +23,7 @@ Consider $n$ uniformly drawn locations from some area in $\mathbb{R}^2$ with are
 as an estimation for the length of the shortest TSP path measured by Euclidean distance through these random locations, where $\beta$ is some proportionality constant.
 
 In contrast to the Euclidean plane, based on different features of the area, TSP path lengths in this area might behave differently.
-For example, when there are clusters of locations with empty space in between them, or natural boundaries such as canals could have impact on TSP path length in an area.
+For example, clusters of locations with empty space in between them or natural boundaries such as canals could have impact on TSP path length in an area.
 The BHH formula is not able to capture such complex relations, and might fail to provide accurate results.
 
 % Additionally, the value for $\beta$ may differ vastly across different types of areas, as a result of varying geographic features.
@@ -32,8 +32,8 @@ The BHH formula is not able to capture such complex relations, and might fail to
 % This would result in one central formula to predict TSP path length accurately, removing the need to calculate separate parameters for each area.
 
 This research investigates how well \Cref{eq:beardwood} performs, predicting TSP path length on real road networks.
-Using OpenStreetMap \citep{openstreetmap} data, we simulate TSP instances in a wide variety of different urban areas in the Netherlands, then solve these for the actual shortest paths using the Lin–Kernighan heuristic \citep{lin1973effective}.
-Then, the $\beta$ from \Cref{eq:beardwood} is estimated and the performance of this formula is analyzed.
+Using OpenStreetMap \citep{openstreetmap} data, we simulate TSP instances in a variety of different urban areas in the Netherlands, then solve these for the actual shortest paths using the Lin–Kernighan heuristic \citep{lin1973effective}.
+Next, the $\beta$ from \Cref{eq:beardwood} is estimated and the performance of this formula is analyzed.
 Additionally, the results for $\beta$ and the performance across the selected areas is compared.
 In an attempt to capture more complex relations between area features and TSP path length, a supervised learning method is used as an alternative model to predict TSP paths.
 
@@ -42,18 +42,16 @@ The core contributions of this research are:
 	\item An analysis of the performance of the BHH formula under the following conditions:
 	      \begin{enumerate}
 		      \item The locations are drawn from the set of postal codes in the area in question, a violation of the uniform distribution of visited locations.
-		            In reality, delivery locations for companies are not uniformly distributed across the delivery area, but they are clustered in certain parts of the area.
+		            In reality, delivery locations for companies are not uniformly distributed across the delivery area, they may be clustered in certain parts of the area.
 		      \item Applied to realistically sized (in the sense that a delivery person could serve this area in a single workday) real-world parts of
 		            cities and villages in the Netherlands;
 	      \end{enumerate}
 	\item A supervised learning analysis to investigate how well the optimal TSP path length can be
-	      predicted, based on features of the area the path is in, including road network density,
+	      predicted, based on features of the area, including road network density,
 	      address density and other natural and man-made features of the area.
 \end{enumerate}
-The analysis can easily be extended to any type of area in any part of the world, one would only
-have to download the OpenStreetMap \citep{openstreetmap} for another part of the world and add the names of the areas
-to apply it to. The source code of this project is available on
-\href{https://github.com/koen1859/BSc_Thesis}{GitHub}.
+The analysis can easily be extended to any type of area in any part of the world, one would only have to download the OpenStreetMap \citep{openstreetmap} for another part of the world and add the names of the areas to apply it to.
+The source code of this project is available on \href{https://github.com/koen1859/BSc_Thesis}{GitHub}.
 
 In section 2 the context and previous research in this field is provided.
 In section 3 a formal problem definition is stated.

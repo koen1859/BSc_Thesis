@@ -12,19 +12,17 @@ Entities that want to estimate TSP path length by the BHH formula for areas they
 Potential reasons for the variation in accuracy can be analyzed using visualizations.
 For example, the prediction error for the Schepenbuurt quarter in Friesland, and the Stad van de Zon quarter in Noord-Holland is especially high, compared to the other areas.
 These low-accuracy areas have an important feature in common.
-Figure \ref{fig:combined} displays two of such areas.
+\Cref{fig:combined} displays two of such areas.
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[b]{0.45\textwidth}
 		\includegraphics[width=\textwidth]{Pictures/Schepenbuurt_quarter.png}
 		\caption{Schepenbuurt}
-		\label{fig:Schepenbuurt}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[b]{0.462\textwidth}
 		\includegraphics[width=\textwidth]{Pictures/Stad_van_de_Zon_quarter.png}
 		\caption{Stad van de Zon}
-		\label{fig:StadvdZon}
 	\end{subfigure}
 	\caption{Maps of Schepenbuurt and Stad van de Zon quarters.}
 	\label{fig:combined}
@@ -40,19 +38,18 @@ length.
 Based on this, a higher variation in the TSP path length is to be expected, which explains the higher prediction error.
 This problem is likely to disappear when the number of locations in the TSP $j$ is large enough, since in that case locations from all clusters would be included.
 
-This pattern is again implied by the visualizations in Figure \ref{fig:combinedScatter}. The Stad van de Zon scatter plot is a good example of this phenomenon.
+This pattern is again implied by the visualizations in \Cref{fig:combinedScatter}.
+The Stad van de Zon scatter plot is the clearest example of this phenomenon.
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[b]{0.49\textwidth}
 		\includegraphics[width=\textwidth]{../project/plots/scatter_friesland-Schepenbuurt.png}
 		\caption{Schepenbuurt}
-		\label{fig:SchepenbuurtScatter}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[b]{0.49\textwidth}
 		\includegraphics[width=\textwidth]{../project/plots/scatter_noord_holland-Stad van de Zon.png}
 		\caption{Stad van de Zon}
-		\label{fig:StadvdZonScatter}
 	\end{subfigure}
 	\caption{Scatter plots of TSP path length vs number of locations for the quarters Schepenbuurt and Stad van de Zon (log-log scale).}
 	\label{fig:combinedScatter}
@@ -62,7 +59,7 @@ The randomness in whether locations from outside the main cluster are included i
 As $n$ increases, the number of data points in the lower group decreases.
 Both of these observations imply these data points are for a TSP that contains locations only in the main cluster, since the probability of this happening decreases with $n$.
 
-Additionally, it is interesting to consider neighborhoods where the prediction errors are especially low. Figure \ref{fig:combined2} displays maps for two quarters,
+Additionally, it is interesting to consider neighborhoods where the prediction errors are especially low. \Cref{fig:combined2} displays maps for two quarters,
 Westeinde in Friesland and Bornholm in Noord-Holland. Such low-prediction error neighborhoods also share characteristics.
 One is that the addresses seem distributed close to uniformly across the area.
 There are some 'clusters', for example Westeinde can visually be split into four clusters that are only connected by one or two main road connections.
@@ -73,33 +70,29 @@ This could explain why the formula gives lower prediction errors for these areas
 	\begin{subfigure}[b]{0.4\textwidth}
 		\includegraphics[width=\textwidth]{Pictures/Westeinde_quarter.png}
 		\caption{Westeinde}
-		\label{fig:Westeinde}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[b]{0.585\textwidth}
 		\includegraphics[width=\textwidth]{Pictures/Bornholm_quarter.png}
 		\caption{Bornholm}
-		\label{fig:Bornholm}
 	\end{subfigure}
 	\caption{Maps of the quarters Westeinde and Bornholm.}
 	\label{fig:combined2}
 \end{figure}
-Although some variation around the fitted BHH formula remains, Figure \ref{fig:combinedScatter2} exhibits significantly lower prediction error compared to Figure \ref{fig:combinedScatter}.
+Although some variation around the fitted BHH formula remains, \Cref{fig:combinedScatter2} exhibits significantly lower prediction error compared to \Cref{fig:combinedScatter}.
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[b]{0.49\textwidth}
 		\includegraphics[width=\textwidth]{../project/plots/scatter_friesland-Westeinde.png}
 		\caption{Westeinde}
-		\label{fig:WesteindeScatter}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[b]{0.49\textwidth}
 		\includegraphics[width=\textwidth]{../project/plots/scatter_noord_holland-Bornholm.png}
 		\caption{Bornholm}
-		\label{fig:BornholmScatter}
 	\end{subfigure}
 	\caption{Scatter plots of TSP path length vs number of locations for the quarters Westeinde and Bornholm (log-log scale).}
 	\label{fig:combinedScatter2}
 \end{figure}
-A conclusion from this is that when an entity would want to apply the BHH formula to predict TSP path length, this entity has to think about how to organize the areas in question, in order to minimize the prediction error caused by clustering.
-This problem is not likely to completely disappear when having a better way of distributing areas than the quarters defined in OpenStreetMap, but it is for sure possible to do better.
+This suggests that any entity aiming to use the BHH formula to predict TSP path lengths must carefully consider how to define the areas, as poor clustering can introduce significant prediction errors.
+While improved area distribution may not entirely eliminate this issue, it can certainly lead to better results compared to the coarse divisions like OpenStreetMap quarters.
