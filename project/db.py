@@ -16,13 +16,13 @@ def get_roads(
     connection = psycopg.connect(dbname=DB)
     cursor = connection.cursor()
     cursor.execute(
-        f"""
+        """
         -- First, get the neighborhood polygon, in the coordinate format we need.
         WITH neighborhood AS (
             SELECT ST_Transform(way, 4326) AS geom
             FROM planet_osm_polygon
             WHERE place = 'quarter'
-              AND name = '{neighborhood}'
+              AND name = %s
         ),
         -- Then, define the road geometries in a way that we can filter based 
         -- on whether they are inside the neighborhood.
@@ -66,7 +66,8 @@ def get_roads(
         JOIN LATERAL unnest(w.nodes) WITH ORDINALITY AS u(node_id, ordinality) ON true
         JOIN planet_osm_nodes n ON n.id = u.node_id
         GROUP BY fr.road_id, fr.oneway;
-    """
+    """,
+        (neighborhood,),
     )
     roads = cursor.fetchall()
     cursor.close()
@@ -82,12 +83,12 @@ def get_addresses(DB: str, neighborhood: str) -> list[tuple[int, float, float]]:
     connection = psycopg.connect(dbname=DB)
     cursor = connection.cursor()
     cursor.execute(
-        f"""
+        """
         WITH neighborhood AS (
             SELECT ST_Transform(way, 4326) AS way
             FROM planet_osm_polygon
             WHERE place = 'quarter'
-            AND name = '{neighborhood}'
+            AND name = %s
         ),
         matched_nodes AS (
             SELECT
@@ -105,7 +106,8 @@ def get_addresses(DB: str, neighborhood: str) -> list[tuple[int, float, float]]:
                 )
         )
         SELECT * FROM matched_nodes;
-        """
+        """,
+        (neighborhood,),
     )
     addresses = cursor.fetchall()
     cursor.close()
@@ -125,12 +127,12 @@ def get_features(
     connection = psycopg.connect(dbname=DB)
     cursor = connection.cursor()
     cursor.execute(
-        f"""
+        """
         WITH neighborhood AS (
             SELECT ST_Transform(way, 4326) AS geom
             FROM planet_osm_polygon
             WHERE place = 'quarter'
-            AND name = '{neighborhood}'
+            AND name = %s
         ),
         natural_features AS (
             SELECT
@@ -204,7 +206,8 @@ def get_features(
         FROM filtered_features
         GROUP BY type
         ORDER BY count DESC;
-        """
+        """,
+        (neighborhood,),
     )
     data = cursor.fetchall()
     cursor.close()
