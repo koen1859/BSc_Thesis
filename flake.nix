@@ -36,9 +36,10 @@
         (
           {pkgs, ...}: {
             packages = [
+              # The python environment
               (
-                # The python environment
-                pkgs.python313.withPackages (ps:
+                pkgs.python313.withPackages
+                (ps:
                   with ps; [
                     psycopg
                     igraph
@@ -51,6 +52,28 @@
                     pandas
                     tqdm
                     ipython
+                  ])
+              )
+              (
+                pkgs.texliveFull.withPackages
+                (ps:
+                  with ps; [
+                    latexmk
+                    amsmath
+                    marvosym
+                    bbm-macros
+                    minted
+                    texcount
+                    tocbibind
+                    latexindent
+                    adjustbox
+                    algpseudocodex
+                    algorithmicx
+                    algorithms
+                    fifo-stack
+                    varwidth
+                    tabto-ltx
+                    totcount
                   ])
               )
               pkgs.osm2pgsql
