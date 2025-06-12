@@ -1,5 +1,5 @@
 \subsection{Graph construction}
-Using the geographic information of the roads and buildings, a graph is constructed for each neighborhood, using the \url{igraph} module in \url{Python}.
+Using the geographic information of the roads and buildings, a graph is constructed for each neighborhood, using the \url{igraph} \citep{igraph} module in \url{Python}.
 This graph connects all buildings to each other over the road network.
 First, using the information about the roads and buildings the sets of nodes and edges need to be defined.
 An edge is a line that connects two nodes.
@@ -12,7 +12,7 @@ This algorithm needs to be very efficient, since many buildings are added in eac
 An R-tree can be used to accomplish this efficiency.
 An R-tree is a dynamic index structure that is able to retrieve data items quickly according to their spatial locations \citep{guttman1984r}.
 \Cref{lst:python-edges} displays the algorithm used to make the edges that connect the buildings to the road network.
-For each building node, the closest point on the closest road is found, using the shapely implementation of the R-tree, \pythoninline{STRtree}.
+For each building node, the closest point on the closest road is found, using the shapely \citep{shapely} implementation of the R-tree, \pythoninline{STRtree}.
 Then, if this point is not an already existing node, a new virtual node is added, which splits this existing edge in two parts.
 The road is reconnected with the new node in between.
 Finally, the building is connected to this new node.
@@ -28,7 +28,6 @@ and $(\varphi_A,\theta_A)$, $(\varphi_B,\theta_B)$ be their coordinates, in \url
 Earth's radius. Then the distance between these nodes (the weight of the edge connecting them),
 using the equirectangular approximation is:
 \begin{align}
-	\label{eq:equirectangluar_approx}
 	d(A,B)               & =R\sqrt{\varphi^2+\theta^2},                             \\
 	\text{where }\varphi & =(\varphi_B-\varphi_A)\cos{\frac{\theta_A+\theta_B}{2}}, \\
 	\text{and }\theta    & =\theta_B-\theta_A.
@@ -47,9 +46,9 @@ for the areas in this analysis can be viewed and interacted with via this
 \subsection{Extracting features}
 One of the predictors of the TSP path length, is the area of the neighborhood the locations are drawn from.
 The OSM data provides the area of the polygons, but this value can not be used to predict TSP path length effectively.
-This value significantly overestimates the correct value for $A$.
-When there are things like parks, lakes, or large buildings like a stadium inside the quarter, then in that part of the
-area, there are no delivery locations. Consequently, this area should not be included in the area calculation.
+This value significantly overestimates the correct value for A when there are things like parks, lakes, or large buildings are inside in the quarter.
+These places have no delivery locations but do increase the area of the quarter.
+Consequently, this area should not be included in the area calculation.
 To account for this problem, alpha shapes are used to calculate $A$. Alpha shapes are generalizations of the convex hull,
 they capture the shape of a point set \citep{akkiraju1995alpha}. Figure \Cref{fig:Beijum} displays the map of the Beijum
 quarter in Groningen with the alpha shape for its addresses, as it was used for calculating the area.

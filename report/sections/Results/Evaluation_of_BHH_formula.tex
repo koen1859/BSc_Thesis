@@ -6,7 +6,6 @@ The prediction accuracy differs vastly per neighborhood: the Mean Absolute Perce
 It is found that fitting Equation \ref{eq:beardwood} yields a Mean Absolute Percentage error of about 6.6\%, averaged over all observations, when letting $\beta$ differ per neighborhood, as can be seen in \Cref{tab:results_small}.
 When using the nationwide average as the value for $\beta$ to predict TSP path length, the model performance drops significantly, with a MAPE of more than 22\%.
 Entities that want to estimate TSP path length by the BHH formula for areas they do not now the true value for $\beta$ of, either have to accept the high prediction error or run simulations to estimate the true value of $\beta$ to achieve better predictions.
-\Cref{fig:mape_vs_beta} (Appendix) shows there is a slight positive correlation between $\beta$ and the MAPE.
 \input{../project/small_results_table.tex}
 
 Potential reasons for the variation in accuracy can be analyzed using visualizations.
@@ -36,9 +35,9 @@ This would result in a significantly lower path length, as the distance to the o
 However, there is also significant probability that there are addresses of the smaller cluster in the TSP, which in turn leads to a significantly higher path
 length.
 Based on this, a higher variation in the TSP path length is to be expected, which explains the higher prediction error.
-This problem is likely to disappear when the number of locations in the TSP $j$ is large enough, since in that case locations from all clusters would be included.
+This problem disappears when the number of locations in the TSP $j$ is large enough, since in that case locations from all clusters would be included.
 
-This pattern is again implied by the visualizations in \Cref{fig:combinedScatter}.
+This pattern is again confirmed by the visualizations in \Cref{fig:combinedScatter}.
 The Stad van de Zon scatter plot is the clearest example of this phenomenon.
 \begin{figure}[H]
 	\centering
@@ -54,13 +53,14 @@ The Stad van de Zon scatter plot is the clearest example of this phenomenon.
 	\caption{Scatter plots of TSP path length vs number of locations for the quarters Schepenbuurt and Stad van de Zon (log-log scale).}
 	\label{fig:combinedScatter}
 \end{figure}
-There is a group of points far below the fitted line for the BHH formula, and a group of points far above it.
+There is a group of points below the fitted line for the BHH formula, and a group of points above it.
 The randomness in whether locations from outside the main cluster are included in a TSP decides whether its data point it in the upper or lower group of points.
 As $n$ increases, the number of data points in the lower group decreases.
-Both of these observations imply these data points are for a TSP that contains locations only in the main cluster, since the probability of this happening decreases with $n$.
+Both of these observations suggest these data points are for a TSP that contains locations only in the main cluster, since the probability of this happening decreases with $n$.
 
-Additionally, it is interesting to consider neighborhoods where the prediction errors are especially low. \Cref{fig:combined2} displays maps for two quarters,
-Westeinde in Friesland and Bornholm in Noord-Holland. Such low-prediction error neighborhoods also share characteristics.
+Additionally, it is interesting to consider neighborhoods where the prediction errors are especially low.
+\Cref{fig:combined2} displays maps for two quarters, Westeinde in Friesland and Bornholm in Noord-Holland.
+Such low-prediction error neighborhoods also share characteristics.
 One is that the addresses seem distributed close to uniformly across the area.
 There are some 'clusters', for example Westeinde can visually be split into four clusters that are only connected by one or two main road connections.
 However, they all contain a similar number of addresses, such that each TSP will likely visit all of them.
@@ -95,4 +95,4 @@ Although some variation around the fitted BHH formula remains, \Cref{fig:combine
 	\label{fig:combinedScatter2}
 \end{figure}
 This suggests that any entity aiming to use the BHH formula to predict TSP path lengths must carefully consider how to define the areas, as poor clustering can introduce significant prediction errors.
-While improved area distribution may not entirely eliminate this issue, it can certainly lead to better results compared to the coarse divisions like OpenStreetMap quarters.
+While improved delivery area designation may not entirely eliminate this issue, it can certainly lead to better results compared to the coarse divisions like OpenStreetMap quarters.

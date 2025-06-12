@@ -4,6 +4,8 @@ Define $N_j$ to be the set of all postal codes in a neighborhood $j$.
 Let $TSP_{n,j}=\{x_i\}_{i=1}^n,\,x_i\in N_j$ be a subset of size $n$ of the postal codes in neighborhood $j$.
 Then, $L_{n,j}$ can be defined to be the length of the shortest path through the set $TSP_{n,j}$.
 This is the length of the solution of the traveling salesman problem consisting of the points in $TSP_{j,n}$.
+We first want to examine the behavior of $TSP_{j,n}$, and most importantly the accuracy of the BHH formula in estimating this value.
+Afterward, we want to see how using supervised learning can be used to get a more accurate estimate of $TSP_{j,n}$.
 This research consists of two parts.
 \begin{enumerate}
 	\item Analyze the behavior of \( L_{n,j} \) for various sample sizes \( n \) and neighborhoods \( j \),
