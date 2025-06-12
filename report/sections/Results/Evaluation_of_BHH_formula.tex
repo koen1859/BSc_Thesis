@@ -1,13 +1,38 @@
 \subsection{Evaluation of BHH formula}
+\subsubsection{Main Finding and implications}
+The main finding is that the formula performs poorly and its core advantage (its simplicity) breaks down when realistic applications require estimating its parameters through costly simulations.
 The results for $\beta$, the MAE and MAPE using the BHH formula are tabulated in \Cref{tab:results} (Appendix).
 The value for $\beta$ differs strongly from area to area: some areas have an estimated $\beta$ as low as 1.5, while others have $\beta$ close to 6.
-A histogram of the values for $\beta$ is provided in \Cref{fig:Histogram} (Appendix).
 The prediction accuracy differs vastly per neighborhood: the Mean Absolute Percentage Error is below 4\% for some areas, and above 15\% for others (using their individual $\beta$).
-It is found that fitting Equation \ref{eq:beardwood} yields a Mean Absolute Percentage error of about 6.6\%, averaged over all observations, when letting $\beta$ differ per neighborhood, as can be seen in \Cref{tab:results_small}.
+A histogram of the values for $\beta$, and a scatter plot of the values for $\beta$ against the corresponding MAPE is provided in \Cref{fig:histscatter}.
+The correlation coefficient of $\beta$ and the MAPE is 0.18.
+This indicates that there is no real correlation between the MAPE and $\beta$, the difference in the prediction accuracy across the areas does not stem from a difference in the proportionality constant.
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{../project/plots/histogram.png}
+		\caption{Histogram of $\beta$.}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.462\textwidth}
+		\includegraphics[width=\textwidth]{../project/plots/MAPE_vs_beta.png}
+		\caption{Stad van de Zon}
+	\end{subfigure}
+	\caption{Scatter plot of $\beta$ against the MAPE.}
+	\label{fig:histscatter}
+\end{figure}
+It is found that fitting \Cref{eq:beardwood} yields a Mean Absolute Percentage error of about 6.6\% averaged over all observations, when letting $\beta$ differ per neighborhood, as can be seen in \Cref{tab:results_small}.
 When using the nationwide average as the value for $\beta$ to predict TSP path length, the model performance drops significantly, with a MAPE of more than 22\%.
-Entities that want to estimate TSP path length by the BHH formula for areas they do not now the true value for $\beta$ of, either have to accept the high prediction error or run simulations to estimate the true value of $\beta$ to achieve better predictions.
 \input{../project/small_results_table.tex}
+This suggests that the BHH formula performs poorly for estimating TSP path lengths on real-world road networks, especially for the number of stops a delivery person might make in a typical workday.
+Although the main appeal of the BHH formula lies in its simplicity and analytical form, it is not useful when the true value of $\beta$ is unknown.
+An average prediction error of more than 22\% much too high to use the formula in practice.
+Even when the true value of $\beta$ is known, the prediction accuracy varies strongly across different areas.
+Moreover, estimating the true value of $\beta$ requires simulations or calibration using known TSP solutions, undermining the original appeal of the BHH formula, its simplicity.
+Therefore, we conclude that the BHH formula is not suitable for practical applications where accuracy is critical.
+Instead, we recommend calculating the exact TSP solutions, which is computationally feasible using efficient algorithms such as LKH.
 
+\subsubsection{Potential explanations}
 Potential reasons for the variation in accuracy can be analyzed using visualizations.
 For example, the prediction error for the Schepenbuurt quarter in Friesland, and the Stad van de Zon quarter in Noord-Holland is especially high, compared to the other areas.
 These low-accuracy areas have an important feature in common.
@@ -94,5 +119,3 @@ Although some variation around the fitted BHH formula remains, \Cref{fig:combine
 	\caption{Scatter plots of TSP path length vs number of locations for the quarters Westeinde and Bornholm (log-log scale).}
 	\label{fig:combinedScatter2}
 \end{figure}
-This suggests that any entity aiming to use the BHH formula to predict TSP path lengths must carefully consider how to define the areas, as poor clustering can introduce significant prediction errors.
-While improved delivery area designation may not entirely eliminate this issue, it can certainly lead to better results compared to the coarse divisions like OpenStreetMap quarters.

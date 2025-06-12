@@ -1,22 +1,23 @@
 \section{Conclusion}
-This research evaluated the applicability of the Beardwood-Halton-Hammersley (BHH) formula to real-world delivery scenarios by analyzing its performance on TSP
-instances constructed from OpenStreetMap data across various Dutch neighborhoods.
-It is found that the BHH formula provides predictions with Mean Absolute Percentage (MAPE) error of 6.6\% on the TSP path length provided the true value
-$\beta$ for the area is known.
+This research evaluated the applicability of the Beardwood-Halton-Hammersley (BHH) formula to real-world delivery scenarios by analyzing its performance on TSP instances constructed from OpenStreetMap data across various Dutch neighborhoods.
+We find that the BHH formula provides predictions with Mean Absolute Percentage (MAPE) error of 6.6\% on the TSP path length provided the true value $\beta$ for the area is known.
 The proportionality constant $\beta$ varies substantially between neighborhoods.
 As a result, when this value $\beta$ is not known, and a nationwide average is used, this MAPE increases to more than 22\% on average.
-This implies that this formula might not be suitable for practical applications, where a delivery company might not know the true $\beta$ for new areas it wants to serve.
-
-Even when estimating a separate $\beta$ per area, the prediction accuracy remains inconsistent. Neighborhoods with evenly distributed addresses and good
-connectivity tend to conform better to the BHH formula, while those with uneven-sized clusters show larger deviations in TSP path lengths.
+The main appeal of the BHH formula is its simplicity and closed form.
+However, in many real-world applications the true value of $\beta$ is unknown.
+Making predictions using the BHH formula would in such cases yield much too high prediction errors of more than 22\% on average, which is not useful.
+Estimating the true value of $\beta$ defeats the appeal of the BHH formula (its simplicity) since this requires simulations.
+Even when estimating a separate $\beta$ per area, the prediction accuracy remains inconsistent.
+Neighborhoods with evenly distributed addresses and good connectivity tend to conform better to the BHH formula, while those with uneven-sized clusters show larger deviations in TSP path lengths.
 
 To address these limitations of the BHH formula, a supervised leaning model is used to predict TSP path length based on area features about the spatial distribution
-and other geographic features. This model is able to provide more accurate predictions compared to the BHH formula with unknown true $\beta$, with a MAPE of 10.6\% on
-the test set.
+and other geographic features. This model is able to provide more accurate predictions compared to the BHH formula with unknown true $\beta$, with a MAPE of 10.6\% on the test set.
 This model offers a more scalable and generalizable approach for real-world applications, however it does not solve all limitations of the BHH formula.
-The predictions for areas with a clustered, irregular distribution of delivery locations still have a relatively high MAPE.
-The importance of this for real-world applications is debatable, since a delivery company is likely to distribute their delivery areas in a way that decreases
-this irregularity.
+The predictions for areas with a clustered, irregular distribution of delivery locations still have a high MAPE.
+The importance of this for real-world applications is debatable, since a delivery company is likely to distribute their delivery areas in a way that decreases this irregularity.
+
+We advise entities aiming to estimate TSP path length in real-world applications for low numbers of stops to calculate the true TSP solutions.
+Using programs like the Lin-Kernighan heuristic, these calculations are very efficient and require little computing power, while gaining much prediction accuracy.
 
 An important caveat for the models used in this research is that it is assumed delivery locations are on a flat, 2d plane.
 This is a reasonable assumption when considering Dutch neighborhoods, since the Netherlands does not contain much variation in terrain height.
