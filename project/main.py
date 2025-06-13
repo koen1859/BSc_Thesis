@@ -1,9 +1,10 @@
 import multiprocessing
-from run_simulation import run_simulation, interpret_results, run_ml
-from tables import make_results_tables, make_small_final_results_table
-from areas import areas
-from tqdm import tqdm
+
 import ujson
+from areas import areas
+from run_simulation import interpret_results, run_ml
+from tables import make_results_tables
+from tqdm import tqdm
 
 
 def wrapper(args):

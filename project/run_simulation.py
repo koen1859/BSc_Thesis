@@ -1,15 +1,15 @@
+import pandas as pd
 from db import get_addresses, get_features, get_roads
-from node import Node, get_road_nodes, get_building_nodes
 from edge import Edge, get_road_edges
+from features_df import features_df, split_train_test
+from find_beta import errorsplot, find_beta, results, scatterplot
 from graph import Graph
-from tsp import solve_tsps
+from ml_model import feature_importance, random_forest
+from node import Node, get_building_nodes, get_road_nodes
 from read_tour import read_tours
 from route import random_path
-from find_beta import find_beta, results, scatterplot, errorsplot
-from features_df import features_df, split_train_test
-from ml_model import random_forest, feature_importance
 from tables import make_ml_results_table
-import pandas as pd
+from tsp import solve_tsps
 
 
 # This is the main simulation function. It creates, solves,

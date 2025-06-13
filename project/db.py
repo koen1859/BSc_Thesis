@@ -1,4 +1,5 @@
 import os
+
 import psycopg
 import ujson
 from graph import Graph

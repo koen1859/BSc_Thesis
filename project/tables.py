@@ -1,12 +1,12 @@
-import ujson
 import json
 import math
+
+import numpy as np
 from sklearn.metrics import (
     mean_absolute_error,
     mean_absolute_percentage_error,
     r2_score,
 )
-import numpy as np
 
 
 def make_results_tables():

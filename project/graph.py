@@ -1,16 +1,17 @@
+import itertools
 import os
 import random
-import itertools
+
 import folium
+import geopandas as gpd
 import igraph as ig
 import numpy as np
 import ujson
+from edge import Edge
+from node import Node
+from shapely import concave_hull, union_all
 from shapely.geometry import LineString, Point
 from shapely.strtree import STRtree
-from shapely import union_all, concave_hull
-import geopandas as gpd
-from node import Node
-from edge import Edge
 
 
 class Graph:

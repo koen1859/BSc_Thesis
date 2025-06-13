@@ -1,12 +1,12 @@
+import matplotlib.pyplot as plt
+import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import (
-    r2_score,
     mean_absolute_error,
     mean_absolute_percentage_error,
+    r2_score,
 )
 from sklearn.model_selection import GridSearchCV
-import pandas as pd
-import matplotlib.pyplot as plt
 
 
 def random_forest(df_train: pd.DataFrame, df_test: pd.DataFrame):
@@ -68,7 +68,7 @@ def random_forest(df_train: pd.DataFrame, df_test: pd.DataFrame):
         "y_test_pred": y_test_pred,
         "per_area_metrics": per_area_metrics,
         "feature_importances": feature_importances,
-        "best_parameters": grid_search.best_params_
+        "best_parameters": grid_search.best_params_,
     }
 
     results["feature_importances"].head(15).plot(kind="barh")
