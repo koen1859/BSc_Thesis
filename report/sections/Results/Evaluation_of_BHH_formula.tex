@@ -1,12 +1,13 @@
 \subsection{Evaluation of BHH formula}
 \subsubsection{Main Finding and implications}
-The main finding is that the formula performs poorly and its core advantage (its simplicity) breaks down when realistic applications require estimating its parameters through costly simulations.
+The main finding is that the formula performs poorly, predicting TSP path length.
+Its core advantage (its simplicity) breaks down when realistic applications require estimating its parameters through costly simulations.
 The results for $\beta$, the MAE and MAPE using the BHH formula are tabulated in \Cref{tab:results} (Appendix).
 The value for $\beta$ differs strongly from area to area: some areas have an estimated $\beta$ as low as 1.5, while others have $\beta$ close to 6.
-The prediction accuracy differs vastly per neighborhood: the Mean Absolute Percentage Error is below 4\% for some areas, and above 15\% for others (using their individual $\beta$).
+The prediction accuracy differs vastly per neighborhood: the Mean Absolute Percentage Error is below 4\% up to above 15\% (using their individual $\beta$).
 A histogram of the values for $\beta$, and a scatter plot of the values for $\beta$ against the corresponding MAPE is provided in \Cref{fig:histscatter}.
 The correlation coefficient of $\beta$ and the MAPE is 0.18.
-This indicates that there is no real correlation between the MAPE and $\beta$, the difference in the prediction accuracy across the areas does not stem from a difference in the proportionality constant.
+This indicates that the MAPE and $\beta$ are not correlated, the difference in the prediction accuracy across the areas does not stem from a difference in the proportionality constant.
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[b]{0.45\textwidth}
@@ -21,12 +22,12 @@ This indicates that there is no real correlation between the MAPE and $\beta$, t
 	\caption{Scatter plot of $\beta$ against the MAPE.}
 	\label{fig:histscatter}
 \end{figure}
-It is found that fitting \Cref{eq:beardwood} yields a Mean Absolute Percentage error of about 6.6\% averaged over all observations, when letting $\beta$ differ per neighborhood, as can be seen in \Cref{tab:results_small}.
-When using the nationwide average as the value for $\beta$ to predict TSP path length, the model performance drops significantly, with a MAPE of more than 22\%.
+Fitting \Cref{eq:beardwood} yields a Mean Absolute Percentage error of about 6.6\% averaged over all observations, when letting $\beta$ differ per neighborhood (top row), as can be seen in \Cref{tab:results_small}.
+When using the nationwide average as the value for $\beta$ to predict TSP path length, the model performance drops significantly, with a MAPE of more than 22\% (bottom row).
 \input{../project/small_results_table.tex}
 This suggests that the BHH formula performs poorly for estimating TSP path lengths on real-world road networks, especially for the number of stops a delivery person might make in a typical workday.
 Although the main appeal of the BHH formula lies in its simplicity and analytical form, it is not useful when the true value of $\beta$ is unknown.
-An average prediction error of more than 22\% much too high to use the formula in practice.
+An average prediction error of more than 22\% is too high to use the formula effectively in practice.
 Even when the true value of $\beta$ is known, the prediction accuracy varies strongly across different areas.
 Moreover, estimating the true value of $\beta$ requires simulations or calibration using known TSP solutions, undermining the original appeal of the BHH formula, its simplicity.
 Therefore, we conclude that the BHH formula is not suitable for practical applications where accuracy is critical.
@@ -54,13 +55,12 @@ These low-accuracy areas have an important feature in common.
 
 Such quarters have one or more clusters of addresses, with some addresses spread out over the rest of the area, where the number of addresses in the cluster is significantly higher
 than the number of addresses spread out.
-A possible explanation for the higher prediction errors is that when the number of locations to visit, $j$, is small and one of the clusters is significantly smaller than the other
+A possible explanation for the higher prediction errors is that when the number of locations to visit, $n$, is small and one of the clusters is significantly smaller than the other
 in terms of the number of addresses it contains, there is a substantial probability that none of the addresses from the smaller cluster are included in the TSP instance.
-This would result in a significantly lower path length, as the distance to the other cluster and back does not need to be traveled.
-However, there is also significant probability that there are addresses of the smaller cluster in the TSP, which in turn leads to a significantly higher path
-length.
+This results in a significantly lower path length, as the distance to the other cluster and back does not need to be traveled.
+However, there is also significant probability that there are addresses of the smaller cluster in the TSP, which in turn leads to a significantly higher path length.
 Based on this, a higher variation in the TSP path length is to be expected, which explains the higher prediction error.
-This problem disappears when the number of locations in the TSP $j$ is large enough, since in that case locations from all clusters would be included.
+This problem disappears when the number of locations in the TSP $n$ is large enough, since in that case locations from all clusters would be included.
 
 This pattern is again confirmed by the visualizations in \Cref{fig:combinedScatter}.
 The Stad van de Zon scatter plot is the clearest example of this phenomenon.
@@ -79,7 +79,7 @@ The Stad van de Zon scatter plot is the clearest example of this phenomenon.
 	\label{fig:combinedScatter}
 \end{figure}
 There is a group of points below the fitted line for the BHH formula, and a group of points above it.
-The randomness in whether locations from outside the main cluster are included in a TSP decides whether its data point it in the upper or lower group of points.
+The randomness in whether locations from outside the main cluster are included in a TSP decides whether its data point is in the upper or lower group of points.
 As $n$ increases, the number of data points in the lower group decreases.
 Both of these observations suggest these data points are for a TSP that contains locations only in the main cluster, since the probability of this happening decreases with $n$.
 
@@ -104,7 +104,7 @@ This could explain why the formula gives lower prediction errors for these areas
 	\caption{Maps of the quarters Westeinde and Bornholm.}
 	\label{fig:combined2}
 \end{figure}
-Although some variation around the fitted BHH formula remains, \Cref{fig:combinedScatter2} exhibits significantly lower prediction error compared to \Cref{fig:combinedScatter}.
+Although some variation around the fitted BHH formula remains, \Cref{fig:combinedScatter2} exhibits lower prediction error compared to \Cref{fig:combinedScatter}.
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[b]{0.49\textwidth}
