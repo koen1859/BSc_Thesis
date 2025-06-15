@@ -23,15 +23,16 @@ The equirectangular approximation is used to calculate these weights. This appro
 efficient, but only works when the points the distance is calculated between is small enough such
 that the rounding of the earth does not have a significant effect on the true distance.
 The nodes are all close enough together, so the effect of the
-rounding of Earth's surface is negligible. Let $A$ and $B$ be two nodes,
-and $(\varphi_A,\theta_A)$, $(\varphi_B,\theta_B)$ be their coordinates, in \url{radians}. Let $R=6,371,000$ meters,
-Earth's radius. Then the distance between these nodes (the weight of the edge connecting them),
-using the equirectangular approximation is:
-\begin{align}
-	d(A,B)               & =R\sqrt{\varphi^2+\theta^2},                             \\
-	\text{where }\varphi & =(\varphi_B-\varphi_A)\cos{\frac{\theta_A+\theta_B}{2}}, \\
-	\text{and }\theta    & =\theta_B-\theta_A.
-\end{align}
+rounding of Earth's surface is negligible.
+% Let $A$ and $B$ be two nodes,
+% and $(\varphi_A,\theta_A)$, $(\varphi_B,\theta_B)$ be their coordinates, in \url{radians}. Let $R=6,371,000$ meters,
+% Earth's radius. Then the distance between these nodes (the weight of the edge connecting them),
+% using the equirectangular approximation is:
+% \begin{align}
+% 	d(A,B)               & =R\sqrt{\varphi^2+\theta^2},                             \\
+% 	\text{where }\varphi & =(\varphi_B-\varphi_A)\cos{\frac{\theta_A+\theta_B}{2}}, \\
+% 	\text{and }\theta    & =\theta_B-\theta_A.
+% \end{align}
 
 Using the \url{folium} module in \url{Python}, such a graph can be visualized on a geographic map.
 One of such visualizations is provided in \Cref{fig:overtoomse_sluis}. All maps like this one,

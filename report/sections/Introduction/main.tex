@@ -6,8 +6,7 @@ Since the number of parcels worldwide has increased between 2013 and 2022 and is
 The TSP is an NP-hard problem, it is computationally intensive to find the exact solution for large instances.
 In many real-world scenarios, the exact optimal routes may not be needed, but instead a rough, reliable estimate of the optimal route length.
 For instance, consider a last-mile carrier expanding to a new area for service.
-This firm may need to hire new delivery persons.
-Then, this firm needs to estimate how many delivery persons they need to hire, and what kinds of contracts they should provide.
+This firm will need to hire new delivery personnel which requires estimating how many new employees are needed and what contractual agreements are appropriate.
 Reliable estimates for the route length can provide valuable information for making such decisions.
 
 Efficient approximation methods provide a solution for such practical applications where exact solutions are too computationally intensive to conduct or not feasible due to insufficient data.
@@ -25,11 +24,6 @@ as an estimation for the length of the shortest TSP path measured by Euclidean d
 In contrast to the Euclidean plane, TSP path lengths in an area might behave differently based on different features of this area,.
 For example, clusters of locations with empty space in between them or natural boundaries such as canals could have impact on TSP path length in an area.
 The BHH formula is not able to capture such complex relations, and might fail to provide accurate results.
-
-% Additionally, the value for $\beta$ may differ vastly across different types of areas, as a result of varying geographic features.
-% This would result in having to use a different value for $\beta$ for every different area, making it less viable to use this formula for delivery services, especially if they do not know the true value of $\beta$ for the areas they serve.
-% A potential solution to this might be to use supervised learning methods to predict the length of the TSP path, aimed at capturing more complex relations between area features and the TSP path length in this area.
-% This would result in one central formula to predict TSP path length accurately, removing the need to calculate separate parameters for each area.
 
 This research investigates how well \Cref{eq:beardwood} performs, predicting TSP path length on real road networks.
 Using OpenStreetMap \citep{openstreetmap} data, we simulate TSP instances in a variety of different urban areas in the Netherlands, then solve these for the actual shortest paths using the Lin–Kernighan heuristic \citep{lin1973effective}.
